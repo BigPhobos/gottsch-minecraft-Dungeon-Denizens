@@ -1,1 +1,1 @@
-# gottsch-minecraft-Dungeon-Denizens
+# Dungeon Denizens
