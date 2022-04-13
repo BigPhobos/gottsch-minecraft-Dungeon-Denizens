@@ -15,7 +15,7 @@ apply plugin: 'maven-publish'
 
 version = '1.0'
 group = 'com.someguyssoftware.ddenizens' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'dungeon-denizens'
+archivesBaseName = 'DungeonDenizens'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -159,6 +159,7 @@ repositories {
 }
 
 def gottschcore_path="/libs/GottschCore-mc1.18.1-f39.0.0-v1.5.0.jar"
+def minimap_path="/libs/Xaeros_Minimap_22.3.0_Forge_1.18.jar"
 println gottschcore_path
 
 dependencies {
@@ -171,8 +172,8 @@ dependencies {
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-	runtimeOnly files(gottschcore_path)
-
+	compileOnly files(gottschcore_path)
+	runtimeOnly files(minimap_path)
     // Examples using mod jars from ./libs
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
 
