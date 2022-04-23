@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.gottschcore.random.RandomHelper;
+import com.someguyssoftware.gottschcore.world.WorldInfo;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Difficulty;
@@ -16,6 +17,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -64,6 +67,7 @@ public class Shadow extends DDMonster {
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
 		this.goalSelector.addGoal(3,  new ShadowFleeGoal<>(this, Player.class, 6.0F, 1.2D, 1.2D));
+		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Boulder.class, 6.0F, 1.0D, 1.2D));
 		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
 		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -119,9 +123,12 @@ public class Shadow extends DDMonster {
 					seconds = HARD_DIFFICULTY_SECONDS;
 				}
 				// inflict blindness and/or weakness
-				if (RandomHelper.checkProbability(random, 90)) {
-					if (seconds > 0) {
-						((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, seconds * 20, 0), this);
+				ItemStack helmetStack = ((Player)target).getItemBySlot(EquipmentSlot.HEAD);
+				if (helmetStack.isEmpty() || helmetStack.getItem() != Items.GOLDEN_HELMET) {
+					if (RandomHelper.checkProbability(random, 90)) {
+						if (seconds > 0) {
+							((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, seconds * 20, 0), this);
+						}
 					}
 				}
 				if (RandomHelper.checkProbability(random, 20)) {
@@ -136,26 +143,46 @@ public class Shadow extends DDMonster {
 		}
 	}
 
-	@Override
-	protected void actuallyHurt(DamageSource damageSource, float amount) {
-		// reduce damage if not correct weapon (gold sword)
-		if (damageSource.getEntity() != null && damageSource.getEntity() instanceof Player) {
-			ItemStack heldStack = ((Player)damageSource.getEntity()).getItemInHand(InteractionHand.MAIN_HAND);
-			if (heldStack.isEmpty() || heldStack.getItem() != Items.GOLDEN_SWORD) {
-				amount = 1.0F;
-			}
-			else {
-				// increase damage to that of iron sword
-				amount += 2.0F;
-			}
-		}
-		super.actuallyHurt(damageSource, amount);
-	}
+//	@Override
+//	protected void actuallyHurt(DamageSource damageSource, float amount) {
+//		// reduce damage if not correct weapon (gold sword)
+//		if (damageSource.getEntity() != null && damageSource.getEntity() instanceof Player) {
+//			ItemStack heldStack = ((Player)damageSource.getEntity()).getItemInHand(InteractionHand.MAIN_HAND);
+//			if (heldStack.isEmpty() || heldStack.getItem() != Items.GOLDEN_SWORD) {
+//				amount = 1.0F;
+//			}
+//			else {
+//				// increase damage to that of iron sword
+//				amount += 2.0F;
+//			}
+//		}
+//		super.actuallyHurt(damageSource, amount);
+//	}
 
 	@Override
-	public boolean hurt(DamageSource p_21016_, float p_21017_) {
+	public boolean hurt(DamageSource damageSource, float amount) {
+		if (WorldInfo.isClientSide(this.level)) {
+			return false;
+		}
+		
 		this.flee = true;
-		return super.hurt(p_21016_, p_21017_);
+		
+		if (damageSource.getEntity() != null && damageSource.getEntity() instanceof Player) {
+			ItemStack heldStack = ((Player)damageSource.getEntity()).getItemInHand(InteractionHand.MAIN_HAND);
+			if (!heldStack.isEmpty() && heldStack.getItem() == Items.GOLDEN_SWORD) {
+				// increase damage to that of iron sword
+				amount += 2.0F;
+				// negate the weakness from the strike power of the sword
+				if (((Player)damageSource.getEntity()).hasEffect(MobEffects.WEAKNESS)) {
+					amount += MobEffects.WEAKNESS.getAttributeModifierValue(0, null);
+				}
+			}
+			// TODO add shadow sword condition
+			else {
+				amount = 1.0F;
+			}
+		}
+		return super.hurt(damageSource, amount);
 	}
 
 	/**
@@ -188,8 +215,8 @@ public class Shadow extends DDMonster {
 					return true;
 				}
 			}
-			DD.LOGGER.info("cancel flee");
-			((Shadow)mob).flee = false;
+//			DD.LOGGER.info("cancel flee");
+//			((Shadow)mob).flee = false;
 			return false;
 		}
 

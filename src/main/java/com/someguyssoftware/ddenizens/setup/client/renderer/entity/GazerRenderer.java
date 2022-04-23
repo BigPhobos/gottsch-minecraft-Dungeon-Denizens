@@ -29,7 +29,7 @@ public class GazerRenderer<T extends Gazer> extends MobRenderer<T, GazerModel<T>
 	 */
 	public GazerRenderer(EntityRendererProvider.Context context) {
 		super(context, new GazerModel<>(context.bakeLayer(GazerModel.LAYER_LOCATION)), 0.8F);
-		this.scale = 0.85F;
+		this.scale = 0.88F; // makes the body approx 16x16
 	}
 
 	@Override

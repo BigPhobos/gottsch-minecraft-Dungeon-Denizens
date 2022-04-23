@@ -1,12 +1,16 @@
 {
   "entity.ddenizens.boulder": "Boulder",
+  "entity.ddenizens.daemon": "Daemon",
   "entity.ddenizens.gazer": "Gazer",
   "entity.ddenizens.ghoul": "Ghoul",
   "entity.ddenizens.headless": "Headless",
   "entity.ddenizens.shadow": "Shadow",
+  "entity.ddenizens.shadowlord": "Shadowlord",
   "item.ddenizens.boulder": "Boulder Spawn Egg",
+  "item.ddenizens.daemon": "Daemon Spawn Egg",
   "item.ddenizens.gazer": "Gazer Spawn Egg",
   "item.ddenizens.ghoul": "Ghoul Spawn Egg",
   "item.ddenizens.headless": "Headless Spawn Egg",
-  "item.ddenizens.shadow": "Shadow Spawn Egg"
+  "item.ddenizens.shadow": "Shadow Spawn Egg",
+  "item.ddenizens.shadowlord": "Shadowlord Spawn Egg"
 }

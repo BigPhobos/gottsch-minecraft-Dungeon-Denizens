@@ -116,7 +116,7 @@ public class HeadlessHurtByTargetGoal extends TargetGoal {
 		Iterator<? extends Mob> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			Mob otherMob = (Mob)iterator.next();
-			DD.LOGGER.info("process mob alert -> {}", otherMob.getName().getString());
+//			DD.LOGGER.info("process mob alert -> {}", otherMob.getName().getString());
 			if (this.mob != otherMob && otherMob.getTarget() == null) {
 				if (this.othersToAlert.contains(otherMob.getClass())) {
 					DD.LOGGER.info("alerting mob of targer -> {}", otherMob.getName().getString());

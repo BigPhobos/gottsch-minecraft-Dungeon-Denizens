@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.someguyssoftware.ddenizens.setup.ClientSetup;
-import com.someguyssoftware.ddenizens.setup.ModSetup;
+import com.someguyssoftware.ddenizens.setup.CommonSetup;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import net.minecraft.world.level.block.Block;
@@ -46,7 +46,7 @@ public class DD {
         // register the setup method for mod loading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         // register 'ModSetup::init' to be called at mod setup time (server and client)
-        modEventBus.addListener(ModSetup::init);
+        modEventBus.addListener(CommonSetup::init);
         // register 'ClientSetup::init' to be called at mod setup time (client only)
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::init));
     	

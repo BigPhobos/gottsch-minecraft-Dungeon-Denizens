@@ -56,7 +56,10 @@ public class ShadowModel<T extends Entity> extends EntityModel<T> {
 	private final ModelPart left_leg;
 	private final ModelPart right_leg;
 
-
+	/**
+	 * 
+	 * @param root
+	 */
 	public ShadowModel(ModelPart root) {
 		super(RenderType::entityTranslucentCull);
 		this.head = root.getChild("head");

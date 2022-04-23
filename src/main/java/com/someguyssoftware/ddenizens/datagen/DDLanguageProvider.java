@@ -52,5 +52,13 @@ public class DDLanguageProvider extends LanguageProvider {
         
         add(Registration.SHADOW_ENTITY_TYPE.get(), "Shadow");
         add(Registration.SHADOW_EGG.get(), "Shadow Spawn Egg");
+        
+        add(Registration.SHADOWLORD_ENTITY_TYPE.get(), "Shadowlord");
+        add(Registration.SHADOWLORD_EGG.get(), "Shadowlord Spawn Egg");
+        
+        add(Registration.DAEMON_ENTITY_TYPE.get(), "Daemon");
+        add(Registration.DAEMON_EGG.get(), "Daemon Spawn Egg");
+        
+        add(Registration.SLOWBALL_ITEM.get(), "Slowball");
     }
 }

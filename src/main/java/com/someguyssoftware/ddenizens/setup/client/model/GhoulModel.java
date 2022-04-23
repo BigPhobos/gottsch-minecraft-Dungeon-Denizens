@@ -119,7 +119,7 @@ public class GhoulModel<T extends Entity> extends EntityModel<T> implements Head
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		// head
 		this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
-		this.head.xRot = headPitch * ((float)Math.PI / 180F) + 0.3054326F; // +17.5 degrees
+		this.head.xRot = headPitch * ((float)Math.PI / 180F) + 0.3054326F; // +17.5 degrees because has a slight down angle
 		
 		// legs
 		float f = 1.0F;

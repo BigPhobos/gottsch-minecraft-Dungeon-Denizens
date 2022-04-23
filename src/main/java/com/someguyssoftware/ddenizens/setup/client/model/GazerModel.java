@@ -58,16 +58,19 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 	private final ModelPart eye4;
 	private final ModelPart eye5;
 	
-	
+	/**
+	 * 
+	 * @param root
+	 */
 	public GazerModel(ModelPart root) {
 		this.head = root.getChild("head");
 		this.body = root.getChild("body");
 		this.mouth = root.getChild("mouth");
-		this.tentacle1 = root.getChild("tenticle1");
-		this.tentacle2 = root.getChild("tenticle2");
-		this.tentacle3 = root.getChild("tenticle3");
-		this.tentacle4 = root.getChild("tenticle4");
-		this.tentacle5 = root.getChild("tenticle5");
+		this.tentacle1 = root.getChild("tentacle1");
+		this.tentacle2 = root.getChild("tentacle2");
+		this.tentacle3 = root.getChild("tentacle3");
+		this.tentacle4 = root.getChild("tentacle4");
+		this.tentacle5 = root.getChild("tentacle5");
 		this.eye1 = tentacle1.getChild("eye");
 		this.eye2 = tentacle2.getChild("eye2");
 		this.eye3 = tentacle3.getChild("eye3");
@@ -81,18 +84,23 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 
 		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(51, 45).addBox(-5.0F, -5.0F, -5.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 13.0F, -6.0F));
 		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-9.0F, -19.0F, -9.0F, 18.0F, 18.0F, 18.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 62).addBox(-6.0F, -17.0F, -11.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, 0.0F));
+		.texOffs(0, 55).addBox(-6.0F, -17.0F, -11.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(13, 0).addBox(-0.5F, -21.0F, 9.0F, 0.0F, 13.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, 0.0F));
+		PartDefinition spike3_r1 = body.addOrReplaceChild("spike3_r1", CubeListBuilder.create().texOffs(0, 60).addBox(-2.0F, 10.0F, -9.0F, 2.0F, 2.0F, 6.0F, new CubeDeformation(0.0F))
+		.texOffs(38, 59).addBox(-2.0F, 5.0F, -4.0F, 2.0F, 2.0F, 7.0F, new CubeDeformation(0.0F))
+		.texOffs(55, 0).addBox(-2.0F, 0.0F, -2.0F, 2.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -20.0F, 7.0F, 0.7854F, 0.0F, 0.0F));
 		PartDefinition mouth = partdefinition.addOrReplaceChild("mouth", CubeListBuilder.create().texOffs(0, 37).addBox(-8.0F, -3.0F, -10.0F, 16.0F, 3.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 24.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
-		PartDefinition tenticle1 = partdefinition.addOrReplaceChild("tenticle1", CubeListBuilder.create().texOffs(55, 7).addBox(-1.0F, -1.5F, -1.5F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(9.0F, 19.5F, -0.5F, 0.0F, 0.0F, 0.4363F));
-		PartDefinition eye = tenticle1.addOrReplaceChild("eye", CubeListBuilder.create().texOffs(21, 68).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(12.5F, 0.0F, 0.0F, 0.0F, 0.0F, -0.4363F));
-		PartDefinition tenticle2 = partdefinition.addOrReplaceChild("tenticle2", CubeListBuilder.create().texOffs(55, 0).addBox(-1.0F, -2.0F, -2.0F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(9.0F, 11.0F, 2.0F, 0.0F, 0.0F, -0.4363F));
-		PartDefinition eye2 = tenticle2.addOrReplaceChild("eye2", CubeListBuilder.create().texOffs(0, 67).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(12.5F, -0.5F, -0.5F, 0.0F, 0.0F, 0.4363F));
-		PartDefinition tenticle3 = partdefinition.addOrReplaceChild("tenticle3", CubeListBuilder.create().texOffs(0, 55).addBox(-11.0F, -1.5F, -1.5F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-9.0F, 19.5F, -1.5F, 0.0F, 0.0F, -0.4363F));
-		PartDefinition eye3 = tenticle3.addOrReplaceChild("eye3", CubeListBuilder.create().texOffs(66, 66).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-11.5F, 0.0F, 0.0F, 0.0F, 0.0F, 0.4363F));
-		PartDefinition tenticle4 = partdefinition.addOrReplaceChild("tenticle4", CubeListBuilder.create().texOffs(47, 37).addBox(-11.0F, -1.5F, -1.5F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-9.0F, 10.5F, 1.5F, 0.0F, 0.0F, 0.4363F));
-		PartDefinition eye4 = tenticle4.addOrReplaceChild("eye4", CubeListBuilder.create().texOffs(45, 66).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-11.5F, 0.0F, 0.0F, 0.0F, 0.0F, -0.4363F));
-		PartDefinition tenticle5 = partdefinition.addOrReplaceChild("tenticle5", CubeListBuilder.create().texOffs(0, 0).addBox(-1.5F, -7.5F, -1.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 4.5F, 1.5F, 0.4363F, 0.0F, 0.0F));
-		PartDefinition eye5 = tenticle5.addOrReplaceChild("eye5", CubeListBuilder.create().texOffs(29, 57).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -9.0F, 0.0F, -0.4363F, 0.0F, 0.0F));
+		PartDefinition tentacle1 = partdefinition.addOrReplaceChild("tentacle1", CubeListBuilder.create().texOffs(47, 37).addBox(-1.0F, -1.5F, -1.5F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(9.0F, 19.5F, -0.5F, 0.0F, 0.0F, 0.4363F));
+		PartDefinition eye = tentacle1.addOrReplaceChild("eye", CubeListBuilder.create().texOffs(24, 55).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(12.5F, 0.0F, 0.0F, 0.0F, 0.0F, -0.4363F));
+		PartDefinition tentacle2 = partdefinition.addOrReplaceChild("tentacle2", CubeListBuilder.create().texOffs(47, 37).addBox(-1.0F, -2.0F, -2.0F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(9.0F, 11.0F, 2.0F, 0.0F, 0.0F, -0.4363F));
+		PartDefinition eye2 = tentacle2.addOrReplaceChild("eye2", CubeListBuilder.create().texOffs(24, 55).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(12.5F, -0.5F, -0.5F, 0.0F, 0.0F, 0.4363F));
+		PartDefinition tentacle3 = partdefinition.addOrReplaceChild("tentacle3", CubeListBuilder.create().texOffs(47, 37).addBox(-11.0F, -1.5F, -1.5F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-9.0F, 19.5F, -1.5F, 0.0F, 0.0F, -0.4363F));
+		PartDefinition eye3 = tentacle3.addOrReplaceChild("eye3", CubeListBuilder.create().texOffs(24, 55).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-11.5F, 0.0F, 0.0F, 0.0F, 0.0F, 0.4363F));
+		PartDefinition tentacle4 = partdefinition.addOrReplaceChild("tentacle4", CubeListBuilder.create().texOffs(47, 37).addBox(-11.0F, -1.5F, -1.5F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-9.0F, 10.5F, 1.5F, 0.0F, 0.0F, 0.4363F));
+		PartDefinition eye4 = tentacle4.addOrReplaceChild("eye4", CubeListBuilder.create().texOffs(24, 55).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-11.5F, 0.0F, 0.0F, 0.0F, 0.0F, -0.4363F));
+		PartDefinition tentacle5 = partdefinition.addOrReplaceChild("tentacle5", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -7.5F, -1.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 4.5F, 1.5F, 0.4363F, 0.0F, 0.0F));
+		PartDefinition eye5 = tentacle5.addOrReplaceChild("eye5", CubeListBuilder.create().texOffs(24, 55).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -9.0F, 0.0F, -0.4363F, 0.0F, 0.0F));
+
 		return LayerDefinition.create(meshdefinition, 128, 128);
 	}
 
@@ -118,23 +126,34 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 		this.tentacle5.xRot = tentacleRotation;
 		this.tentacle5.zRot = 0F;
 		
-		// bob eyes
+		// bob tentacles
 		bobSideTentaclePart(tentacle1, eye1, ageInTicks, 0.612F, 1.0F);
 		bobSideTentaclePart(tentacle2, eye2, ageInTicks, 0.35F, -1.0F);
 		bobSideTentaclePart(tentacle3, eye3, ageInTicks, 0.55F, 1.0F);
 		bobSideTentaclePart(tentacle4, eye4, ageInTicks, 0.45F, 1.0F);
 		bobTopTentaclePart(tentacle5, eye5, ageInTicks, 0.3F, 1.0F);
+		
+		// reset mouth
+		this.mouth.xRot = 0.2181662F;
+		
+		// bob mouth
+		bobMouthPart(mouth, ageInTicks);
 	}
 
 	public static void bobSideTentaclePart(ModelPart tentacle, ModelPart eye, float age, float radians, float direction) {
-		float speed = 0.05F; // 20th speed
+		float speed = 0.05F; // 1/20th speed
 		tentacle.zRot += direction * (Mth.cos(age * speed) *  radians + 0.05F);
 		eye.zRot = -tentacle.zRot;
 	}
 	
 	public static void bobTopTentaclePart(ModelPart tentacle, ModelPart eye, float age, float radians, float direction) {
-		tentacle.xRot += direction * (Mth.cos(age * radians) * 0.05F + 0.05F);
+		float speed = 0.05F; // 1/20th speed
+		tentacle.xRot += direction * (Mth.cos(age * speed) * radians + 0.05F);
 		eye.xRot = -tentacle.xRot;
+	}
+	
+	public static void bobMouthPart(ModelPart mouth, float age) {
+		mouth.xRot += Mth.cos(age * 0.05F) * -0.2181662F + 0.05F;
 	}
 	
 	@Override

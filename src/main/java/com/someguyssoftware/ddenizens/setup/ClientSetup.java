@@ -3,18 +3,23 @@ package com.someguyssoftware.ddenizens.setup;
 
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.setup.client.model.BoulderModel;
+import com.someguyssoftware.ddenizens.setup.client.model.DaemonModel;
 import com.someguyssoftware.ddenizens.setup.client.model.EttinModel;
 import com.someguyssoftware.ddenizens.setup.client.model.GazerModel;
 import com.someguyssoftware.ddenizens.setup.client.model.GhoulModel;
 import com.someguyssoftware.ddenizens.setup.client.model.HeadlessModel;
 import com.someguyssoftware.ddenizens.setup.client.model.ShadowModel;
+import com.someguyssoftware.ddenizens.setup.client.model.ShadowlordModel;
 import com.someguyssoftware.ddenizens.setup.client.renderer.entity.BoulderRenderer;
+import com.someguyssoftware.ddenizens.setup.client.renderer.entity.DaemonRenderer;
 import com.someguyssoftware.ddenizens.setup.client.renderer.entity.EttinRenderer;
 import com.someguyssoftware.ddenizens.setup.client.renderer.entity.GazerRenderer;
 import com.someguyssoftware.ddenizens.setup.client.renderer.entity.GhoulRenderer;
 import com.someguyssoftware.ddenizens.setup.client.renderer.entity.HeadlessRenderer;
 import com.someguyssoftware.ddenizens.setup.client.renderer.entity.ShadowRenderer;
+import com.someguyssoftware.ddenizens.setup.client.renderer.entity.ShadowlordRenderer;
 
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,6 +49,8 @@ public class ClientSetup {
 		event.registerLayerDefinition(GazerModel.LAYER_LOCATION, GazerModel::createBodyLayer);
 		event.registerLayerDefinition(BoulderModel.LAYER_LOCATION, BoulderModel::createBodyLayer);
 		event.registerLayerDefinition(ShadowModel.LAYER_LOCATION, ShadowModel::createBodyLayer);
+		event.registerLayerDefinition(ShadowlordModel.LAYER_LOCATION, ShadowlordModel::createBodyLayer);
+		event.registerLayerDefinition(DaemonModel.LAYER_LOCATION, DaemonModel::createBodyLayer);
 	}
 
 	/**
@@ -58,5 +65,18 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.GAZER_ENTITY_TYPE.get(), GazerRenderer::new);
         event.registerEntityRenderer(Registration.BOULDER_ENTITY_TYPE.get(), BoulderRenderer::new);
         event.registerEntityRenderer(Registration.SHADOW_ENTITY_TYPE.get(), ShadowRenderer::new);
+        event.registerEntityRenderer(Registration.SHADOWLORD_ENTITY_TYPE.get(), ShadowlordRenderer::new);
+        event.registerEntityRenderer(Registration.DAEMON_ENTITY_TYPE.get(), DaemonRenderer::new);
+        
+        event.registerEntityRenderer(Registration.SLOWBALL_ENTITY_TYPE.get(), (provider) -> {
+            // 1.0 = scale, true = full bright
+        	return new ThrownItemRenderer<>(provider, 1.0F, true);
+         });
+        event.registerEntityRenderer(Registration.HARMBALL_ENTITY_TYPE.get(), (provider) -> {
+        	return new ThrownItemRenderer<>(provider, 1.0F, true);
+         });
+        event.registerEntityRenderer(Registration.FIRESPOUT_ENTITY_TYPE.get(), (provider) -> {
+        	return new ThrownItemRenderer<>(provider, 1.0F, true);
+         });
 	}
 }

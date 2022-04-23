@@ -110,10 +110,11 @@ public class Headless extends Monster {
 				.add(Attributes.MOVEMENT_SPEED, 0.28F);                
 	}
 
-	@Override
-	public void checkDespawn() {
-		// does NOT despawn
-	}
+//	@Override
+//	public void checkDespawn() {
+//		// does NOT despawn
+//	}
+
 
 	public static class HeadlessNearestAttackableTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
 		private static final int ALERT_RANGE_Y = 10;
@@ -155,7 +156,7 @@ public class Headless extends Monster {
 			Iterator<? extends Mob> iterator = list.iterator();
 			while (iterator.hasNext()) {
 				Mob otherMob = (Mob)iterator.next();
-				DD.LOGGER.info("process mob alert -> {}", otherMob.getName().getString());
+//				DD.LOGGER.info("process mob alert -> {}", otherMob.getName().getString());
 				if (this.mob != otherMob && otherMob.getTarget() == null) {
 					if (this.othersToAlert.contains(otherMob.getClass())) {
 						DD.LOGGER.info("alerting mob of targer -> {}", otherMob.getName().getString());

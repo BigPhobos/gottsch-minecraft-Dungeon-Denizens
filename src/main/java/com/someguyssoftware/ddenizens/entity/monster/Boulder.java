@@ -67,7 +67,7 @@ public class Boulder extends Monster {
 	private static final String WAKING_UP = "wakingUp";
 	private static final String LOYALTY_TICKS = "loyaltyTicks";
 	private static final String OWNER = "owner";
-	private static final int MAX_LOYALTY_TICKS = 500; //6000; // 5 minutes
+	private static final int MAX_LOYALTY_TICKS = 6000; // 5 minutes
 
 	public static final float MAX_LEG_AMOUNT = 2F;
 	public static final float MAX_BODY_AMOUNT = 2F;
@@ -102,10 +102,8 @@ public class Boulder extends Monster {
 	protected void registerGoals() {
 		this.goalSelector.addGoal(5, new BoulderGoDormantGoal(this));
 		this.goalSelector.addGoal(5, new BoulderWakeUpGoal(this));		
-		this.goalSelector.addGoal(6, new BoulderFollowOwnerGoal(this, 5.0F, 1.5F));
+		this.goalSelector.addGoal(6, new BoulderFollowOwnerGoal(this, 5.0F, 2F));
 		this.goalSelector.addGoal(7, new BoulderRandomStrollGoal(this, 1.0D));
-		// TODO need a "follow" goal like a wolf or cow
-		// TODO the goal's canUse() method must check against the hibernate state.
 	}
 
 	/**
@@ -114,6 +112,9 @@ public class Boulder extends Monster {
 	 */
 	public static AttributeSupplier.Builder createAttributes() {
 		return Monster.createMonsterAttributes()
+				.add(Attributes.ARMOR, 2.0D)
+				.add(Attributes.ARMOR_TOUGHNESS, 2.0D)
+				.add(Attributes.MAX_HEALTH, 80.0)
 				.add(Attributes.MOVEMENT_SPEED, 0.24F);
 	}
 
