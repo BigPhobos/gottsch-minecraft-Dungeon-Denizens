@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.setup.ClientSetup;
 import com.someguyssoftware.ddenizens.setup.CommonSetup;
 import com.someguyssoftware.ddenizens.setup.Registration;
@@ -38,10 +39,11 @@ public class DD {
 
 	public static final String MODID = "ddenizens";
 
-	public DD()
-    {
+	public DD() {
+		
         // register the deferred registries
         Registration.init();
+        Config.register();
 
         // register the setup method for mod loading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

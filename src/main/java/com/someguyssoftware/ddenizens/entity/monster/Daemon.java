@@ -5,31 +5,23 @@ package com.someguyssoftware.ddenizens.entity.monster;
 
 import java.util.Random;
 
-import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.entity.monster.Shadowlord.ShadowlordMeleeAttackGoal;
-import com.someguyssoftware.ddenizens.entity.monster.Shadowlord.ShadowlordShootHarmGoal;
+import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.projectile.FireSpout;
-import com.someguyssoftware.ddenizens.entity.projectile.Harmball;
 import com.someguyssoftware.ddenizens.setup.Registration;
 import com.someguyssoftware.gottschcore.random.RandomHelper;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FleeSunGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -46,15 +38,14 @@ import net.minecraft.world.phys.Vec3;
  * @author Mark Gottschling on Apr 6, 2022
  *
  */
-public class Daemon extends Monster {
+public class Daemon extends DDMonster {
 	public static final double MELEE_DISTANCE_SQUARED = 25D;
 	private static final double SHOOT_DISTANCE_SQUARED = 4096D;
-	private static final double FIRESPOUT_MAX_DISTANCE = 10D;
-	private static final double FIRESPOUT_MAX_DISTANCE_SQUARED = FIRESPOUT_MAX_DISTANCE * FIRESPOUT_MAX_DISTANCE;
-	private static final int FIRESPOUTS_MAX = 10;
-	private static final int COOLDOWN_TIME = 200;
-	
-	private double flameTime;
+//	private static final double FIRESPOUT_MAX_DISTANCE = 10D;
+//	private static final double FIRESPOUT_MAX_DISTANCE_SQUARED = FIRESPOUT_MAX_DISTANCE * FIRESPOUT_MAX_DISTANCE;
+//	private static final int FIRESPOUTS_MAX = 10;
+
+	private double flameParticlesTime;
 
 	/**
 	 * 
@@ -67,13 +58,18 @@ public class Daemon extends Monster {
 	}
 
 	protected void registerGoals() {
-		//		this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-		this.goalSelector.addGoal(4, new DaemonShootSpellsGoal(this));
-		//		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.3D, false));
+		this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(4, new DaemonShootSpellsGoal(this, Config.Mobs.DAEMON.firespoutCooldownTime.get()));
+		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.3D, false));
 		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 64.0F, 0.2F));
 		this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
+			if (entity instanceof Boulder) {
+				return ((Boulder)entity).isActive();
+			}
+			return false;
+		}));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 	}
 
@@ -103,7 +99,13 @@ public class Daemon extends Monster {
 	 * @return
 	 */
 	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		return (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER || (level.getHeight() < 0) && checkMobSpawnRules(mob, level, spawnType, pos, random));
+		//		return (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER || (level.getHeight() < 0) && checkMobSpawnRules(mob, level, spawnType, pos, random));
+		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
+			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+		}
+		else {
+			return checkDDSpawnRules(mob, level, spawnType, pos, random);
+		}
 	}
 
 	/**
@@ -118,12 +120,12 @@ public class Daemon extends Monster {
 			this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
 
 			if (RandomHelper.checkProbability(random, 24)) {
-				double x = 0.75D * Math.sin(flameTime);
-				double z = 0.75D * Math.cos(flameTime);
+				double x = 0.75D * Math.sin(flameParticlesTime);
+				double z = 0.75D * Math.cos(flameParticlesTime);
 				this.level.addParticle(ParticleTypes.FLAME, this.position().x + x, this.position().y + 0.1D, position().z + z, 0, 0, 0);
 			}
-			flameTime++;
-			flameTime = flameTime % 360;
+			flameParticlesTime++;
+			flameParticlesTime = flameParticlesTime % 360;
 		}
 		super.aiStep();
 	}
@@ -134,18 +136,26 @@ public class Daemon extends Monster {
 	 *
 	 */
 	static class DaemonShootSpellsGoal extends Goal {
+		private static final int DEFAULT_COOLDOWN_TIME = 200;
 		private final Daemon daemon;
 		private int cooldownTime;
+		private int maxCooldownTime;
 		private boolean shootFireSpouts;
+		private int maxFireSpouts;
 		private int fireSpoutCount;
 		private Vec3 viewVector;
 		private Vec3 daemonPosition;
 		private Vec3 targetPosition;
-		private Double lastY;
-		
+		private Double lastY;	
+
 		public DaemonShootSpellsGoal(Daemon mob) {
+			this(mob, DEFAULT_COOLDOWN_TIME);
+		}
+
+		public DaemonShootSpellsGoal(Daemon mob, int maxCooldownTime) {
 			this.daemon = mob;
-			// TODO cooldownTime could be config value
+			this.maxCooldownTime = maxCooldownTime;
+			this.maxFireSpouts = Config.Mobs.DAEMON.firespoutMaxDistance.get();
 		}
 
 		@Override
@@ -156,7 +166,7 @@ public class Daemon extends Monster {
 		@Override
 		public void start() {
 			// set the cooldown to be a few seconds to start so the daemon doesn't fire right away.
-			this.cooldownTime = 10;
+			this.cooldownTime = maxCooldownTime / 2;
 		}
 
 		@Override
@@ -174,7 +184,7 @@ public class Daemon extends Monster {
 			if (cooldownTime < 0) {
 				cooldownTime = 0;
 			}
-//			DD.LOGGER.info("cooldown -> {}", cooldownTime);
+
 			LivingEntity target = daemon.getTarget();
 			if (target != null) {
 				double distanceToTarget = getDistanceToTarget();
@@ -182,17 +192,15 @@ public class Daemon extends Monster {
 					//				if (livingentity.distanceToSqr(daemon) < SHOOT_DISTANCE_SQUARED && daemon.hasLineOfSight(livingentity)) {
 
 					if (this.cooldownTime == 0) {
-						// TODO determine which spell is being cast/shot
-
 						// +6.0 gives you a 2 block buffer from the spell radius
-						if (distanceToTarget < (9.0 + FIRESPOUT_MAX_DISTANCE_SQUARED)) {
+						if (distanceToTarget < (9.0 + (maxFireSpouts * maxFireSpouts))) {
 							shootFireSpouts = true;
 
 							// save viewVector, daemon position, player position
 							this.viewVector = daemon.getViewVector(1.0F);
 							this.daemonPosition = new Vec3(daemon.getX(), daemon.getY(0.5), daemon.getZ());
 							this.targetPosition = new Vec3(target.getX(), target.getY(0.5), target.getZ());							
-							this.cooldownTime = 100;//COOLDOWN_TIME
+							this.cooldownTime = maxCooldownTime;
 							lastY = null;
 						}
 					}
@@ -200,7 +208,7 @@ public class Daemon extends Monster {
 			}
 
 			if (shootFireSpouts && daemon.level.getGameTime() % 3 == 0) {
-				if (fireSpoutCount < FIRESPOUTS_MAX) {
+				if (fireSpoutCount < maxFireSpouts) {
 					// view vector
 					Vec3 vec3 = this.viewVector;
 					double offsetMultiplier = 1;
@@ -225,7 +233,7 @@ public class Daemon extends Monster {
 					if (lastY == null) {
 						lastY = Double.valueOf(y);
 					}
-					
+
 					// calculate Y (on ground)
 					BlockPos pos = new BlockPos(Math.floor(x), y, Math.floor(z));
 					BlockState state = daemon.level.getBlockState(pos);
@@ -248,7 +256,7 @@ public class Daemon extends Monster {
 								break;
 							}							
 						}
-						if (count > FIRESPOUT_MAX_DISTANCE) {
+						if (count > maxFireSpouts) {
 							resetShootFireSpout();
 							return;
 						}
@@ -278,7 +286,7 @@ public class Daemon extends Monster {
 					// increment the count
 					fireSpoutCount++;
 					// turn off is max spouts are reached
-					if (fireSpoutCount >= FIRESPOUTS_MAX) {
+					if (fireSpoutCount >= maxFireSpouts) {
 						resetShootFireSpout();
 					}
 				}
@@ -293,7 +301,7 @@ public class Daemon extends Monster {
 			fireSpoutCount = 0;
 			lastY = null;
 		}
-		
+
 		/**
 		 * 
 		 * @param entity

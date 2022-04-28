@@ -9,7 +9,7 @@ license="GNU GPLv3"
 
 [[mods]] #mandatory
 modId="ddenizens" #mandatory
-version="${file.jarVersion}" #mandatory
+version="1.0.0" #mandatory
 displayName="Dungeon Denizens" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
@@ -60,6 +60,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magn
     modId="gottschcore"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="[1.5.0]"
+    versionRange="[1.6.0,]"
     ordering="BEFORE"
     side="BOTH"

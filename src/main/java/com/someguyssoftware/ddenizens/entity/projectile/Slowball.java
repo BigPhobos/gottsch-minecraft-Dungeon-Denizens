@@ -19,6 +19,7 @@
  */
 package com.someguyssoftware.ddenizens.entity.projectile;
 
+import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import net.minecraft.Util;
@@ -97,11 +98,9 @@ public class Slowball extends AbstractHurtingProjectile implements ItemSupplier 
 		if (!this.level.isClientSide) {
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
-			// TODO can be config
-			target.hurt(DamageSource.indirectMagic(this, ownerEntity), 2.0F);
+			target.hurt(DamageSource.indirectMagic(this, ownerEntity), Config.Spells.PARALYSIS.damage.get());
 			if (target instanceof LivingEntity) {
-				// TODO can be config
-				((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * 20, 0), this);
+				((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Config.Spells.PARALYSIS.duration.get(), 0), this);
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);
 			}
 		}

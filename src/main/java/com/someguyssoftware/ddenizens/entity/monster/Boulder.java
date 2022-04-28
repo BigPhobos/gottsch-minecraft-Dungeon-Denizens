@@ -26,6 +26,9 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
+import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -52,7 +55,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 /**
- * TODO make purpose for Boulder. Entities CANNOT be used as a light source!
+ *
  * @author Mark Gottschling on Apr 6, 2022
  *
  */
@@ -93,7 +96,11 @@ public class Boulder extends Monster {
 	 * @return
 	 */
 	public static boolean checkSpawnRules(EntityType<? extends Monster> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		return (level.getHeight() < 60 || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
+//		return (level.getHeight() < 60 || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());	
+		SpawnConfig config = mobConfig.getSpawnConfig();
+		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN)
+				&& checkAnyLightMonsterSpawnRules(mob, level, spawnType, pos, random);
 	}
 
 	/**
@@ -122,6 +129,11 @@ public class Boulder extends Monster {
 	public void checkDespawn() {
 		// does NOT despawn
 	}
+	
+	@Override
+   public boolean removeWhenFarAway(double distance) {
+      return false;
+   }
 
 	@Override
 	public void aiStep() {		
@@ -134,7 +146,6 @@ public class Boulder extends Monster {
 
 	@Override
 	public void tick() {
-		//		if (this.getLevel().getGameTime() % 5 == 0) {
 		// decrement the loyalty ticks
 		int ticks = getLoyaltyTicks();
 		ticks--;
@@ -143,8 +154,6 @@ public class Boulder extends Monster {
 		}
 		setLoyaltyTicks(ticks);
 
-		//			DD.LOGGER.info("tick state -> {}", getState());
-
 		previousAmount = amount;
 		if (isDormant()) {
 			amount = 1F;
@@ -152,13 +161,11 @@ public class Boulder extends Monster {
 		}
 		else if (isFallingAsleep()) {
 			if (amount < 1F) {
-				//					DD.LOGGER.info("falling asleep amount -> {}", amount);
 				amount += 0.1;
 			}
 			if (amount >= 1F) {
 				amount = 1F;
 				if (bodyAmount < 1F) {
-					//						DD.LOGGER.info("body falling asleep amount -> {}", bodyAmount);
 					bodyAmount += 0.2F;
 				}
 				if (bodyAmount >= 1F) {
@@ -169,14 +176,11 @@ public class Boulder extends Monster {
 		}
 		else if (isWakingUp()) {
 			if (bodyAmount > 0F) {
-				//					DD.LOGGER.info("body waking up amount -> {}", bodyAmount);
 				bodyAmount -= 0.1F;
 			}
 			if (bodyAmount <= 0F) {
 				bodyAmount = 0F;
 				if (amount > 0F) {
-					//						DD.LOGGER.info("waking up amount -> {}", amount);
-
 					amount -= 0.1;
 				}
 				if (amount <= 0F) {
@@ -189,29 +193,25 @@ public class Boulder extends Monster {
 			amount = 0F;
 			bodyAmount = 0F;
 		}
-		//		}
+
 		super.tick();
 	}
 
 	public void goToSleep() {
 		setState(FALLING_ASLEEP);
-		//		DD.LOGGER.info("state -> {}", getState());
 	}
 
 	public void hibernate() {
 		setState(DORMANT);
 		setOwnerUUID(null);
-		//		DD.LOGGER.info("state -> {}", getState());
 	}
 
 	public void wakeUp() {
 		setState(WAKING_UP);
-		//		DD.LOGGER.info("state -> {}", getState());
 	}
 
 	public void activate() {
 		setState(ACTIVE);
-		//		DD.LOGGER.info("state -> {}", getState());
 	}
 
 	public void feed(UUID owner) {
@@ -234,11 +234,6 @@ public class Boulder extends Monster {
 		this.entityData.set(DATA_STATE, state);
 	}
 
-	/**
-	 * TODO review: this should be an indication of completion not transitory. maybe rename?
-	 * ex. isDormant
-	 * @return
-	 */
 	public boolean isDormant() {
 		return getState().equals(DORMANT);
 	}
@@ -283,7 +278,7 @@ public class Boulder extends Monster {
 			try {
 				this.setOwnerUUID(uuid);
 			} catch (Throwable throwable) {
-				// TODO
+				DD.LOGGER.warn("Unable to set owner of boulder to -> {}", uuid);
 			}
 		}
 

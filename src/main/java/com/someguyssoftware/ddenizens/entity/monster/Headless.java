@@ -74,24 +74,26 @@ public class Headless extends Monster {
 		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
 		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8));
 		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+		
 		/*
 		 * 6 = max distance, 1 = walk speed modifier, 1.2 spring speed modifier
 		 */
 		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Creeper.class, 6.0F, 1.0D, 1.2D));
+		
 		// target goals
 		/*
 		 * setAlertOthers() is opposite of what you would expect. if a value is passed in,
 		 * that is the exception list, as opposed to the included list.
 		 * setAlertOthers() will alert ALL mobs based on class hierarchry of instanceof Mob.
 		 */
-		// TODO create extension of HurtByTargetGoal, override setAlertOthers, that takes a list in
 		// for the included list. ie this mob will alert the other specific listed mobs.
-		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class)); /** Add Ettins, or Gazer */
+		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class, Gazer.class));
+		
 		/*
 		 * determines who to target
 		 * this = pathfinding mob, Player = target, true = must see entity in order to target
 		 */
-		this.targetSelector.addGoal(2, new HeadlessNearestAttackableTargetGoal<>(this, Player.class, true).setAlertOthers(Headless.class));
+		this.targetSelector.addGoal(2, new HeadlessNearestAttackableTargetGoal<>(this, Player.class, true).setAlertOthers(Headless.class, Gazer.class));
 	}
 
 	/**
@@ -102,7 +104,7 @@ public class Headless extends Monster {
 	public static AttributeSupplier.Builder createAttributes() {
 		return Monster.createMonsterAttributes()
 				.add(Attributes.ATTACK_DAMAGE, 3.5)
-				.add(Attributes.ATTACK_KNOCKBACK)
+				.add(Attributes.ATTACK_KNOCKBACK, 0.5D)
 				.add(Attributes.ARMOR, 1.0D)
 				.add(Attributes.ARMOR_TOUGHNESS, 1.0D)
 				.add(Attributes.MAX_HEALTH, 24.0)
@@ -110,12 +112,10 @@ public class Headless extends Monster {
 				.add(Attributes.MOVEMENT_SPEED, 0.28F);                
 	}
 
-//	@Override
-//	public void checkDespawn() {
-//		// does NOT despawn
-//	}
-
-
+	/**
+	 *
+	 * @param <T>
+	 */
 	public static class HeadlessNearestAttackableTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
 		private static final int ALERT_RANGE_Y = 10;
 		private List<Class<?>> othersToAlert = new ArrayList<>();
@@ -156,10 +156,8 @@ public class Headless extends Monster {
 			Iterator<? extends Mob> iterator = list.iterator();
 			while (iterator.hasNext()) {
 				Mob otherMob = (Mob)iterator.next();
-//				DD.LOGGER.info("process mob alert -> {}", otherMob.getName().getString());
 				if (this.mob != otherMob && otherMob.getTarget() == null) {
 					if (this.othersToAlert.contains(otherMob.getClass())) {
-						DD.LOGGER.info("alerting mob of targer -> {}", otherMob.getName().getString());
 						alertOther(otherMob, this.mob.getLastHurtByMob());
 					}
 				}

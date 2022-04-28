@@ -6,11 +6,14 @@ package com.someguyssoftware.ddenizens.entity.monster;
 import java.util.EnumSet;
 import java.util.Random;
 
+import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.entity.ai.goal.SummonGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
 import com.someguyssoftware.ddenizens.setup.Registration;
 import com.someguyssoftware.gottschcore.spatial.Coords;
 import com.someguyssoftware.gottschcore.spatial.ICoords;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -18,15 +21,19 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -49,12 +56,18 @@ public class Gazer extends FlyingMob {
 
 	@Override
 	protected void registerGoals() {
-		this.goalSelector.addGoal(4, new Gazer.GazerBiteGoal(this));
-		this.goalSelector.addGoal(5, new Gazer.GazerRandomFloatAroundGoal(this));
+		this.goalSelector.addGoal(4, new Gazer.GazerBiteGoal(this, Config.Mobs.GAZER.biteCooldownTime.get()));
+//		this.goalSelector.addGoal(5, new Gazer.GazerRandomFloatAroundGoal(this));
 		this.goalSelector.addGoal(7, new Gazer.GazerLookGoal(this));
-		this.goalSelector.addGoal(7, new Gazer.GazerShootParalysisGoal(this));
-		this.goalSelector.addGoal(7, new Gazer.GazerSummon(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true));
+		this.goalSelector.addGoal(7, new Gazer.GazerShootParalysisGoal(this, Config.Mobs.GAZER.paralysisChargeTime.get()));
+		this.goalSelector.addGoal(7, new Gazer.GazerSummon(this, Config.Mobs.GAZER.summonCooldownTime.get()));
+		
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
+			if (entity instanceof Boulder) {
+				 return ((Boulder)entity).isActive();
+			}
+			return false;
+		}));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 	}
 
@@ -76,22 +89,46 @@ public class Gazer extends FlyingMob {
 
 	/**
 	 * 
+	 * @param mob
+	 * @param level
+	 * @param spawnType
+	 * @param pos
+	 * @param random
+	 * @return
+	 */
+	public static boolean checkGazerSpawnRules(EntityType<Gazer> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
+		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
+			return DDMonster.checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+		}
+		else {
+			return DDMonster.checkDDSpawnRules(mob, level, spawnType, pos, random);
+		}
+	}
+	
+	/**
+	 * 
 	 * @author Mark Gottschling on Apr 15, 2022
 	 *
 	 */
-	static class GazerSummon extends Goal {
+	static class GazerSummon extends SummonGoal {
+		private static final int DEFAULT_COOLDOWN_TIME = 2400;
 		private final Gazer gazer;
-		private int chargeTime;
+		private int cooldownTime;
 		private Random random;
 
 		public GazerSummon(Gazer gazer) {
+			this(gazer, DEFAULT_COOLDOWN_TIME);
+		}
+		
+		public GazerSummon(Gazer gazer, int maxCooldownTime) {
+			super(maxCooldownTime);
 			this.gazer = gazer;
 			this.random = new Random();
 		}
 
 		@Override
 		public void start() {
-			this.chargeTime = 2000;
+			this.cooldownTime = summonCooldownTime / 2;
 		}
 
 		@Override
@@ -104,10 +141,9 @@ public class Gazer extends FlyingMob {
 			if (target != null) {
 				if (target.distanceToSqr(this.gazer) < 1024.0D && this.gazer.hasLineOfSight(target)) {
 					Level level = this.gazer.level;
-					++this.chargeTime;
+					++this.cooldownTime;
 
-					// TODO charge time can be a config
-					if (this.chargeTime >= 2400) {
+					if (this.cooldownTime >= summonCooldownTime) {
 
 						int y = 0;
 						int height = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, gazer.blockPosition().getX(), gazer.blockPosition().getZ());
@@ -125,10 +161,9 @@ public class Gazer extends FlyingMob {
 								}
 							}
 						}
-						// TODO can come from config
-						int numSpawns = random.nextInt(1, 3);
+						int numSpawns = random.nextInt(Config.Mobs.GAZER.minSummonSpawns.get(), Config.Mobs.GAZER.maxSummonSpawns.get() + 1);
 						for (int i = 0; i < numSpawns; i++) {
-							boolean spawnSuccess = spawn((ServerLevel)level, Registration.HEADLESS_ENTITY_TYPE.get(), new Coords(gazer.blockPosition().getX(), y + 1, gazer.blockPosition().getZ()), target);
+							boolean spawnSuccess = super.spawn((ServerLevel)level, random, gazer, Registration.HEADLESS_ENTITY_TYPE.get(), new Coords(gazer.blockPosition().getX(), y + 1, gazer.blockPosition().getZ()), target);
 							if (!level.isClientSide() && spawnSuccess) {
 								for (int p = 0; p < 20; p++) {
 									double xSpeed = random.nextGaussian() * 0.02D;
@@ -138,52 +173,10 @@ public class Gazer extends FlyingMob {
 								}
 							}
 						}
-						this.chargeTime = 0;
+						this.cooldownTime = 0;
 					}
-				} else if (this.chargeTime > 0) {
-					--this.chargeTime;
 				}
 			}
-		}
-
-		/**
-		 * 
-		 * @param level
-		 * @param entityType
-		 * @param coords
-		 * @param target
-		 * @return
-		 */
-		protected boolean spawn(ServerLevel level, EntityType<? extends Mob> entityType, ICoords coords, LivingEntity target) {
-			for (int i = 0; i < 20; i++) { // 20 tries
-				int spawnX = coords.getX() + Mth.nextInt(this.random, 1, 2) * Mth.nextInt(this.random, -1, 1);
-				int spawnY = coords.getY() + Mth.nextInt(this.random, 1, 2) * Mth.nextInt(this.random, -1, 1);
-				int spawnZ = coords.getZ() + Mth.nextInt(this.random, 1, 2) * Mth.nextInt(this.random, -1, 1);
-
-				ICoords spawnCoords = new Coords(spawnX, spawnY, spawnZ);
-
-				boolean isSpawned = false;
-				if (!gazer.level.isClientSide()) {
-					SpawnPlacements.Type placement = SpawnPlacements.getPlacementType(entityType);
-					if (NaturalSpawner.isSpawnPositionOk(placement, level, spawnCoords.toPos(), entityType)) {
-						Mob mob = entityType.create(level);
-						mob.setPos((double)spawnX, (double)spawnY, (double)spawnZ);
-						mob.setTarget(target);
-						level.addFreshEntityWithPassengers(mob);
-						isSpawned = true;
-					}
-				}
-				if (!gazer.level.isClientSide() && isSpawned) {
-					for (int p = 0; p < 20; p++) {
-						double xSpeed = random.nextGaussian() * 0.02D;
-						double ySpeed = random.nextGaussian() * 0.02D;
-						double zSpeed = random.nextGaussian() * 0.02D;
-						((ServerLevel)level).sendParticles(ParticleTypes.POOF, gazer.blockPosition().getX() + 0.5D, gazer.blockPosition().getY(), gazer.blockPosition().getZ() + 0.5D, 1, xSpeed, ySpeed, zSpeed, (double)0.15F);
-					}
-					return true;
-				}
-			}
-			return false;
 		}
 
 		@Override
@@ -198,11 +191,18 @@ public class Gazer extends FlyingMob {
 	 *
 	 */
 	static class GazerShootParalysisGoal extends Goal {
+		private static final int DEFAULT_CHARGE_TIME = 80;
 		private final Gazer gazer;
+		public int maxChargeTime;
 		public int chargeTime;
 
 		public GazerShootParalysisGoal(Gazer gazer) {
+			this(gazer, DEFAULT_CHARGE_TIME);
+		}
+		
+		public GazerShootParalysisGoal(Gazer gazer, int maxChargeTime) {
 			this.gazer = gazer;
+			this.maxChargeTime =maxChargeTime;
 		}
 
 		@Override
@@ -232,7 +232,7 @@ public class Gazer extends FlyingMob {
 					Level level = this.gazer.level;
 					++this.chargeTime;
 
-					if (this.chargeTime == 40) {
+					if (this.chargeTime >= maxChargeTime) {
 						Vec3 vec3 = this.gazer.getViewVector(1.0F);
 						double x = livingentity.getX() - (this.gazer.getX() + vec3.x * 2.0D);
 						double y = livingentity.getY(0.5D) - (this.gazer.getY(0.5D));
@@ -242,7 +242,7 @@ public class Gazer extends FlyingMob {
 						slowball.init(this.gazer, x, y, z);
 						slowball.setPos(this.gazer.getX() + vec3.x * 2.0D, this.gazer.getY(0.5D), slowball.getZ() + vec3.z * 2.0);
 						level.addFreshEntity(slowball);
-						this.chargeTime = -40;
+						this.chargeTime = 0;
 					}
 				} else if (this.chargeTime > 0) {
 					--this.chargeTime;
@@ -261,11 +261,18 @@ public class Gazer extends FlyingMob {
 	 *
 	 */
 	static class GazerBiteGoal extends Goal {
+		private static final int DEFAULT_COOLDOWN_TIME = 80;
 		private Gazer gazer;
 		private int cooldown;
+		private int maxCooldownTime;
 
 		public GazerBiteGoal(Gazer gazer) {
+			this(gazer, DEFAULT_COOLDOWN_TIME);
+		}
+		
+		public GazerBiteGoal(Gazer gazer, int maxCooldownTime) {
 			this.gazer = gazer;
+			this.maxCooldownTime = maxCooldownTime;
 		}
 
 		@Override
@@ -291,7 +298,7 @@ public class Gazer extends FlyingMob {
 		@Override
 		public void tick() {
 			cooldown++;
-			if (cooldown > 20) {
+			if (cooldown > maxCooldownTime) {
 				if (this.getAttackReachSqr(gazer.getTarget()) >= this.gazer.distanceToSqr(gazer.getTarget().getX(), gazer.getTarget().getY(), gazer.getTarget().getZ())) {
 					this.gazer.doHurtTarget(gazer.getTarget());
 					this.cooldown = 0;

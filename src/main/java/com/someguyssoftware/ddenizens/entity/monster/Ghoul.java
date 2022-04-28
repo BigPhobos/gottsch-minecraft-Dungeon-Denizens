@@ -3,6 +3,8 @@
  */
 package com.someguyssoftware.ddenizens.entity.monster;
 
+import com.someguyssoftware.ddenizens.config.Config;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -64,7 +66,7 @@ public class Ghoul extends Monster {
 	public Ghoul(EntityType<? extends Monster> entityType, Level level) {
 		super(entityType, level);
 		this.setCanPickUpLoot(true);
-		this.setCanOpenDoors(true); // TODO get value from Config
+		this.setCanOpenDoors(Config.Mobs.GHOUL.canOpenDoors.get());
 		if (this.canOpenDoors()) {
 			((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
 		}
@@ -161,7 +163,6 @@ public class Ghoul extends Monster {
 
 //	@Override
 //	protected void dropCustomDeathLoot(DamageSource p_21385_, int p_21386_, boolean p_21387_) {
-//		// TODO Auto-generated method stub
 //		super.dropCustomDeathLoot(p_21385_, p_21386_, p_21387_);
 //	}
 
@@ -220,9 +221,8 @@ public class Ghoul extends Monster {
 			}
 			if (!meatStack.isEmpty()) {
 				meatStack.shrink(1);
-				// TODO use head() instead
-				getGhoul().setHealth(Math.min(getGhoul().getHealth() + 4.0F, getGhoul().getMaxHealth()));
-
+//				getGhoul().setHealth(Math.min(getGhoul().getHealth() + 4.0F, getGhoul().getMaxHealth()));
+				getGhoul().heal(Config.Mobs.GHOUL.healAmount.get().floatValue());
 			}
 			super.start();
 		}		

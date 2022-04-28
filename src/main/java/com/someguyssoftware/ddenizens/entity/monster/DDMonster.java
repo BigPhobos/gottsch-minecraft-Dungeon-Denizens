@@ -21,6 +21,12 @@ package com.someguyssoftware.ddenizens.entity.monster;
 
 import java.util.Random;
 
+import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
+import com.someguyssoftware.ddenizens.config.Config.INetherMobConfig;
+import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
+import com.someguyssoftware.ddenizens.setup.Registration;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -28,6 +34,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 /**
  * @author Mark Gottschling on Apr 13, 2022
@@ -51,6 +58,32 @@ public abstract class DDMonster extends Monster {
 	 * @return
 	 */
 	public static boolean checkDDSpawnRules(EntityType<? extends Mob> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		return level.getHeight() < UNDERGROUND_HEIGHT && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		boolean result = false;
+		IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());		
+		SpawnConfig config = mobConfig.getSpawnConfig();
+//		return pos.getY() < UNDERGROUND_HEIGHT && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		if (config.minHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
+			result |= pos.getY() >config.minHeight.get();
+		}
+		if (config.maxHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
+			result |= pos.getY() < config.maxHeight.get();
+		}
+		return result |= checkMobSpawnRules(mob, level, spawnType, pos, random);
+//		return pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get() && checkMobSpawnRules(mob, level, spawnType, pos, random);
 	}
+	
+	public static boolean checkDDNetherSpawnRules(EntityType<? extends Mob> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
+		boolean result = false;
+		IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());
+		SpawnConfig netherConfig = ((INetherMobConfig)mobConfig).getNetherSpawn();
+		if (netherConfig.minHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
+			result |= pos.getY() > netherConfig.minHeight.get();
+		}
+		if (netherConfig.maxHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
+			result |= pos.getY() < netherConfig.maxHeight.get();
+		}
+		return result |= checkMobSpawnRules(mob, level, spawnType, pos, random);
+	}
+	
+
 }

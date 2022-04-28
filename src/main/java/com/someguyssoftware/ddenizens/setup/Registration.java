@@ -1,6 +1,10 @@
 package com.someguyssoftware.ddenizens.setup;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.capability.GhoulCapability;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.Daemon;
 import com.someguyssoftware.ddenizens.entity.monster.Ettin;
@@ -14,12 +18,17 @@ import com.someguyssoftware.ddenizens.entity.projectile.Harmball;
 import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
 
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,40 +40,35 @@ import net.minecraftforge.registries.RegistryObject;
  *
  */
 public class Registration {
-	private static final String HEADLESS = "headless";
-	private static final String GHOUL = "ghoul";
-	private static final String ETTIN = "ettin";
-	private static final String SHADOW = "shadow";
-	private static final String SHADOWLORD = "shadowlord";
-	private static final String GAZER = "gazer";
-	private static final String DAEMON = "daemon";
-	private static final String BOULDER = "boulder";
+	public static final String HEADLESS = "headless";
+	public static final String GHOUL = "ghoul";
+	public static final String ETTIN = "ettin";
+	public static final String SHADOW = "shadow";
+	public static final String SHADOWLORD = "shadowlord";
+	public static final String GAZER = "gazer";
+	public static final String DAEMON = "daemon";
+	public static final String BOULDER = "boulder";
 	
 	// projectile names
 	private static final String SLOWBALL = "slowball";
 	private static final String HARMBALL = "harmball";
 	private static final String FIRESPOUT = "firespout";
 	
+	// unused
+	public static Capability<GhoulCapability> GHOUL_CAPABILITY = null;
+	
 	/*
-	 * TODO could place these in their own classes, but init() here. ex. TreasureBlocks, TreasureItems, TreasureEntities etc.
+	 * deferred registries
 	 */
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DD.MODID);
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, DD.MODID);
-	
-	// particles
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, DD.MODID);
-		
-	/**
-	 * 
-	 */
-	public static void init() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		ITEMS.register(eventBus);	
-		ENTITIES.register(eventBus);		
-		PARTICLES.register(eventBus);
-	}
 
+	// item properties convenience property
 	public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(CreativeModeTab.TAB_MISC);
+	
+	// mob collections
+	public static final List<RegistryObject<?>> ALL_MOBS = Lists.newArrayList();
 	
 	// entities
 	public static final RegistryObject<EntityType<Headless>> HEADLESS_ENTITY_TYPE = Registration.ENTITIES.register(HEADLESS, () -> EntityType.Builder.of(Headless::new, MobCategory.MONSTER)
@@ -165,4 +169,24 @@ public class Registration {
 	
 	// particles
 //	public static final RegistryObject<SimpleParticleType> SHADOW_PARTICLE = Registration.PARTICLES.register("shadow_particle", () -> new SimpleParticleType(true));
+	
+	static {
+		ALL_MOBS.add(HEADLESS_ENTITY_TYPE);
+		ALL_MOBS.add(GHOUL_ENTITY_TYPE);
+		ALL_MOBS.add(BOULDER_ENTITY_TYPE);
+		ALL_MOBS.add(SHADOW_ENTITY_TYPE);
+		ALL_MOBS.add(GAZER_ENTITY_TYPE);
+		ALL_MOBS.add(SHADOWLORD_ENTITY_TYPE);
+		ALL_MOBS.add(DAEMON_ENTITY_TYPE);
+	}
+	
+	/**
+	 * 
+	 */
+	public static void init() {
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		ITEMS.register(eventBus);	
+		ENTITIES.register(eventBus);		
+		PARTICLES.register(eventBus);		
+	}
 }

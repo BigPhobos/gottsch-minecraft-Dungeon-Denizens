@@ -19,6 +19,7 @@
  */
 package com.someguyssoftware.ddenizens.entity.projectile;
 
+import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import net.minecraft.Util;
@@ -97,9 +98,8 @@ public class Harmball extends AbstractHurtingProjectile implements ItemSupplier 
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
 			DamageSource damageSource = new IndirectEntityDamageSource("harmball", this, ownerEntity).setProjectile();
-			target.hurt(damageSource, 6.0F);
+			target.hurt(damageSource, Config.Spells.HARMBALL.damage.get());
 			if (target instanceof LivingEntity) {
-//				((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.HARM, 1), this);
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);
 			}
 		}

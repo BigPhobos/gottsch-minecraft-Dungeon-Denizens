@@ -20,6 +20,7 @@
 package com.someguyssoftware.ddenizens.entity.projectile;
 
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.gottschcore.world.WorldInfo;
 
 import net.minecraft.Util;
@@ -56,7 +57,7 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 	private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(FireSpout.class, EntityDataSerializers.ITEM_STACK);
 	private static final EntityDataAccessor<Integer> ORIGINAL_Y = SynchedEntityData.defineId(FireSpout.class, EntityDataSerializers.INT);
 
-	private int explosionPower = 1;
+	private int explosionPower = Config.Spells.FIRESPOUT.explosionRadius.get();
 
 	/*
 	 * the original position of the projectile entity. 
@@ -129,9 +130,8 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 			this.level.addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
 		}
 		this.setPos(d0, d1, d2);
-		
-//		DD.LOGGER.info("firespout new pos -> {}, origin+5 -> {}", position(), getOriginalY() + 5);
-		if (d1 > getOriginalY() + 5.0D) {
+
+		if (d1 > getOriginalY() + Config.Spells.FIRESPOUT.maxHeight.get()) {
 			this.discard();
 		}
 	}
@@ -139,9 +139,7 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
-//		DD.LOGGER.info("on hit!");
 		if (!WorldInfo.isClientSide(level)) {
-//			DD.LOGGER.info("should be exploding");
 			boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
 			this.level.explode((Entity)null, this.getX(), this.getY(), this.getZ(), (float)this.explosionPower, flag, flag ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
 			this.discard();
@@ -155,8 +153,8 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
 
-			DamageSource damageSource = new IndirectEntityDamageSource("firejet", this, ownerEntity).setIsFire().setProjectile();
-			target.hurt(damageSource, 6.0F);
+			DamageSource damageSource = new IndirectEntityDamageSource("firespout", this, ownerEntity).setIsFire().setProjectile();
+			target.hurt(damageSource, Config.Spells.FIRESPOUT.damage.get());
 			if (target instanceof LivingEntity) {
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);
 			}
@@ -202,7 +200,7 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 		tag.putByte("ExplosionPower", (byte)this.explosionPower);
 
 		if (getOriginalPosition()  != null) {
-			tag.put("originalPosition", this.newDoubleList(new double[] { getOriginalPosition().x, getOriginalPosition().y, getOriginalPosition().z }));
+			tag.put(ORIGINAL_POSITION_TAG, this.newDoubleList(new double[] { getOriginalPosition().x, getOriginalPosition().y, getOriginalPosition().z }));
 		}
 	}
 
@@ -214,8 +212,8 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 		if (tag.contains("ExplosionPower", 99)) {
 			this.explosionPower = tag.getByte("ExplosionPower");
 		}
-		if (tag.contains("originalPosition", 9)) {
-			ListTag listTag = tag.getList("orginalPosition", 6);
+		if (tag.contains(ORIGINAL_POSITION_TAG, 9)) {
+			ListTag listTag = tag.getList(ORIGINAL_POSITION_TAG, 6);
 			if (listTag.size() == 3) {
 				setOriginalPosition(new Vec3(listTag.getDouble(0),  listTag.getDouble(1), listTag.getDouble(2)));
 			}

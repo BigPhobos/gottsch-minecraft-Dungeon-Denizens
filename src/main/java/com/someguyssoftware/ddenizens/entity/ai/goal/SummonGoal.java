@@ -41,9 +41,16 @@ import net.minecraft.world.level.NaturalSpawner;
  *
  */
 public abstract class SummonGoal extends Goal {
-	// TODO add summonChargeTime
-	// TODO add chargeTime
+	protected int summonCooldownTime;
+	protected int cooldownTime;
 	
+	/**
+	 * 
+	 * @param summonCoolDownTime
+	 */
+	public SummonGoal(int summonCoolDownTime) {
+		this.summonCooldownTime = summonCoolDownTime;
+	}
 	
 	/**
 	 * 

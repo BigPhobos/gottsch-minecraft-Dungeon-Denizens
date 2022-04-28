@@ -6,6 +6,10 @@ package com.someguyssoftware.ddenizens.entity.monster;
 import java.util.Random;
 
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
+import com.someguyssoftware.ddenizens.config.Config.INetherMobConfig;
+import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
 import com.someguyssoftware.gottschcore.random.RandomHelper;
 import com.someguyssoftware.gottschcore.world.WorldInfo;
 
@@ -51,7 +55,6 @@ public class Shadow extends DDMonster {
 	private static final int HARD_DIFFICULTY_SECONDS = 20;
 	private static final int WEAKNESS_SECONDS = 5;
 
-	// TODO add a maximum flee time
 	private boolean flee;
 
 	/**
@@ -108,10 +111,35 @@ public class Shadow extends DDMonster {
 	 * @return
 	 */
 	public static boolean checkShadowSpawnRules(EntityType<Shadow> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		return (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER && checkMobSpawnRules(mob, level, spawnType, pos, random)) 
-				|| checkDDSpawnRules(mob, level, spawnType, pos, random);
+//		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN)
+//				&& checkAnyLightMonsterSpawnRules(mob, level, spawnType, pos, random);
+
+		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
+//			IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());
+//			SpawnConfig netherConfig = ((INetherMobConfig)mobConfig).getNetherSpawn();
+//			if (netherConfig.minHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
+//				result |= pos.getY() > netherConfig.minHeight.get();
+//			}
+//			if (netherConfig.maxHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
+//				result |= pos.getY() < netherConfig.maxHeight.get();
+//			}
+//			result |= checkMobSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+		}
+		else {
+			return checkDDSpawnRules(mob, level, spawnType, pos, random);
+		}
+
+//		return (
+//				
+//				||
+//				 (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER && pos.getY() > netherConfig.minHeight.get() && pos.getY() < netherConfig.maxHeight.get() && checkDDSpawnRules(mob, level, spawnType, pos, random))
+//				); 
+//		return (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER && checkMobSpawnRules(mob, level, spawnType, pos, random)) 
+//				|| (level.getBiome(pos).getBiomeCategory() != BiomeCategory.NETHER && checkDDSpawnRules(mob, level, spawnType, pos, random));
 	}
 
+	// TODO change difficulty seconds to ticks pulled in from Config
 	@Override
 	public boolean doHurtTarget(Entity target) {
 		if (super.doHurtTarget(target)) {
@@ -143,22 +171,9 @@ public class Shadow extends DDMonster {
 		}
 	}
 
-//	@Override
-//	protected void actuallyHurt(DamageSource damageSource, float amount) {
-//		// reduce damage if not correct weapon (gold sword)
-//		if (damageSource.getEntity() != null && damageSource.getEntity() instanceof Player) {
-//			ItemStack heldStack = ((Player)damageSource.getEntity()).getItemInHand(InteractionHand.MAIN_HAND);
-//			if (heldStack.isEmpty() || heldStack.getItem() != Items.GOLDEN_SWORD) {
-//				amount = 1.0F;
-//			}
-//			else {
-//				// increase damage to that of iron sword
-//				amount += 2.0F;
-//			}
-//		}
-//		super.actuallyHurt(damageSource, amount);
-//	}
-
+	/**
+	 * 
+	 */
 	@Override
 	public boolean hurt(DamageSource damageSource, float amount) {
 		if (WorldInfo.isClientSide(this.level)) {
@@ -211,25 +226,20 @@ public class Shadow extends DDMonster {
 		public boolean canUse() {
 			if (((Shadow)mob).flee) {
 				if(super.canUse()) {
-					DD.LOGGER.info("fleeing");
 					return true;
 				}
 			}
-//			DD.LOGGER.info("cancel flee");
-//			((Shadow)mob).flee = false;
 			return false;
 		}
 
 		@Override
 		public void stop() {
-			DD.LOGGER.info("done fleeing.");
 			((Shadow)mob).flee = false;
 			this.toAvoid = null;
 		}
 
 		@Override
 		public boolean canContinueToUse() {
-			DD.LOGGER.info("continue to flee");
 			return !this.pathNav.isDone();
 		}
 	}
