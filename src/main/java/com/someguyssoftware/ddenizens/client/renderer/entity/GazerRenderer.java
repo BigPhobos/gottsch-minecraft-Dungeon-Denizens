@@ -1,12 +1,12 @@
 /**
  * 
  */
-package com.someguyssoftware.ddenizens.setup.client.renderer.entity;
+package com.someguyssoftware.ddenizens.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.client.model.GazerModel;
 import com.someguyssoftware.ddenizens.entity.monster.Gazer;
-import com.someguyssoftware.ddenizens.setup.client.model.GazerModel;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

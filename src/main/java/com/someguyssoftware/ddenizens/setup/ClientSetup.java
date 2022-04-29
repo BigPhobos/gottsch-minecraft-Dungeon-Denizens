@@ -2,22 +2,24 @@ package com.someguyssoftware.ddenizens.setup;
 
 
 import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.setup.client.model.BoulderModel;
-import com.someguyssoftware.ddenizens.setup.client.model.DaemonModel;
-import com.someguyssoftware.ddenizens.setup.client.model.EttinModel;
-import com.someguyssoftware.ddenizens.setup.client.model.GazerModel;
-import com.someguyssoftware.ddenizens.setup.client.model.GhoulModel;
-import com.someguyssoftware.ddenizens.setup.client.model.HeadlessModel;
-import com.someguyssoftware.ddenizens.setup.client.model.ShadowModel;
-import com.someguyssoftware.ddenizens.setup.client.model.ShadowlordModel;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.BoulderRenderer;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.DaemonRenderer;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.EttinRenderer;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.GazerRenderer;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.GhoulRenderer;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.HeadlessRenderer;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.ShadowRenderer;
-import com.someguyssoftware.ddenizens.setup.client.renderer.entity.ShadowlordRenderer;
+import com.someguyssoftware.ddenizens.client.model.BoulderModel;
+import com.someguyssoftware.ddenizens.client.model.DaemonModel;
+import com.someguyssoftware.ddenizens.client.model.EttinModel;
+import com.someguyssoftware.ddenizens.client.model.GazerModel;
+import com.someguyssoftware.ddenizens.client.model.GhoulModel;
+import com.someguyssoftware.ddenizens.client.model.HeadlessModel;
+import com.someguyssoftware.ddenizens.client.model.OrcModel;
+import com.someguyssoftware.ddenizens.client.model.ShadowModel;
+import com.someguyssoftware.ddenizens.client.model.ShadowlordModel;
+import com.someguyssoftware.ddenizens.client.renderer.entity.BoulderRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.DaemonRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.EttinRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.GazerRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.GhoulRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.HeadlessRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.OrcRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.ShadowRenderer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.ShadowlordRenderer;
 
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -44,6 +46,7 @@ public class ClientSetup {
 	@SubscribeEvent()
 	public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(HeadlessModel.LAYER_LOCATION, HeadlessModel::createBodyLayer);
+		event.registerLayerDefinition(OrcModel.LAYER_LOCATION, OrcModel::createBodyLayer);
 		event.registerLayerDefinition(GhoulModel.LAYER_LOCATION, GhoulModel::createBodyLayer);
 		event.registerLayerDefinition(EttinModel.LAYER_LOCATION, EttinModel::createBodyLayer);
 		event.registerLayerDefinition(GazerModel.LAYER_LOCATION, GazerModel::createBodyLayer);
@@ -60,6 +63,7 @@ public class ClientSetup {
 	@SubscribeEvent
     public static void onRegisterRenderer(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(Registration.HEADLESS_ENTITY_TYPE.get(), HeadlessRenderer::new);
+        event.registerEntityRenderer(Registration.ORC_ENTITY_TYPE.get(), OrcRenderer::new);
         event.registerEntityRenderer(Registration.GHOUL_ENTITY_TYPE.get(), GhoulRenderer::new);
         event.registerEntityRenderer(Registration.ETTIN_ENTITY_TYPE.get(), EttinRenderer::new);
         event.registerEntityRenderer(Registration.GAZER_ENTITY_TYPE.get(), GazerRenderer::new);

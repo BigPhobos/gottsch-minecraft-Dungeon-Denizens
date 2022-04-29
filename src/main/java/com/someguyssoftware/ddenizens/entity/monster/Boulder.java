@@ -285,8 +285,6 @@ public class Boulder extends Monster {
 		if (tag.contains(LOYALTY_TICKS)) {
 			this.setLoyaltyTicks(tag.getInt(LOYALTY_TICKS));
 		}
-
-		DD.LOGGER.info("loaded state -> {}, owner -> {}, ticks -> {}", getState(), getOwnerUUID(), getLoyaltyTicks());
 	}
 
 	@Nullable

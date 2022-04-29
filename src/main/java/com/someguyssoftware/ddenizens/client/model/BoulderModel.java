@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
  */
-package com.someguyssoftware.ddenizens.setup.client.model;
+package com.someguyssoftware.ddenizens.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

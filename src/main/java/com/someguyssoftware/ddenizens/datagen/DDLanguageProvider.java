@@ -41,6 +41,8 @@ public class DDLanguageProvider extends LanguageProvider {
 //        add("itemGroup." + TAB_NAME, "Tutorial");
     	add(Registration.HEADLESS_ENTITY_TYPE.get(), "Headless");
         add(Registration.HEADLESS_EGG.get(), "Headless Spawn Egg");
+    	add(Registration.ORC_ENTITY_TYPE.get(), "Orc");
+        add(Registration.ORC_EGG.get(), "Orc Spawn Egg");
         add(Registration.GHOUL_ENTITY_TYPE.get(), "Ghoul");
         add(Registration.GHOUL_EGG.get(), "Ghoul Spawn Egg");
         

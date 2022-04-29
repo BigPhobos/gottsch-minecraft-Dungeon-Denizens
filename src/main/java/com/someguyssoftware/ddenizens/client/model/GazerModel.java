@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
  */
-package com.someguyssoftware.ddenizens.setup.client.model;
+package com.someguyssoftware.ddenizens.client.model;
 
 import java.util.Random;
 
@@ -90,20 +90,29 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
-		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(51, 45).addBox(-5.0F, -5.0F, -5.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 13.0F, -6.0F));
+		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(51, 45).addBox(-5.0F, -5.0F, -5.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 13.0F, -5.0F));
+
 		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-9.0F, -19.0F, -9.0F, 18.0F, 18.0F, 18.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 55).addBox(-6.0F, -17.0F, -11.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, 0.0F));
+
 		PartDefinition cube_r1 = body.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, 37).addBox(0.0F, 0.1F, -2.5F, 0.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -13.5F, 11.0F, -0.2182F, 0.0F, 0.0F));
+
 		PartDefinition cube_r2 = body.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, 37).addBox(0.0F, -10.4F, -3.3F, 0.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -10.5F, 12.5F, 0.3054F, 0.0F, 0.0F));
+
 		PartDefinition spike3_r1 = body.addOrReplaceChild("spike3_r1", CubeListBuilder.create().texOffs(0, 60).addBox(-1.0F, -1.0F, -0.1716F, 2.0F, 2.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -5.9792F, 8.5355F, -0.3054F, 0.0F, 0.0F));
+
 		PartDefinition spike2_r1 = body.addOrReplaceChild("spike2_r1", CubeListBuilder.create().texOffs(38, 59).addBox(-1.0F, -1.0F, 0.7426F, 2.0F, 2.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -12.4038F, 7.8891F, 0.3491F, 0.0F, 0.0F));
+
 		PartDefinition spike1_r1 = body.addOrReplaceChild("spike1_r1", CubeListBuilder.create().texOffs(55, 0).addBox(-2.0F, 0.0F, -2.0F, 2.0F, 2.0F, 8.0F, new CubeDeformation(0.1F)), PartPose.offsetAndRotation(0.5F, -20.0F, 7.0F, 0.7854F, 0.0F, 0.0F));
+
 		PartDefinition mouth = partdefinition.addOrReplaceChild("mouth", CubeListBuilder.create().texOffs(0, 37).addBox(-8.0F, -3.0F, -10.0F, 16.0F, 3.0F, 14.0F, new CubeDeformation(0.2F)), PartPose.offsetAndRotation(0.0F, 24.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
+
 		PartDefinition teeth3_r1 = mouth.addOrReplaceChild("teeth3_r1", CubeListBuilder.create().texOffs(10, 0).addBox(-2.0F, 4.0F, 2.2F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F))
 		.texOffs(10, 0).addBox(0.0F, 2.0F, 2.2F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F))
 		.texOffs(10, 0).addBox(6.0F, -4.0F, 2.2F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F))
 		.texOffs(10, 0).addBox(4.0F, -2.0F, 2.2F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F))
 		.texOffs(10, 0).addBox(2.0F, 0.0F, 2.2F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, -6.0F, -12.0F, 0.0F, 0.0F, 0.7854F));
+
 		PartDefinition bone = mouth.addOrReplaceChild("bone", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 		PartDefinition tentacle1 = partdefinition.addOrReplaceChild("tentacle1", CubeListBuilder.create().texOffs(47, 37).addBox(-1.0F, -1.5F, -1.5F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(9.0F, 19.5F, -0.5F, 0.0F, 0.0F, 0.4363F));
 		PartDefinition eye = tentacle1.addOrReplaceChild("eye", CubeListBuilder.create().texOffs(24, 55).addBox(-2.5F, -2.5F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(12.5F, 0.0F, 0.0F, 0.0F, 0.0F, -0.4363F));
@@ -120,8 +129,19 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.head.yRot = Math.min(45, netHeadYaw) * ((float)Math.PI / 180F);
-		this.head.xRot = Math.min(45, headPitch) * ((float)Math.PI / 180F);
+		if (netHeadYaw < 0) {
+			this.head.yRot = Math.max(-20, netHeadYaw) * ((float)Math.PI / 180F);
+		}
+		else {
+			this.head.yRot = Math.min(20, netHeadYaw) * ((float)Math.PI / 180F);
+		}
+
+		if (headPitch < 0) {
+			this.head.xRot = Math.max(-20, headPitch) * ((float)Math.PI / 180F);
+		}
+		else {
+			this.head.xRot = Math.min(20, headPitch) * ((float)Math.PI / 180F);
+		}
 		
 		// reset tentacle rotations before bobbing
 		float tentacleRotation = 0.4363323F; // 25 degrees

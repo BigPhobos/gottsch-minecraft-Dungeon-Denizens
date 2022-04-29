@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.someguyssoftware.ddenizens.setup.client.renderer.entity;
+package com.someguyssoftware.ddenizens.client.renderer.entity;
 
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.client.model.ShadowlordModel;
 import com.someguyssoftware.ddenizens.entity.monster.Shadowlord;
-import com.someguyssoftware.ddenizens.setup.client.model.ShadowlordModel;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

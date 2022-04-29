@@ -51,7 +51,13 @@ public final class Config {
 
 	public static final String CATEGORY_DIV = "##############################";
 	public static final String UNDERLINE_DIV = "------------------------------";
-	
+
+	public static final double MIN_HEALTH = 1D;
+	public static final double MAX_HEALTH = 1024D;
+	public static final int UNDERGROUND_HEIGHT = 60;
+	public static final int MIN_HEIGHT = -64;
+	public static final int MAX_HEIGHT = 319;
+
 	/**
 	 * 
 	 */
@@ -65,69 +71,23 @@ public final class Config {
 	private static void registerServerConfigs() {
 		ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
 		Mobs.register(COMMON_BUILDER);
+		Spells.register(COMMON_BUILDER);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
 	}
 
-	/**
-	 * 
-	 * @author Mark Gottschling on Apr 26, 2022
-	 *
-	 */
-	public static class SpawnConfig {
-//		private static final double MIN_ATTACK_DAMAGE = 0D;
-//		private static final double MAX_ATTACK_DAMAGE = 2048D;
-		private static final double MIN_HEALTH = 1D;
-		private static final double MAX_HEALTH = 1024D;
-//		private static final double MIN_FOLLOW_RANGE = 0D;
-//		private static final double MAX_FOLLOW_RANGE = 2048D;
-//		private static final double MIN_SPEED = 0D;
-//		private static final double MAX_SPEED = 1024D;
-//
-//		public static ForgeConfigSpec.DoubleValue attackDamage;
-//		public static ForgeConfigSpec.DoubleValue health;
-//		public static ForgeConfigSpec.DoubleValue followRange;
-//		public static ForgeConfigSpec.DoubleValue speed;
+	public abstract static class CommonSpawnConfig {
+		public IntValue minSpawn;
+		public IntValue maxSpawn;
+		public ConfigValue<Integer> spawnWeight;
 
-		public static final int UNDERGROUND_HEIGHT = 60;
-		public static final int MIN_HEIGHT = -64;
-		public static final int MAX_HEIGHT = 319;
-		@Deprecated
-		public static final int IGNORE_HEIGHT = -65;
+		public IntValue minHeight;
+		public IntValue maxHeight;
 		
-		public final BooleanValue  enable;
-		
-		public final IntValue minSpawn;
-		public final IntValue maxSpawn;
-		public final ConfigValue<Integer> spawnWeight;
-
-		public final IntValue minHeight;
-		public final IntValue maxHeight;
-
-		public ConfigValue<List<? extends String>> biomeWhitelist;
-		public ConfigValue<List<? extends String>> biomeBlacklist;
-		
-		public ConfigValue<List<? extends String>> biomeCategoryWhitelist;
-		public ConfigValue<List<? extends String>> biomeCategoryBlacklist;
-		
-		private static final Predicate<Object> STRING_PREDICATE = s -> s instanceof String;
-		
-		public SpawnConfig(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
-				int minHeight, int maxHeight,
-				List<String> biomeWhitelist, List<String> biomeBlacklist,
-				List<String> categoryWhitelist, List<String> categoryBlacklist) {			
-			this(builder, "spawning", weight, minSpawn, maxSpawn, minHeight, maxHeight, biomeWhitelist, biomeBlacklist, categoryWhitelist, categoryBlacklist);
-		}
-		
-		public SpawnConfig(ForgeConfigSpec.Builder builder, String category, int weight, int minSpawn, int maxSpawn, 
-				int minHeight, int maxHeight,
-				List<String> biomeWhitelist, List<String> biomeBlacklist,
-				List<String> categoryWhitelist, List<String> categoryBlacklist) {
-			
-			builder.push(category);	
-
-			this.enable = builder
-					.comment(" Enable / disable spawning.")
-					.define("enable", true);
+		/*
+		 * sets the property values with a push()/pop()
+		 */
+		public void configure(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
+				int minHeight, int maxHeight) {
 			
 			this.minSpawn = builder
 					.comment(" Minimum spawn group size.")
@@ -142,125 +102,175 @@ public final class Config {
 							" A zombie in the overworld is 95.", 
 							" Use 0 for default, which uses a calculation based on zombie's weight.")
 					.defineInRange("spawnWeight: ", weight, 0, Integer.MAX_VALUE);
-			
+
 			this.minHeight = builder
 					.comment(" Minimum world height for spawning.")
 					.defineInRange("minHeight: ", minHeight, MIN_HEIGHT, MAX_HEIGHT);
-			
+
 			this.maxHeight = builder
 					.comment(" Maximum world height for spawning.")
 					.defineInRange("maxHeight: ", maxHeight, MIN_HEIGHT, MAX_HEIGHT);
-
-			this.biomeWhitelist = builder.comment(" Allowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains", " Supercedes blacklist.",
-					" Biome white/black lists superced biome category white/black lists.")
-                    .defineList("biomeWhitelist", biomeWhitelist, STRING_PREDICATE);
-			
-			this.biomeBlacklist = builder.comment(" Disallowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains")
-                    .defineList("biomeBlacklist", biomeBlacklist, STRING_PREDICATE);
-			
-			this.biomeCategoryWhitelist = builder.comment(" Allowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether", " Supercedes blacklist.")
-                    .defineList("biomeCategoryWhitelist", categoryWhitelist, STRING_PREDICATE);
-			
-			this.biomeCategoryBlacklist = builder.comment(" Disallowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether")
-                    .defineList("biomeCategoryBlacklist", categoryBlacklist, STRING_PREDICATE);
-			
-			builder.pop();
 		}
 	}
 	
 	/*
 	 * 
 	 */
+	public static class NetherSpawnConfig extends CommonSpawnConfig {
+		public NetherSpawnConfig(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
+				int minHeight, int maxHeight) {
+			builder.push("nether_spawning");
+			configure(builder, weight, minSpawn, maxSpawn, minHeight, maxHeight);
+			builder.pop();
+		}
+	}
+
+	/**
+	 * 
+	 * @author Mark Gottschling on Apr 26, 2022
+	 *
+	 */
+	public static class SpawnConfig extends CommonSpawnConfig {
+		@Deprecated
+		public static final int IGNORE_HEIGHT = -65;
+
+		public final BooleanValue  enable;
+
+		public ConfigValue<List<? extends String>> biomeWhitelist;
+		public ConfigValue<List<? extends String>> biomeBlacklist;
+
+		public ConfigValue<List<? extends String>> biomeCategoryWhitelist;
+		public ConfigValue<List<? extends String>> biomeCategoryBlacklist;
+
+		private static final Predicate<Object> STRING_PREDICATE = s -> s instanceof String;
+
+		public SpawnConfig(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
+				int minHeight, int maxHeight,
+				List<String> biomeWhitelist, List<String> biomeBlacklist,
+				List<String> categoryWhitelist, List<String> categoryBlacklist) {
+
+			builder.push("spawning");
+
+			this.enable = builder
+					.comment(" Enable / disable spawning.")
+					.define("enable", true);
+
+			// configure the common properties
+			configure(builder, weight, minSpawn, maxSpawn, minHeight, maxHeight);
+
+			this.biomeWhitelist = builder.comment(" Allowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains", " Supercedes blacklist.",
+					" Biome white/black lists superced biome category white/black lists.")
+					.defineList("biomeWhitelist", biomeWhitelist, STRING_PREDICATE);
+
+			this.biomeBlacklist = builder.comment(" Disallowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains")
+					.defineList("biomeBlacklist", biomeBlacklist, STRING_PREDICATE);
+
+			this.biomeCategoryWhitelist = builder.comment(" Allowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether", " Supercedes blacklist.")
+					.defineList("biomeCategoryWhitelist", categoryWhitelist, STRING_PREDICATE);
+
+			this.biomeCategoryBlacklist = builder.comment(" Disallowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether")
+					.defineList("biomeCategoryBlacklist", categoryBlacklist, STRING_PREDICATE);
+
+			builder.pop();
+		}
+	}
+
+	/*
+	 * 
+	 */
 	public static class ParalysisConfig {
 		public IntValue damage;
 		public IntValue duration;
-		
+
 		public ParalysisConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Paralysis spell properties.", CATEGORY_DIV).push("paralysis");				
 
 			damage = builder
 					.comment(" The amount of damage the spell inflicts (this is in addition to the slowness/paralysis).")
 					.defineInRange("damage", 2, 1, Integer.MAX_VALUE);
-			
+
 			duration = builder
 					.comment(" The length of time in ticks that the spell lasts for.")
 					.defineInRange("duration", 200, 1, Integer.MAX_VALUE);
-			
+
 			builder.pop();
 		}		
 	}
-	
+
 	public static class HarmballConfig {
 		public IntValue damage;
-		
+
 		public HarmballConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadowlord spell properties.", CATEGORY_DIV).push("shadowlord_spell");				
 
 			damage = builder
 					.comment(" The amount of damage the spell inflicts.")
 					.defineInRange("damage", 6, 1, Integer.MAX_VALUE);
-			
+
 			builder.pop();
 		}
 	}
-	
+
 	public static class FirespoutConfig {
 		public IntValue explosionRadius;
 		public IntValue damage;
 		public IntValue maxHeight;
-		
+
 		public FirespoutConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Firespout spell properties.", CATEGORY_DIV).push("firespout");				
 
 			explosionRadius = builder
 					.comment(" The radius of the explosion.")
 					.defineInRange("explosionRadius", 1, 1, 10);
-			
+
 			damage = builder
 					.comment(" The amount of damage the spell inflicts (this is fire damage, not explosion damage).")
 					.defineInRange("damage", 6, 1, Integer.MAX_VALUE);
-			
+
 			maxHeight = builder
 					.comment(" Maximum height in blocks that a firespout can reach.")
 					.defineInRange("damage", 5, 1, 20);
-			
+
 			builder.pop();
 		}
 	}
-	
+
 	public static class Spells {
 		public static ParalysisConfig PARALYSIS;
 		public static HarmballConfig HARMBALL;
 		public static FirespoutConfig FIRESPOUT;
- 
+
 		public static void register(ForgeConfigSpec.Builder builder) {
 			PARALYSIS = new ParalysisConfig(builder);
 			HARMBALL = new HarmballConfig(builder);
 			FIRESPOUT = new FirespoutConfig(builder);
 		}
 	}
-	
+
 	public static class Mobs {
 		public static HeadlessConfig HEADLESS;
+		public static OrcConfig ORC;
 		public static GhoulConfig GHOUL;
 		public static BoulderConfig BOULDER;
 		public static ShadowConfig SHADOW;
 		public static GazerConfig GAZER;
 		public static ShadowlordConfig SHADOWLORD;
 		public static DaemonConfig DAEMON;
-		
+
 		public static Map<ResourceLocation, IMobConfig> MOBS = Maps.newHashMap();
-		
+
 		public static void register(ForgeConfigSpec.Builder builder) {
 			HEADLESS = new HeadlessConfig(builder);
+			ORC = new OrcConfig(builder);
 			GHOUL = new GhoulConfig(builder);
 			BOULDER = new BoulderConfig(builder);
 			SHADOW = new ShadowConfig(builder);
 			GAZER = new GazerConfig(builder);
 			SHADOWLORD = new ShadowlordConfig(builder);
 			DAEMON = new DaemonConfig(builder);
-			
+
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.HEADLESS), HEADLESS);
+			MOBS.put(new ResourceLocation(DD.MODID, Registration.ORC), ORC);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.GHOUL), GHOUL);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.BOULDER), BOULDER);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.SHADOW), SHADOW);
@@ -270,42 +280,34 @@ public final class Config {
 		}
 	}
 
-	/*
-	 * 
-	 */
 	public static interface IMobConfig {
 		public SpawnConfig getSpawnConfig();
 	}
-	
-	/*
-	 * 
-	 */
+
 	public static interface INetherMobConfig {
-		public SpawnConfig getNetherSpawn();		
+		public NetherSpawnConfig getNetherSpawn();		
 	}
-	
+
 	public static abstract class MobConfig implements IMobConfig {
 		public SpawnConfig spawnConfig;
 		public SpawnConfig getSpawnConfig() {
 			return spawnConfig;
 		}
 	}
-	
+
 	public static abstract class NetherMobConfig implements IMobConfig, INetherMobConfig {
 		public SpawnConfig spawnConfig;
-		public SpawnConfig netherSpawnConfig;
+		public NetherSpawnConfig netherSpawnConfig;
 		public SpawnConfig getSpawnConfig() {
 			return spawnConfig;
 		}
-		public SpawnConfig getNetherSpawn() {
+		public NetherSpawnConfig getNetherSpawn() {
 			return netherSpawnConfig;
 		}
 	}
-	
-	
-	/**
-	 * 
-	 * @author Mark Gottschling on Apr 25, 2022
+
+
+	/*
 	 *
 	 */
 	public static class HeadlessConfig extends MobConfig {
@@ -316,68 +318,28 @@ public final class Config {
 		public HeadlessConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Headless properties.", CATEGORY_DIV).push(Registration.HEADLESS);				
 
-			spawnConfig = new SpawnConfig(builder, 85, 1, 3, SpawnConfig.MIN_HEIGHT, SpawnConfig.MAX_HEIGHT,
+			spawnConfig = new SpawnConfig(builder, 85, 1, 3, MIN_HEIGHT, MAX_HEIGHT,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			builder.pop();
 		}
-		
-		/**
-		 * 
-		 * @param builder
-		 */
-		//			public static void register(ForgeConfigSpec.Builder builder) {
-		//				builder.push(CATEGORY).comment(CATEGORY_DIV, " Headless properties.", CATEGORY_DIV);
-		//		
-		//				enable = builder
-		//						.comment(" Enable / disable spawning.")
-		//						.define("enable", true);
-		//				
-		//				minSpawn = builder
-		//						.comment(" Minimum spawn group size.")
-		//						.defineInRange("minSpawnSize: ", 1, 1, Integer.MAX_VALUE);
-		//				
-		//				maxSpawn = builder
-		//						.comment(" Maximum spawn group size.")
-		//						.defineInRange("maxSpawnSize", 3, 1, Integer.MAX_VALUE);
-		//				
-		//				spawnWeight = builder
-		//						.comment(" Weight of the spawn. A higher number represents a greater probability.", 
-		//								"A zombie in overworld is 95.", 
-		//								"Use 0 for default, which uses a calculation based on zombie's weight.")
-		//						.defineInRange("spawnWeight: ", 0, 0, Integer.MAX_VALUE);
-		//				
-		//				health = builder
-		//						.defineInRange("health", 24D, SpawnConfig.MIN_HEALTH, SpawnConfig.MAX_HEALTH);
-		//				
-		//				followRange = builder
-		//						.defineInRange("Follow Range: ", 40D, SpawnConfig.MIN_FOLLOW_RANGE, SpawnConfig.MAX_FOLLOW_RANGE);
-		//
-		//				speed = builder
-		//						.defineInRange("Movement Speed: ", 0.28D, SpawnConfig.MIN_SPEED, SpawnConfig.MAX_SPEED);
-		//				
-		//				attackDamage = builder
-		//						.comment(" ")
-		//						.defineInRange("Attack Damage: ", 3.5D, SpawnConfig.MIN_ATTACK_DAMAGE, SpawnConfig.MAX_ATTACK_DAMAGE);
-		//				
-		//				attackKnockback = builder
-		//						.comment(" ")
-		//						.defineInRange("Attack Knockback: ", 0.5D, 0D, 5D);
-		//				
-		//				armor = builder
-		//						.comment("")
-		//						.defineInRange("Armor: ", 1D, 0D, 30D);
-		//
-		//				armorToughness = builder
-		//						.defineInRange("Armor Toughness: ", 1D, 0D, 20D);				
-		//				
-		////				injuredAlertOthersList = builder
-		////						.comment(" The headless with notify the other mobs in this list when injured.")
-		////						.defineList("Injured Alert Others List:", Arrays.asList(new String []{"Headless.class, Gazer.class"}), s -> s instanceof String);
-		//				builder.pop();
-		//			}
+	}
+
+	/*
+	 *
+	 */
+	public static class OrcConfig extends MobConfig {
+		public OrcConfig(ForgeConfigSpec.Builder builder) {
+			builder.comment(CATEGORY_DIV, " Orc properties.", CATEGORY_DIV).push(Registration.ORC);
+			spawnConfig = new SpawnConfig(builder, 80, 1, 2, MIN_HEIGHT, MAX_HEIGHT,
+					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
+			builder.pop();
+		}
 	}
 	
+	/*
+	 * 
+	 */
 	public static class GhoulConfig extends MobConfig {
 		// ghoul specific
 		public DoubleValue healAmount;
@@ -386,34 +348,37 @@ public final class Config {
 		public GhoulConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Ghoul properties.", CATEGORY_DIV).push(Registration.GHOUL);				
 
-			spawnConfig = new SpawnConfig(builder, 75, 1, 1,  SpawnConfig.MIN_HEIGHT, SpawnConfig.MAX_HEIGHT,
+			spawnConfig = new SpawnConfig(builder, 75, 1, 1,  MIN_HEIGHT, MAX_HEIGHT,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			healAmount = builder
 					.comment(" The amount a ghoul can heal themselves when eating meat.")
-					.defineInRange("healAmount", 4D, SpawnConfig.MIN_HEALTH, SpawnConfig.MAX_HEALTH);
-			
+					.defineInRange("healAmount", 4D, MIN_HEALTH, MAX_HEALTH);
+
 			canOpenDoors = builder
 					.comment(" Determines whether a ghoul open doors.")
 					.define("canOpenDoors", true);
-			
+
 			builder.pop();
 		}
 	}
-	
+
+	/*
+	 * 
+	 */
 	public static class BoulderConfig extends MobConfig {
 		// boulder specific		
 
 		public BoulderConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Boulder properties.", CATEGORY_DIV).push("boulder");				
 
-			spawnConfig = new SpawnConfig(builder, 35, 1, 1,  SpawnConfig.MIN_HEIGHT, 60,
+			spawnConfig = new SpawnConfig(builder, 35, 1, 1,  MIN_HEIGHT, 60,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			builder.pop();
 		}
 	}
-	
+
 	/*
 	 * 
 	 */
@@ -423,16 +388,15 @@ public final class Config {
 		public ShadowConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadow properties.", CATEGORY_DIV).push(Registration.SHADOW);				
 
-			spawnConfig = new SpawnConfig(builder, 35, 1, 2,  SpawnConfig.MIN_HEIGHT, 60,
+			spawnConfig = new SpawnConfig(builder, 35, 1, 2,  MIN_HEIGHT, 60,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
-			netherSpawnConfig = new SpawnConfig(builder, "nether_spawning", 5, 1, 2, SpawnConfig.MIN_HEIGHT, SpawnConfig.MAX_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-			
+			netherSpawnConfig = new NetherSpawnConfig(builder, 5, 1, 2, MIN_HEIGHT, MAX_HEIGHT);
+
 			builder.pop();
 		}
 	}
-	
+
 	/*
 	 * 
 	 */
@@ -443,40 +407,39 @@ public final class Config {
 		public IntValue summonCooldownTime;
 		public IntValue minSummonSpawns;
 		public IntValue maxSummonSpawns;
-		
+
 		public GazerConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Gazer properties.", CATEGORY_DIV).push(Registration.GAZER);				
 
-			spawnConfig = new SpawnConfig(builder, 25, 1, 2,  SpawnConfig.MIN_HEIGHT, SpawnConfig.UNDERGROUND_HEIGHT,
+			spawnConfig = new SpawnConfig(builder, 25, 1, 1,  MIN_HEIGHT, UNDERGROUND_HEIGHT,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
-			netherSpawnConfig = new SpawnConfig(builder, "nether_spawning", 10, 1, 1, SpawnConfig.MIN_HEIGHT, SpawnConfig.MAX_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-			
+			netherSpawnConfig = new NetherSpawnConfig(builder, 10, 1, 1, MIN_HEIGHT, MAX_HEIGHT);
+
 			biteCooldownTime = builder
 					.comment(" The cooldown time of a bite attack (measured in ticks).")
 					.defineInRange("biteCooldownTime", 20, 1, Integer.MAX_VALUE);
-			
+
 			paralysisChargeTime = builder
 					.comment(" The charge time of a paraylsis spell attack (measured in ticks).")
 					.defineInRange("paralysisChargeTime", 80, 1, Integer.MAX_VALUE);
-			
+
 			summonCooldownTime = builder
 					.comment(" The cooldown time of a summon spell (measured in ticks).")
 					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
-			
+
 			minSummonSpawns = builder
 					.comment(" Minimum spawn group size for summon spell.")
 					.defineInRange("minSummonSpawns", 1, 0, Integer.MAX_VALUE);
-			
+
 			maxSummonSpawns = builder
 					.comment(" Maximum spawn group size for summon spell.")
 					.defineInRange("maxSummonSpawns", 3, 1, Integer.MAX_VALUE);
-			
+
 			builder.pop();
 		}
 	}
-	
+
 	/*
 	 * 
 	 */
@@ -486,36 +449,35 @@ public final class Config {
 		public IntValue summonCooldownTime;
 		public IntValue minSummonSpawns;
 		public IntValue maxSummonSpawns;
-		
+
 		public ShadowlordConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadowlord properties.", CATEGORY_DIV).push(Registration.SHADOWLORD);				
 
-			spawnConfig = new SpawnConfig(builder, 15, 1, 1,  SpawnConfig.MIN_HEIGHT, 20,
+			spawnConfig = new SpawnConfig(builder, 15, 1, 1,  MIN_HEIGHT, 20,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
-			netherSpawnConfig = new SpawnConfig(builder, "nether_spawning", 15, 1, 1,  SpawnConfig.MIN_HEIGHT, SpawnConfig.MAX_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-			
+			netherSpawnConfig = new NetherSpawnConfig(builder, 15, 1, 1,  MIN_HEIGHT, MAX_HEIGHT);
+
 			harmChargeTime = builder
 					.comment(" The charge time of a harm spell attack (measured in ticks).")
 					.defineInRange("harmChargeTime", 50, 1, Integer.MAX_VALUE);
-						
+
 			summonCooldownTime = builder
 					.comment(" The cooldown time of a summon spell (measured in ticks).")
 					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
-			
+
 			minSummonSpawns = builder
 					.comment(" Minimum spawn group size for summon spell.")
 					.defineInRange("minSummonSpawns", 1, 0, Integer.MAX_VALUE);
-			
+
 			maxSummonSpawns = builder
 					.comment(" Maximum spawn group size for summon spell.")
 					.defineInRange("maxSummonSpawns", 2, 1, Integer.MAX_VALUE);
-			
+
 			builder.pop();
 		}
 	}
-	
+
 	/*
 	 * 
 	 */
@@ -523,24 +485,23 @@ public final class Config {
 		// daemon specific		
 		public IntValue firespoutCooldownTime;
 		public IntValue firespoutMaxDistance;
-		
+
 		public DaemonConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Daemon properties.", CATEGORY_DIV).push(Registration.DAEMON);				
 
-			spawnConfig = new SpawnConfig(builder, 1, 1, 1,  SpawnConfig.MIN_HEIGHT, 0,
+			spawnConfig = new SpawnConfig(builder, 1, 1, 1,  MIN_HEIGHT, 0,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
-			netherSpawnConfig = new SpawnConfig(builder, "nether_spawning", 10, 1, 1,  SpawnConfig.MIN_HEIGHT, SpawnConfig.MAX_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-			
+			netherSpawnConfig = new NetherSpawnConfig(builder, 10, 1, 1,  MIN_HEIGHT, MAX_HEIGHT);
+
 			firespoutCooldownTime = builder
 					.comment(" The cooldown time of a firespout spell (measured in ticks).")
 					.defineInRange("firespoutCooldownTime", 200, 1, Integer.MAX_VALUE);
-			
+
 			firespoutMaxDistance = builder
 					.comment(" The max distance (in blocks) that firespout spell can travel.")
 					.defineInRange("firespoutMaxDistance", 10, 3, 20);
-			
+
 			builder.pop();
 		}
 	}

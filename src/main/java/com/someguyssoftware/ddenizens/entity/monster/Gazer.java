@@ -10,6 +10,7 @@ import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.ai.goal.SummonGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
 import com.someguyssoftware.ddenizens.setup.Registration;
+import com.someguyssoftware.gottschcore.random.RandomHelper;
 import com.someguyssoftware.gottschcore.spatial.Coords;
 import com.someguyssoftware.gottschcore.spatial.ICoords;
 
@@ -57,7 +58,7 @@ public class Gazer extends FlyingMob {
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(4, new Gazer.GazerBiteGoal(this, Config.Mobs.GAZER.biteCooldownTime.get()));
-//		this.goalSelector.addGoal(5, new Gazer.GazerRandomFloatAroundGoal(this));
+		this.goalSelector.addGoal(5, new Gazer.GazerRandomFloatAroundGoal(this));
 		this.goalSelector.addGoal(7, new Gazer.GazerLookGoal(this));
 		this.goalSelector.addGoal(7, new Gazer.GazerShootParalysisGoal(this, Config.Mobs.GAZER.paralysisChargeTime.get()));
 		this.goalSelector.addGoal(7, new Gazer.GazerSummon(this, Config.Mobs.GAZER.summonCooldownTime.get()));
@@ -163,7 +164,19 @@ public class Gazer extends FlyingMob {
 						}
 						int numSpawns = random.nextInt(Config.Mobs.GAZER.minSummonSpawns.get(), Config.Mobs.GAZER.maxSummonSpawns.get() + 1);
 						for (int i = 0; i < numSpawns; i++) {
-							boolean spawnSuccess = super.spawn((ServerLevel)level, random, gazer, Registration.HEADLESS_ENTITY_TYPE.get(), new Coords(gazer.blockPosition().getX(), y + 1, gazer.blockPosition().getZ()), target);
+							EntityType<? extends Mob> mob; 
+							if (RandomHelper.checkProbability(random, 90)) {
+								if (random.nextInt(2) == 0) {
+									mob = Registration.HEADLESS_ENTITY_TYPE.get();
+								}
+								else {
+									mob = Registration.ORC_ENTITY_TYPE.get();
+								}
+							}
+							else {
+								mob = Registration.DAEMON_ENTITY_TYPE.get();
+							}
+							boolean spawnSuccess = super.spawn((ServerLevel)level, random, gazer, mob, new Coords(gazer.blockPosition().getX(), y + 1, gazer.blockPosition().getZ()), target);
 							if (!level.isClientSide() && spawnSuccess) {
 								for (int p = 0; p < 20; p++) {
 									double xSpeed = random.nextGaussian() * 0.02D;

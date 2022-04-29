@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
  */
-package com.someguyssoftware.ddenizens.setup.client.renderer.entity;
+package com.someguyssoftware.ddenizens.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.client.model.ShadowModel;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.Shadow;
-import com.someguyssoftware.ddenizens.setup.client.model.ShadowModel;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

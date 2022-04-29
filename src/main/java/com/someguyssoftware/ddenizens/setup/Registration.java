@@ -11,6 +11,7 @@ import com.someguyssoftware.ddenizens.entity.monster.Ettin;
 import com.someguyssoftware.ddenizens.entity.monster.Gazer;
 import com.someguyssoftware.ddenizens.entity.monster.Ghoul;
 import com.someguyssoftware.ddenizens.entity.monster.Headless;
+import com.someguyssoftware.ddenizens.entity.monster.Orc;
 import com.someguyssoftware.ddenizens.entity.monster.Shadow;
 import com.someguyssoftware.ddenizens.entity.monster.Shadowlord;
 import com.someguyssoftware.ddenizens.entity.projectile.FireSpout;
@@ -18,17 +19,13 @@ import com.someguyssoftware.ddenizens.entity.projectile.Harmball;
 import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
 
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -48,6 +45,7 @@ public class Registration {
 	public static final String GAZER = "gazer";
 	public static final String DAEMON = "daemon";
 	public static final String BOULDER = "boulder";
+	public static final String ORC = "orc";
 	
 	// projectile names
 	private static final String SLOWBALL = "slowball";
@@ -77,6 +75,12 @@ public class Registration {
 			.setShouldReceiveVelocityUpdates(false)
 			.setTrackingRange(50)
 			.build(HEADLESS));
+	
+	public static final RegistryObject<EntityType<Orc>> ORC_ENTITY_TYPE = Registration.ENTITIES.register(ORC, () -> EntityType.Builder.of(Orc::new, MobCategory.MONSTER)
+			.sized(0.6F, 1.95F)
+			.clientTrackingRange(12)
+			.setShouldReceiveVelocityUpdates(false)
+			.build(ORC));
 	
 	public static final RegistryObject<EntityType<Ghoul>> GHOUL_ENTITY_TYPE = Registration.ENTITIES.register(GHOUL, () -> EntityType.Builder.of(Ghoul::new, MobCategory.MONSTER)
 			.sized(0.6F, 1.68F)
@@ -153,13 +157,14 @@ public class Registration {
 	
 	// mod eggs
 	public static final RegistryObject<Item> HEADLESS_EGG = Registration.ITEMS.register(HEADLESS, () -> new ForgeSpawnEggItem(HEADLESS_ENTITY_TYPE, 0xc8b486, 0x6f5e48, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> GHOUL_EGG = Registration.ITEMS.register(GHOUL, () -> new ForgeSpawnEggItem(GHOUL_ENTITY_TYPE, 0xffffff, 0x6f5e48, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> ORC_EGG = Registration.ITEMS.register(ORC, () -> new ForgeSpawnEggItem(ORC_ENTITY_TYPE, 0xc8b486, 0x6f5e48, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> GHOUL_EGG = Registration.ITEMS.register(GHOUL, () -> new ForgeSpawnEggItem(GHOUL_ENTITY_TYPE, 0x93aba3, 0x869e96, Registration.ITEM_PROPERTIES));
 	public static final RegistryObject<Item> ETTIN_EGG = Registration.ITEMS.register(ETTIN, () -> new ForgeSpawnEggItem(ETTIN_ENTITY_TYPE, 0x626262, 0x6f5e48, Registration.ITEM_PROPERTIES));
 	
-	public static final RegistryObject<Item> GAZER_EGG = Registration.ITEMS.register(GAZER, () -> new ForgeSpawnEggItem(GAZER_ENTITY_TYPE, 0xff0000, 0x00ff00, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> BOULDER_EGG = Registration.ITEMS.register(BOULDER, () -> new ForgeSpawnEggItem(BOULDER_ENTITY_TYPE, 0xff0000, 0x00ff00, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> SHADOW_EGG = Registration.ITEMS.register(SHADOW, () -> new ForgeSpawnEggItem(SHADOW_ENTITY_TYPE, 0x000000, 0x00ff00, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD, () -> new ForgeSpawnEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x0c0c0c, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> GAZER_EGG = Registration.ITEMS.register(GAZER, () -> new ForgeSpawnEggItem(GAZER_ENTITY_TYPE, 0x7a2e2f, 0x63181d, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> BOULDER_EGG = Registration.ITEMS.register(BOULDER, () -> new ForgeSpawnEggItem(BOULDER_ENTITY_TYPE, 0x747474, 0x8f8f8f, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> SHADOW_EGG = Registration.ITEMS.register(SHADOW, () -> new ForgeSpawnEggItem(SHADOW_ENTITY_TYPE, 0x000000, 0x2b2b2b, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD, () -> new ForgeSpawnEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x050831, Registration.ITEM_PROPERTIES));
 	public static final RegistryObject<Item> DAEMON_EGG = Registration.ITEMS.register(DAEMON, () -> new ForgeSpawnEggItem(DAEMON_ENTITY_TYPE, 0xff0000, 0xfc0000, Registration.ITEM_PROPERTIES));
 	
 	// projectiles

@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.someguyssoftware.ddenizens.setup.client.renderer.entity;
+package com.someguyssoftware.ddenizens.client.renderer.entity;
 
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.client.model.GhoulModel;
 import com.someguyssoftware.ddenizens.entity.monster.Ghoul;
-import com.someguyssoftware.ddenizens.setup.client.model.GhoulModel;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

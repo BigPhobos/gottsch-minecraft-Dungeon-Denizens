@@ -17,14 +17,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
  */
-package com.someguyssoftware.ddenizens.setup.client.renderer.entity;
+package com.someguyssoftware.ddenizens.client.renderer.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.entity.monster.Boulder;
-import com.someguyssoftware.ddenizens.setup.client.model.BoulderModel;
+import com.someguyssoftware.ddenizens.client.model.EttinModel;
+import com.someguyssoftware.ddenizens.entity.monster.Ettin;
 
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -35,24 +33,19 @@ import net.minecraft.resources.ResourceLocation;
  *
  * @param <T>
  */
-public class BoulderRenderer extends MobRenderer<Boulder, BoulderModel<Boulder>> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(DD.MODID, "textures/entity/boulder.png");
-
+public class EttinRenderer<T extends Ettin> extends MobRenderer<T, EttinModel<T>> {
+	private static final ResourceLocation TEXTURE = new ResourceLocation(DD.MODID, "textures/entity/ettin.png");
+	
 	/**
 	 * 
 	 * @param context
 	 */
-	public BoulderRenderer(EntityRendererProvider.Context context) {
-		super(context, new BoulderModel<>(context.bakeLayer(BoulderModel.LAYER_LOCATION)), 0.4F);
-	}
+	public EttinRenderer(EntityRendererProvider.Context context) {
+        super(context, new EttinModel<>(context.bakeLayer(EttinModel.LAYER_LOCATION)), 0.8F);
+    }
 
-	@Override
-	public void render(Boulder boulder, float p_116532_, float p_116533_, PoseStack matrixStack, MultiBufferSource bufferSource, int p_116536_) {
-		super.render(boulder, p_116532_, p_116533_, matrixStack, bufferSource, p_116536_);
-	}
-
-	@Override
-	public ResourceLocation getTextureLocation(Boulder entity) {
-		return TEXTURE;
-	}
+     @Override
+    public ResourceLocation getTextureLocation(Ettin entity) {
+        return TEXTURE;
+    }
 }

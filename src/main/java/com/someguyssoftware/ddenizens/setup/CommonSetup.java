@@ -32,6 +32,7 @@ import com.someguyssoftware.ddenizens.entity.monster.Ettin;
 import com.someguyssoftware.ddenizens.entity.monster.Gazer;
 import com.someguyssoftware.ddenizens.entity.monster.Ghoul;
 import com.someguyssoftware.ddenizens.entity.monster.Headless;
+import com.someguyssoftware.ddenizens.entity.monster.Orc;
 import com.someguyssoftware.ddenizens.entity.monster.Shadow;
 import com.someguyssoftware.ddenizens.entity.monster.Shadowlord;
 import com.someguyssoftware.gottschcore.biome.BiomeHelper;
@@ -83,6 +84,7 @@ public class CommonSetup {
 	@SubscribeEvent
 	public static void onAttributeCreate(EntityAttributeCreationEvent event) {
 		event.put(Registration.HEADLESS_ENTITY_TYPE.get(), Headless.createAttributes().build());
+		event.put(Registration.ORC_ENTITY_TYPE.get(), Orc.createAttributes().build());
 		event.put(Registration.GHOUL_ENTITY_TYPE.get(), Ghoul.createAttributes().build());  
 		event.put(Registration.GAZER_ENTITY_TYPE.get(), Gazer.prepareAttributes().build());        
 		event.put(Registration.BOULDER_ENTITY_TYPE.get(), Boulder.createAttributes().build());
@@ -96,6 +98,7 @@ public class CommonSetup {
 	@SubscribeEvent
 	public static void registerEntitySpawn(RegistryEvent.Register<EntityType<?>> event) {
 		SpawnPlacements.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
+		SpawnPlacements.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
 		SpawnPlacements.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
 		SpawnPlacements.register(Registration.BOULDER_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Boulder::checkSpawnRules);
 

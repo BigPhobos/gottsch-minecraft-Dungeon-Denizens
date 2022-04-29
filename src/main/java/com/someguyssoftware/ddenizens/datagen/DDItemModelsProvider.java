@@ -46,6 +46,7 @@ public class DDItemModelsProvider extends ItemModelProvider {
                 mcLoc("item/generated"), "layer0", modLoc("item/harmball"));
     	
     	withExistingParent(Registration.HEADLESS_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.ORC_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.GHOUL_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.GAZER_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.BOULDER_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
