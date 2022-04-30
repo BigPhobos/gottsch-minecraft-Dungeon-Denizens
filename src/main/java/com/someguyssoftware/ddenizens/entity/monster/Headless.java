@@ -93,7 +93,7 @@ public class Headless extends Monster {
 		 * determines who to target
 		 * this = pathfinding mob, Player = target, true = must see entity in order to target
 		 */
-		this.targetSelector.addGoal(2, new HeadlessNearestAttackableTargetGoal<>(this, Player.class, true).setAlertOthers(Headless.class, Gazer.class));
+		this.targetSelector.addGoal(2, new HeadlessNearestAttackableTargetGoal<>(this, Player.class, true).setAlertOthers(Headless.class, Orc.class, Gazer.class));
 	}
 
 	/**

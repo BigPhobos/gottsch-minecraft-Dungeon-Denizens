@@ -46,7 +46,7 @@ import net.minecraft.world.entity.Entity;
  *
  * @param <T>
  */
-public class HeadlessModel<T extends Entity> extends EntityModel<T> {
+public class HeadlessModel<T extends Entity> extends DDModel<T> {
 	public static final String MODEL_NAME = "headless_model";
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, MODEL_NAME), "main");
 
@@ -62,6 +62,18 @@ public class HeadlessModel<T extends Entity> extends EntityModel<T> {
 	private final ModelPart rightLowerArm;
 	private final ModelPart leftLowerArm;
 
+	/*
+	 * created solely to fulfill the contract of IHumanlikeModel
+	 */
+	private final ModelPart head;
+	
+	private float leftArmX;
+	private float rightArmX;
+	
+	private ModelPart attackArm;
+	private boolean changeAttackArm;
+	private long changeAttackArmTime;
+	
 	/**
 	 * 
 	 * @param root
@@ -77,6 +89,16 @@ public class HeadlessModel<T extends Entity> extends EntityModel<T> {
 		this.backCloth = loinCloth.getChild("back_cloth");
 		this.leftLowerArm = leftArm.getChild("left_lower_arm");
 		this.rightLowerArm = rightArm.getChild("right_lower_arm");
+		
+		head = root.getChild("head");
+		head.visible = false;
+		
+		rightArmX = rightArm.x;
+		leftArmX = leftArm.x;
+		
+		attackArm = getLeftArm();
+		changeAttackArm = false;
+		changeAttackArmTime = 0;
 	}
 
 	/**
@@ -99,7 +121,8 @@ public class HeadlessModel<T extends Entity> extends EntityModel<T> {
 		PartDefinition front_cloth = loin_cloth.addOrReplaceChild("front_cloth", CubeListBuilder.create().texOffs(44, 0).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -12.0F, 0.0F));
 		PartDefinition back_cloth = loin_cloth.addOrReplaceChild("back_cloth", CubeListBuilder.create().texOffs(31, 0).addBox(-2.5F, 0.0F, 1.5F, 5.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -12.0F, 0.0F));
 
-		
+		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().addBox(0F, 0F, 0F, 0F, 0F, 0F, new CubeDeformation(0.0F)), PartPose.offset(0F, 0F, 0F));
+
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
@@ -158,6 +181,8 @@ public class HeadlessModel<T extends Entity> extends EntityModel<T> {
 		this.rightArm.xRot = 0F;
 		this.rightArm.zRot = 0.8726646F;
 
+		setupAttackAnimation(entity, ageInTicks);
+		
 		// bob the arms
 		bobModelPart(this.rightArm, ageInTicks, 1.0F);
 		bobModelPart(this.leftArm, ageInTicks, -1.0F);
@@ -181,5 +206,54 @@ public class HeadlessModel<T extends Entity> extends EntityModel<T> {
 		leftArm.render(poseStack, buffer, packedLight, packedOverlay);
 		rightArm.render(poseStack, buffer, packedLight, packedOverlay);
 		loinCloth.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+	
+	@Override
+	public void resetSwing(T entity, ModelPart body, ModelPart rightArm, ModelPart leftArm) {
+		body.yRot = 0;
+		rightArm.x = rightArmX;
+		rightArm.zRot = 0.8726646F;
+		rightArm.yRot = 0;
+		leftArm.x = leftArmX;
+		leftArm.yRot = 0;
+		leftArm.zRot = -rightArm.zRot;
+		if (this.attackTime > 0) {
+			if (changeAttackArm && entity.level.getGameTime() - changeAttackArmTime > 20) {
+				if (attackArm == getRightArm()) {
+					attackArm = getLeftArm();
+				}
+				else {
+					attackArm = getRightArm();
+				}
+				changeAttackArm = false;				
+			}			
+		}
+		else {
+			if (!changeAttackArm) {
+				changeAttackArm = true;
+				changeAttackArmTime = entity.level.getGameTime();
+			}
+		}
+	}
+	
+	@Override
+	public ModelPart getAttackArm() {
+		return attackArm;
+	}
+	
+	public ModelPart getHead() {
+		return head;
+	}
+	
+	public ModelPart getBody() {
+		return body;
+	}
+	
+	public ModelPart getRightArm() {
+		return rightArm;
+	}
+	
+	public ModelPart getLeftArm() {
+		return leftArm;
 	}
 }

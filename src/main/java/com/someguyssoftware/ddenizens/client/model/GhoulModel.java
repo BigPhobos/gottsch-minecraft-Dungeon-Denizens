@@ -43,27 +43,37 @@ import net.minecraft.world.entity.Entity;
  *
  * @param <T>
  */
-public class GhoulModel<T extends Entity> extends EntityModel<T> implements HeadedModel {
+public class GhoulModel<T extends Entity> extends DDModel<T> implements HeadedModel {
 	public static final String MODEL_NAME = "ghoul_model";
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, MODEL_NAME), "main");
 	private final ModelPart torso;
 	private final ModelPart head;
 	private final ModelPart body;
-	private final ModelPart lower_body;
-	private final ModelPart left_arm;
-	private final ModelPart right_arm;
+//	private final ModelPart lower_body;
+	private final ModelPart leftArm;
+	private final ModelPart rightArm;
 	private final ModelPart leftLeg;
 	private final ModelPart rightLeg;
+	
+	private float leftArmX;
+	private float rightArmX;
 
+	/**
+	 * 
+	 * @param root
+	 */
 	public GhoulModel(ModelPart root) {
 		this.head = root.getChild("head");
 		this.torso = root.getChild("torso");		
 		this.body = torso.getChild("body");
-		this.lower_body = torso.getChild("lower_body");
-		this.left_arm = root.getChild("left_arm");
-		this.right_arm = root.getChild("right_arm");
+//		this.lower_body = torso.getChild("lower_body");
+		this.leftArm = root.getChild("left_arm");
+		this.rightArm = root.getChild("right_arm");
 		this.leftLeg = root.getChild("left_leg");
 		this.rightLeg = root.getChild("right_leg");
+		
+		rightArmX = rightArm.x;
+		leftArmX = leftArm.x;
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -136,16 +146,18 @@ public class GhoulModel<T extends Entity> extends EntityModel<T> implements Head
 		// 0.5235988F = 30 degrees
 		float armSpeed = 0.25F;
 		radians = 0.5235988F; // 30
-		this.right_arm.xRot = -0.7417649F + Mth.cos(limbSwing * armSpeed) * radians * 1.4F * limbSwingAmount;
-		this.left_arm.xRot = -0.567232F + Mth.cos(limbSwing * armSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount;
+		this.rightArm.xRot = -0.7417649F + Mth.cos(limbSwing * armSpeed) * radians * 1.4F * limbSwingAmount;
+		this.leftArm.xRot = -0.567232F + Mth.cos(limbSwing * armSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount;
 
+		setupAttackAnimation(entity, ageInTicks);
+		
 		// reset arm rotations before bobbing, because bobbing is an addition to current rotation
-		this.left_arm.zRot = -0.3926991F;
-		this.right_arm.zRot = 0.3926991F;
+		this.leftArm.zRot = -0.3926991F;
+		this.rightArm.zRot = 0.3926991F;
 		
 		// bob the arms
-		bobModelPart(this.right_arm, ageInTicks, 1.0F);
-		bobModelPart(this.left_arm, ageInTicks, -1.0F);
+		bobModelPart(this.rightArm, ageInTicks, 1.0F);
+		bobModelPart(this.leftArm, ageInTicks, -1.0F);
 	}
 
 	/**
@@ -159,11 +171,24 @@ public class GhoulModel<T extends Entity> extends EntityModel<T> implements Head
 	}
 	
 	@Override
+	public void resetSwing(T entity, ModelPart body, ModelPart rightArm, ModelPart leftArm) {
+		body.yRot = 0;
+		rightArm.x = rightArmX;
+		rightArm.xRot = -0.7417649F;
+		rightArm.zRot = 0;
+		rightArm.yRot = 0;
+		leftArm.x = leftArmX;
+		leftArm.xRot = -0.567232F;
+		leftArm.yRot = 0;
+		leftArm.zRot = 0;
+	}
+	
+	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		head.render(poseStack, buffer, packedLight, packedOverlay);
 		torso.render(poseStack, buffer, packedLight, packedOverlay);
-		left_arm.render(poseStack, buffer, packedLight, packedOverlay);
-		right_arm.render(poseStack, buffer, packedLight, packedOverlay);
+		leftArm.render(poseStack, buffer, packedLight, packedOverlay);
+		rightArm.render(poseStack, buffer, packedLight, packedOverlay);
 		leftLeg.render(poseStack, buffer, packedLight, packedOverlay);
 		rightLeg.render(poseStack, buffer, packedLight, packedOverlay);
 	}
@@ -171,5 +196,20 @@ public class GhoulModel<T extends Entity> extends EntityModel<T> implements Head
 	@Override
 	public ModelPart getHead() {
 		return this.head;
+	}
+
+	@Override
+	public ModelPart getBody() {
+		return body;
+	}
+
+	@Override
+	public ModelPart getRightArm() {
+		return rightArm;
+	}
+
+	@Override
+	public ModelPart getLeftArm() {
+		return leftArm;
 	}
 }

@@ -40,7 +40,6 @@ public class DD {
 	public static final String MODID = "ddenizens";
 
 	public DD() {
-		
         // register the deferred registries
         Registration.init();
         Config.register();

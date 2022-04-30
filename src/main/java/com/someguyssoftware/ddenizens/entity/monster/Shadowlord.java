@@ -104,16 +104,17 @@ public class Shadowlord extends DDMonster {
 	 */
 	protected void registerGoals() {
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
-		this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
 		
 		this.goalSelector.addGoal(4, new ShadowlordShootHarmGoal(this, Config.Mobs.SHADOWLORD.harmChargeTime.get()));
 		this.goalSelector.addGoal(4, new ShadowlordSummonGoal(this, Config.Mobs.SHADOWLORD.summonCooldownTime.get(), true));
-//		this.goalSelector.addGoal(5, new ShadowlordMeleeAttackGoal(this, 1.0D, false));
-		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
+		// TODO update with strafing movement - see RangedBowAttackGoal
+		//		this.goalSelector.addGoal(5, new ShadowlordMeleeAttackGoal(this, 1.0D, false));
+		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, false));
+		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		
-		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 64.0F, 0.2F));
-		this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 64.0F));
+		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {

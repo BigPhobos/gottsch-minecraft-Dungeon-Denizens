@@ -308,7 +308,7 @@ public class Daemon extends DDMonster {
 		 * @return
 		 */
 		protected double getAttackReachSqr(LivingEntity entity) {
-			return (double)(daemon.getBbWidth() * 2.0F * daemon.getBbWidth() * 2.0F + entity.getBbWidth());
+			return (double)(daemon.getBbWidth() * 2.2F * daemon.getBbWidth() * 2.0F + entity.getBbWidth());
 		}
 
 		/**

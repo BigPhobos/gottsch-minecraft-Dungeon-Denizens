@@ -43,7 +43,7 @@ import net.minecraft.world.entity.Entity;
  *
  * @param <T>
  */
-public class ShadowModel<T extends Entity> extends EntityModel<T> {
+public class ShadowModel<T extends Entity> extends DDModel<T> {
 
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, "shadow_model"), "main");
 	
@@ -51,11 +51,14 @@ public class ShadowModel<T extends Entity> extends EntityModel<T> {
 	private final ModelPart headwear;
 	private final ModelPart body_legs;
 	private final ModelPart body;
-	private final ModelPart left_arm;
-	private final ModelPart right_arm;
+	private final ModelPart leftArm;
+	private final ModelPart rightArm;
 	private final ModelPart left_leg;
 	private final ModelPart right_leg;
 
+	private float leftArmX;
+	private float rightArmX;
+	
 	/**
 	 * 
 	 * @param root
@@ -66,10 +69,13 @@ public class ShadowModel<T extends Entity> extends EntityModel<T> {
 		this.headwear = root.getChild("headwear");
 		this.body_legs = root.getChild("body_legs");
 		this.body = body_legs.getChild("body");
-		this.left_arm = root.getChild("left_arm");
-		this.right_arm = root.getChild("right_arm");
+		this.leftArm = root.getChild("left_arm");
+		this.rightArm = root.getChild("right_arm");
 		this.left_leg = body_legs.getChild("left_leg");
 		this.right_leg = body_legs.getChild("right_leg");
+		
+		rightArmX = rightArm.x;
+		leftArmX = leftArm.x;
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -101,16 +107,18 @@ public class ShadowModel<T extends Entity> extends EntityModel<T> {
 		this.right_leg.xRot = Mth.cos(limbSwing * walkSpeed) * radians * 1.4F * limbSwingAmount / f;
 		this.left_leg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount / f;
 		
+		setupAttackAnimation(entity, ageInTicks);
+		
 		// reset arm rotations before bobbing, because bobbing is an addition to current rotation
-		this.left_arm.zRot = 0F;
-		this.left_arm.xRot = -0.8726646F; // 50 degrees
+		this.leftArm.zRot = 0F;
+		this.leftArm.xRot = -0.8726646F; // 50 degrees
 
-		this.right_arm.zRot = 0F;
-		this.right_arm.xRot = -0.9599311F; // 55 dgrees
+		this.rightArm.zRot = 0F;
+		this.rightArm.xRot = -0.9599311F; // 55 dgrees
 
 		// bob the arms
-		bobModelPart(this.right_arm, ageInTicks, 1.0F);
-		bobModelPart(this.left_arm, ageInTicks, -1.0F);
+		bobModelPart(this.rightArm, ageInTicks, 1.0F);
+		bobModelPart(this.leftArm, ageInTicks, -1.0F);
 	}
 
 	/**
@@ -124,14 +132,47 @@ public class ShadowModel<T extends Entity> extends EntityModel<T> {
 	}
 	
 	@Override
+	public void resetSwing(T entity, ModelPart body, ModelPart rightArm, ModelPart leftArm) {
+		body.yRot = 0;
+		rightArm.x = rightArmX;
+		rightArm.xRot = -0.9599311F;
+		rightArm.zRot = 0;
+		rightArm.yRot = 0;
+		leftArm.x = leftArmX;
+		leftArm.xRot = -0.8726646F;
+		leftArm.yRot = 0;
+		leftArm.zRot = 0;
+	}
+	
+	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		head.render(poseStack, buffer, packedLight, packedOverlay);
 //		headwear.render(poseStack, buffer, packedLight, packedOverlay);
 //		body.render(poseStack, buffer, packedLight, packedOverlay);
 		body_legs.render(poseStack, buffer, packedLight, packedOverlay);
-		left_arm.render(poseStack, buffer, packedLight, packedOverlay);
-		right_arm.render(poseStack, buffer, packedLight, packedOverlay);
+		leftArm.render(poseStack, buffer, packedLight, packedOverlay);
+		rightArm.render(poseStack, buffer, packedLight, packedOverlay);
 //		left_leg.render(poseStack, buffer, packedLight, packedOverlay);
 //		right_leg.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+	
+	@Override
+	public ModelPart getHead() {
+		return this.head;
+	}
+
+	@Override
+	public ModelPart getBody() {
+		return body;
+	}
+
+	@Override
+	public ModelPart getRightArm() {
+		return rightArm;
+	}
+
+	@Override
+	public ModelPart getLeftArm() {
+		return leftArm;
 	}
 }

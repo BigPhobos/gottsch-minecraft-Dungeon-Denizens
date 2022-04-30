@@ -35,7 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
-public class DaemonModel<T extends Entity> extends EntityModel<T> {
+public class DaemonModel<T extends Entity> extends DDModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "daemon2"), "main");
 	private final ModelPart daemon;
@@ -52,7 +52,9 @@ public class DaemonModel<T extends Entity> extends EntityModel<T> {
 	private final ModelPart tail;
 	private final ModelPart lowerTail;
 	
-	private float upperBodyY;
+	private float upperBodyY;	
+	private float leftArmX;
+	private float rightArmX;
 	
 	/**
 	 * 
@@ -75,6 +77,8 @@ public class DaemonModel<T extends Entity> extends EntityModel<T> {
 		this.lowerTail = tail.getChild("lower_tail");
 		
 		upperBodyY = upperBody.y;
+		rightArmX = rightArm.x;
+		leftArmX = leftArm.x;
 	}
 
 	/**
@@ -163,6 +167,8 @@ public class DaemonModel<T extends Entity> extends EntityModel<T> {
 		this.rightLeg.xRot = Mth.cos(limbSwing * walkSpeed) * radians  * 1.4F * limbSwingAmount;
 		this.leftLeg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount;
 		
+		setupAttackAnimation(entity, ageInTicks);
+		
 		/*
 		 *  bobs
 		 */
@@ -203,7 +209,34 @@ public class DaemonModel<T extends Entity> extends EntityModel<T> {
 	}
 	
 	@Override
+	public void resetSwing(T entity, ModelPart body, ModelPart rightArm, ModelPart leftArm) {
+		body.yRot = 0;
+		rightArm.x = rightArmX;
+		rightArm.zRot = 0.9599311F;
+		rightArm.yRot = 0;
+		leftArm.x = leftArmX;
+		leftArm.yRot = 0;
+		leftArm.zRot = -rightArm.zRot;
+	}
+	
+	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		daemon.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+	
+	public ModelPart getHead() {
+		return head;
+	}
+	
+	public ModelPart getBody() {
+		return body;
+	}
+	
+	public ModelPart getRightArm() {
+		return rightArm;
+	}
+	
+	public ModelPart getLeftArm() {
+		return leftArm;
 	}
 }

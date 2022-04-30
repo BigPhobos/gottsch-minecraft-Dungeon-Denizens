@@ -1,0 +1,10 @@
+{
+    "homepage": "https://minecraft.curseforge.com/projects/dungeon-denizens",
+    "promos": {
+    "1.18.1-latest": "0.0.1",
+    "1.18.1-recommended": "0.0.1"
+  },
+    "1.18.1": {
+        "0.0.1": "Beta release"
+	}
+}
