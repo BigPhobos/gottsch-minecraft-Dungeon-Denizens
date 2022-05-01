@@ -48,13 +48,12 @@ public class ShadowModel<T extends Entity> extends DDModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, "shadow_model"), "main");
 	
 	private final ModelPart head;
-	private final ModelPart headwear;
 	private final ModelPart body_legs;
 	private final ModelPart body;
 	private final ModelPart leftArm;
 	private final ModelPart rightArm;
-	private final ModelPart left_leg;
-	private final ModelPart right_leg;
+	private final ModelPart leftLeg;
+	private final ModelPart rightLeg;
 
 	private float leftArmX;
 	private float rightArmX;
@@ -66,13 +65,12 @@ public class ShadowModel<T extends Entity> extends DDModel<T> {
 	public ShadowModel(ModelPart root) {
 		super(RenderType::entityTranslucentCull);
 		this.head = root.getChild("head");
-		this.headwear = root.getChild("headwear");
 		this.body_legs = root.getChild("body_legs");
 		this.body = body_legs.getChild("body");
 		this.leftArm = root.getChild("left_arm");
 		this.rightArm = root.getChild("right_arm");
-		this.left_leg = body_legs.getChild("left_leg");
-		this.right_leg = body_legs.getChild("right_leg");
+		this.leftLeg = body_legs.getChild("left_leg");
+		this.rightLeg = body_legs.getChild("right_leg");
 		
 		rightArmX = rightArm.x;
 		leftArmX = leftArm.x;
@@ -83,7 +81,6 @@ public class ShadowModel<T extends Entity> extends DDModel<T> {
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
 		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 17).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-		PartDefinition headwear = partdefinition.addOrReplaceChild("headwear", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 		PartDefinition body_legs = partdefinition.addOrReplaceChild("body_legs", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3927F, 0.0F, 0.0F));
 		PartDefinition right_leg = body_legs.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(33, 0).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 12.0F, 0.0F));
 		PartDefinition left_leg = body_legs.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 34).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 12.0F, 0.0F));
@@ -104,8 +101,8 @@ public class ShadowModel<T extends Entity> extends DDModel<T> {
 		float f = 1.0F;
 		float radians = 0.3490659F; // 20 degrees
 		float walkSpeed = 0.5F; // half speed = 0.5
-		this.right_leg.xRot = Mth.cos(limbSwing * walkSpeed) * radians * 1.4F * limbSwingAmount / f;
-		this.left_leg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount / f;
+		this.rightLeg.xRot = Mth.cos(limbSwing * walkSpeed) * radians * 1.4F * limbSwingAmount / f;
+		this.leftLeg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount / f;
 		
 		setupAttackAnimation(entity, ageInTicks);
 		

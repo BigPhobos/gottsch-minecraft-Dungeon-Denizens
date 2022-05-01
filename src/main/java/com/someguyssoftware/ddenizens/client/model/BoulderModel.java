@@ -49,9 +49,9 @@ public class BoulderModel<T extends Entity> extends HierarchicalModel<T> {
 	private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart frontLeftLeg;
-	private final ModelPart front_right_leg;
-	private final ModelPart back_left_leg;
-	private final ModelPart back_right_leg;
+	private final ModelPart frontRightLeg;
+	private final ModelPart backLeftLeg;
+	private final ModelPart backRightLeg;
 
 	private final static PartPose FL_LEG_POSE = PartPose.offset(7.0F, 19.0F, -7.0F);
 	private final static PartPose FR_LEG_POSE = PartPose.offset(-7.0F, 19.0F, -7.0F);
@@ -67,9 +67,9 @@ public class BoulderModel<T extends Entity> extends HierarchicalModel<T> {
 		this.root = root;
 		this.body = root.getChild("body");
 		this.frontLeftLeg = root.getChild("front_left_leg");
-		this.front_right_leg = root.getChild("front_right_leg");
-		this.back_left_leg = root.getChild("back_left_leg");
-		this.back_right_leg = root.getChild("back_right_leg");
+		this.frontRightLeg = root.getChild("front_right_leg");
+		this.backLeftLeg = root.getChild("back_left_leg");
+		this.backRightLeg = root.getChild("back_right_leg");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -97,14 +97,24 @@ public class BoulderModel<T extends Entity> extends HierarchicalModel<T> {
 
 		// awake - animate regular walk
 		if (boulder.isActive()) {
-//			this.frontLeftLeg.x = FL_LEG_POSE.x;
-//			this.frontLeftLeg.z = FL_LEG_POSE.z;
+			// reset positions
+			this.frontRightLeg.x = FR_LEG_POSE.x;
+			this.frontRightLeg.z = FR_LEG_POSE.z;
+			this.frontLeftLeg.x = FL_LEG_POSE.x;
+			this.frontLeftLeg.z = FL_LEG_POSE.z;
+			
+			this.backRightLeg.x = BR_LEG_POSE.x;
+			this.backRightLeg.z = BR_LEG_POSE.z;
+			this.backLeftLeg.x = BL_LEG_POSE.x;
+			this.backLeftLeg.z = BL_LEG_POSE.z;
+			
+			this.body.y = BODY_POSE.y;
 
-			this.front_right_leg.xRot = Mth.cos(limbSwing * walkSpeed) * radians  * 1.4F * limbSwingAmount / f;
+			this.frontRightLeg.xRot = Mth.cos(limbSwing * walkSpeed) * radians  * 1.4F * limbSwingAmount / f;
 			this.frontLeftLeg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount / f;
 
-			this.back_right_leg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount / f;
-			this.back_left_leg.xRot = Mth.cos(limbSwing * walkSpeed) * radians  * 1.4F * limbSwingAmount / f;
+			this.backRightLeg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount / f;
+			this.backLeftLeg.xRot = Mth.cos(limbSwing * walkSpeed) * radians  * 1.4F * limbSwingAmount / f;
 		}
 		else {
 			if (boulder.getAmount() <= 1.0F) {
@@ -113,17 +123,17 @@ public class BoulderModel<T extends Entity> extends HierarchicalModel<T> {
 				this.frontLeftLeg.z = FL_LEG_POSE.z + (boulder.getAmount() * 2.0F);
 				this.frontLeftLeg.xRot = 0;
 
-				this.front_right_leg.x = FR_LEG_POSE.x + (boulder.getAmount() * 2.0F);
-				this.front_right_leg.z = FR_LEG_POSE.z + (boulder.getAmount() * 2.0F);
-				this.front_right_leg.xRot = 0;
+				this.frontRightLeg.x = FR_LEG_POSE.x + (boulder.getAmount() * 2.0F);
+				this.frontRightLeg.z = FR_LEG_POSE.z + (boulder.getAmount() * 2.0F);
+				this.frontRightLeg.xRot = 0;
 
-				this.back_left_leg.x = BL_LEG_POSE.x - (boulder.getAmount() * 2.0F);
-				this.back_left_leg.z = BL_LEG_POSE.z - (boulder.getAmount() * 2.0F);
-				this.back_left_leg.xRot = 0;
+				this.backLeftLeg.x = BL_LEG_POSE.x - (boulder.getAmount() * 2.0F);
+				this.backLeftLeg.z = BL_LEG_POSE.z - (boulder.getAmount() * 2.0F);
+				this.backLeftLeg.xRot = 0;
 
-				this.back_right_leg.x = BR_LEG_POSE.x + (boulder.getAmount() * 2.0F);
-				this.back_right_leg.z = BR_LEG_POSE.z - (boulder.getAmount() * 2.0F);
-				this.back_right_leg.xRot = 0;
+				this.backRightLeg.x = BR_LEG_POSE.x + (boulder.getAmount() * 2.0F);
+				this.backRightLeg.z = BR_LEG_POSE.z - (boulder.getAmount() * 2.0F);
+				this.backRightLeg.xRot = 0;
 			}
 			if (boulder.getBodyAmount() <= 1.0F) {
 				this.body.y = BODY_POSE.y + (boulder.getBodyAmount() * 2.0F);
@@ -135,9 +145,9 @@ public class BoulderModel<T extends Entity> extends HierarchicalModel<T> {
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		body.render(poseStack, buffer, packedLight, packedOverlay);
 		frontLeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
-		front_right_leg.render(poseStack, buffer, packedLight, packedOverlay);
-		back_left_leg.render(poseStack, buffer, packedLight, packedOverlay);
-		back_right_leg.render(poseStack, buffer, packedLight, packedOverlay);
+		frontRightLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		backLeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		backRightLeg.render(poseStack, buffer, packedLight, packedOverlay);
 	}
 
 	@Override

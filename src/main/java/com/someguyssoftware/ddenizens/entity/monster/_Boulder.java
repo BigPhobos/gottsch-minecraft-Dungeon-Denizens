@@ -29,7 +29,6 @@ import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
 import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -60,20 +59,18 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
  * @author Mark Gottschling on Apr 6, 2022
  *
  */
-public class Boulder extends Monster {
-	private static final EntityDataAccessor<String> DATA_STATE = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.STRING);
-	private static final EntityDataAccessor<Integer> DATA_LOYAL_TICKS = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.OPTIONAL_UUID);
-	private static final EntityDataAccessor<Float> DATA_AMOUNT = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.FLOAT);
-	private static final EntityDataAccessor<Float> DATA_BODY_AMOUNT = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.FLOAT);
-	
+public class _Boulder extends Monster {
+	private static final EntityDataAccessor<String> DATA_STATE = SynchedEntityData.defineId(_Boulder.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<Integer> DATA_LOYAL_TICKS = SynchedEntityData.defineId(_Boulder.class, EntityDataSerializers.INT);
+	protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(_Boulder.class, EntityDataSerializers.OPTIONAL_UUID);
+
 	private static final String ACTIVE = "active";
 	private static final String FALLING_ASLEEP = "fallingAsleep";
 	private static final String DORMANT = "dormant";
 	private static final String WAKING_UP = "wakingUp";
 	private static final String LOYALTY_TICKS = "loyaltyTicks";
 	private static final String OWNER = "owner";
-	private static final int MAX_LOYALTY_TICKS = 1200; //6000; // 5 minutes
+	private static final int MAX_LOYALTY_TICKS = 6000; // 5 minutes
 
 	public static final float MAX_LEG_AMOUNT = 2F;
 	public static final float MAX_BODY_AMOUNT = 2F;
@@ -85,7 +82,7 @@ public class Boulder extends Monster {
 	private float previousBodyAmount;
 	private float bodyAmount;
 
-	public Boulder(EntityType<? extends Monster> entityType, Level level) {
+	public _Boulder(EntityType<? extends Monster> entityType, Level level) {
 		super(entityType, level);
 	}
 
@@ -99,7 +96,7 @@ public class Boulder extends Monster {
 	 * @return
 	 */
 	public static boolean checkSpawnRules(EntityType<? extends Monster> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		//		return (level.getHeight() < 60 || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
+//		return (level.getHeight() < 60 || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());	
 		SpawnConfig config = mobConfig.getSpawnConfig();
 		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN)
@@ -110,6 +107,8 @@ public class Boulder extends Monster {
 	 * 
 	 */
 	protected void registerGoals() {
+		this.goalSelector.addGoal(5, new BoulderGoDormantGoal(this));
+		this.goalSelector.addGoal(5, new BoulderWakeUpGoal(this));		
 		this.goalSelector.addGoal(6, new BoulderFollowOwnerGoal(this, 5.0F, 2F));
 		this.goalSelector.addGoal(7, new BoulderRandomStrollGoal(this, 1.0D));
 	}
@@ -130,11 +129,11 @@ public class Boulder extends Monster {
 	public void checkDespawn() {
 		// does NOT despawn
 	}
-
+	
 	@Override
-	public boolean removeWhenFarAway(double distance) {
-		return false;
-	}
+   public boolean removeWhenFarAway(double distance) {
+      return false;
+   }
 
 	@Override
 	public void aiStep() {		
@@ -142,73 +141,60 @@ public class Boulder extends Monster {
 			if (this.level.getGameTime() % 20 == 0)
 				this.level.addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
 		}
-		///////
+		super.aiStep();
+	}
 
+	@Override
+	public void tick() {
 		// decrement the loyalty ticks
 		int ticks = getLoyaltyTicks();
 		ticks--;
-		if (ticks <= 0) {
+		if (--ticks <= 0) {
 			ticks = 0;
 		}
 		setLoyaltyTicks(ticks);
 
-		// NOTE isSunBurn only works on server
-		if (!WorldInfo.isClientSide(level)) {
-//			DD.LOGGER.info("state -> {}", getState());
-//			DD.LOGGER.info("loyalty ticks -> {}", getLoyaltyTicks());
-//			DD.LOGGER.info("is sun burn -> {}", isSunBurn());
-			if (isDormant() && getLoyaltyTicks() > 0 && !isSunBurn()) {
-//				DD.LOGGER.info("waking up");
-				wakeUp();
-			}
-			else if (isActive() && (getLoyaltyTicks() <= 0 || isSunBurn())) {
-//				DD.LOGGER.info("going to sleep");
-				goToSleep();
-			}
-			previousAmount = amount;
-			if (isDormant()) {
-				amount = 1F;
-				bodyAmount = 1F;
-			}
-			else if (isFallingAsleep()) {
-				if (amount < 1F) {
-					amount += 0.1;
-				}
-				if (amount >= 1F) {
-					amount = 1F;
-					if (bodyAmount < 1F) {
-						bodyAmount += 0.2F;
-					}
-					if (bodyAmount >= 1F) {
-						bodyAmount = 1F;
-						hibernate();
-					}
-				}
-			}
-			else if (isWakingUp()) {
-				if (bodyAmount > 0F) {
-					bodyAmount -= 0.1F;
-				}
-				if (bodyAmount <= 0F) {
-					bodyAmount = 0F;
-					if (amount > 0F) {
-						amount -= 0.1;
-					}
-					if (amount <= 0F) {
-						amount = 0F;
-						activate();
-					}
-				}
-			}
-			else {
-				amount = 0F;
-				bodyAmount = 0F;
-			}
-			setAmount(amount);
-			setBodyAmount(bodyAmount);
+		previousAmount = amount;
+		if (isDormant()) {
+			amount = 1F;
+			bodyAmount = 1F;
 		}
-		/////////
-		super.aiStep();
+		else if (isFallingAsleep()) {
+			if (amount < 1F) {
+				amount += 0.1;
+			}
+			if (amount >= 1F) {
+				amount = 1F;
+				if (bodyAmount < 1F) {
+					bodyAmount += 0.2F;
+				}
+				if (bodyAmount >= 1F) {
+					bodyAmount = 1F;
+					hibernate();
+				}
+			}
+		}
+		else if (isWakingUp()) {
+			if (bodyAmount > 0F) {
+				bodyAmount -= 0.1F;
+			}
+			if (bodyAmount <= 0F) {
+				bodyAmount = 0F;
+				if (amount > 0F) {
+					amount -= 0.1;
+				}
+				if (amount <= 0F) {
+					amount = 0F;
+					activate();
+				}
+			}
+		}
+		else {
+			amount = 0F;
+			bodyAmount = 0F;
+		}
+
+		super.tick();
 	}
 
 	public void goToSleep() {
@@ -216,10 +202,8 @@ public class Boulder extends Monster {
 	}
 
 	public void hibernate() {
-//		DD.LOGGER.info("hibernating/dormant");
 		setState(DORMANT);
 		setOwnerUUID(null);
-		setLoyaltyTicks(0);
 	}
 
 	public void wakeUp() {
@@ -235,6 +219,7 @@ public class Boulder extends Monster {
 		if (getOwnerUUID() == null || isDormant()) {
 			setOwnerUUID(owner);
 		}
+		//		DD.LOGGER.info("fed boulder, loyalty -> {}, owner -> {}, state -> {}", getLoyaltyTicks(), getOwnerUUID().toString(), getState());
 	}
 
 	/**
@@ -256,22 +241,6 @@ public class Boulder extends Monster {
 	public boolean isActive() {
 		return getState().equals(ACTIVE);
 	}
-	
-	public float getAmount() {
-		return this.entityData.get(DATA_AMOUNT);
-	}
-
-	public void setAmount(float amount) {
-		this.entityData.set(DATA_AMOUNT, amount);
-	}
-	
-	public float getBodyAmount() {
-		return this.entityData.get(DATA_BODY_AMOUNT);
-	}
-
-	public void setBodyAmount(float amount) {
-		this.entityData.set(DATA_BODY_AMOUNT, amount);
-	}
 
 	/**
 	 * Set initial values of synced data
@@ -282,8 +251,6 @@ public class Boulder extends Monster {
 		this.entityData.define(DATA_STATE, DORMANT);
 		this.entityData.define(DATA_LOYAL_TICKS, 0);
 		this.entityData.define(DATA_OWNER_UUID, Optional.empty());
-		this.entityData.define(DATA_AMOUNT, 0.0F);
-		this.entityData.define(DATA_BODY_AMOUNT, 0.0F);
 	}
 
 	@Override
@@ -296,9 +263,6 @@ public class Boulder extends Monster {
 		if (this.getOwnerUUID() != null) {
 			tag.putUUID(OWNER, this.getOwnerUUID());
 		}
-		
-		tag.putFloat("amount", getAmount());
-		tag.putFloat("bodyAmount", getBodyAmount());
 	}
 
 	@Override
@@ -321,12 +285,6 @@ public class Boulder extends Monster {
 		if (tag.contains(LOYALTY_TICKS)) {
 			this.setLoyaltyTicks(tag.getInt(LOYALTY_TICKS));
 		}
-		if (tag.contains("amount")) {
-			this.setAmount(tag.getFloat("amount"));
-		}
-		if (tag.contains("bodyAmount")) {
-			this.setAmount(tag.getFloat("bodyAmount"));
-		}
 	}
 
 	@Nullable
@@ -340,14 +298,11 @@ public class Boulder extends Monster {
 	}
 
 	protected boolean isSunBurn() {
-		//		DD.LOGGER.info("is day -> {}", this.level.isDay());
-		//		DD.LOGGER.info("is server side -> {}", !this.level.isClientSide);
 		if (this.level.isDay() && !this.level.isClientSide) {
 			float brightness = this.getBrightness();
 			BlockPos pos = new BlockPos(this.getX(), this.getEyeY(), this.getZ());
-//			DD.LOGGER.info("can see sky -> {}", this.level.canSeeSky(pos));
-			//			boolean flag = this.isInWaterRainOrBubble() || this.isInPowderSnow || this.wasInPowderSnow;
-			if (brightness > 0.5F && this.level.canSeeSky(pos)) {
+			boolean flag = this.isInWaterRainOrBubble() || this.isInPowderSnow || this.wasInPowderSnow;
+			if (brightness > 0.5F && this.random.nextFloat() * 30.0F < (brightness - 0.4F) * 2.0F && !flag && this.level.canSeeSky(pos)) {
 				return true;
 			}
 		}
@@ -360,8 +315,8 @@ public class Boulder extends Monster {
 	 *
 	 */
 	public static class BoulderRandomStrollGoal extends WaterAvoidingRandomStrollGoal {
-		private Boulder boulder;
-		public BoulderRandomStrollGoal(Boulder boulder, double speedModifier) {
+		private _Boulder boulder;
+		public BoulderRandomStrollGoal(_Boulder boulder, double speedModifier) {
 			super(boulder, speedModifier);
 			this.boulder = boulder;
 		}
@@ -375,8 +330,54 @@ public class Boulder extends Monster {
 		}
 	}
 
+	public static class BoulderGoDormantGoal extends Goal {
+		private _Boulder boulder;
+
+		public BoulderGoDormantGoal(_Boulder boulder) {
+			this.boulder = boulder;
+		}
+
+		@Override
+		public boolean canUse() {
+			if (boulder.isActive() && (boulder.getLoyaltyTicks() <= 0 || boulder.isSunBurn())) {
+				DD.LOGGER.info("going to sleep");
+				return true;
+			}
+			return false;
+		}	
+
+		@Override
+		public void start() {
+			this.boulder.goToSleep();
+			super.start();
+		}
+	}
+
+	public static class BoulderWakeUpGoal extends Goal {
+		private _Boulder boulder;
+
+		public BoulderWakeUpGoal(_Boulder boulder) {
+			this.boulder = boulder;
+		}
+
+		@Override
+		public boolean canUse() {
+			if (boulder.isDormant() && boulder.getLoyaltyTicks() > 0 && !boulder.isSunBurn()) {
+				DD.LOGGER.info("waking up");
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public void start() {
+			super.start();
+			this.boulder.wakeUp();
+		}
+	}
+
 	public static class BoulderFollowOwnerGoal extends Goal {
-		private Boulder boulder;
+		private _Boulder boulder;
 		// the distance away at which the boulder starts to follow
 		private float startDistance;
 		// the distance away at which the bould stops following
@@ -393,7 +394,7 @@ public class Boulder extends Monster {
 		 * @param startDistance
 		 * @param stopDistance
 		 */
-		public BoulderFollowOwnerGoal(Boulder boulder, float startDistance, float stopDistance) {
+		public BoulderFollowOwnerGoal(_Boulder boulder, float startDistance, float stopDistance) {
 			this.boulder = boulder;
 			this.startDistance = startDistance;
 			this.stopDistance = stopDistance;
@@ -515,6 +516,14 @@ public class Boulder extends Monster {
 		this.previousAmount = previousAmount;
 	}
 
+	public float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
+
 	public boolean isFallingAsleep() {
 		return getState().equals(FALLING_ASLEEP);
 	}
@@ -546,5 +555,13 @@ public class Boulder extends Monster {
 
 	public void setPreviousBodyAmount(float previousBodyAmount) {
 		this.previousBodyAmount = previousBodyAmount;
+	}
+
+	public float getBodyAmount() {
+		return bodyAmount;
+	}
+
+	public void setBodyAmount(float bodyAmount) {
+		this.bodyAmount = bodyAmount;
 	}
 }
