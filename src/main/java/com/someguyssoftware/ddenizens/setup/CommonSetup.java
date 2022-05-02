@@ -171,13 +171,28 @@ public class CommonSetup {
 		@SubscribeEvent
 		public static void addGoals(final EntityJoinWorldEvent event) {
 			if (event.getEntity() instanceof Zombie) {
-				((Zombie)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Zombie)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D));
+				((Zombie)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Zombie)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
+					if (entity instanceof Boulder) {
+						 return ((Boulder)entity).isActive();
+					}
+					return false;
+				}));
 			}
 			else if (event.getEntity() instanceof Skeleton) {
-				((Skeleton)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Skeleton)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D));
+				((Skeleton)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Skeleton)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
+					if (entity instanceof Boulder) {
+						 return ((Boulder)entity).isActive();
+					}
+					return false;
+				}));
 			}
 			else if (event.getEntity() instanceof ZombieVillager) {
-				((ZombieVillager)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((ZombieVillager)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D));
+				((ZombieVillager)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((ZombieVillager)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
+					if (entity instanceof Boulder) {
+						 return ((Boulder)entity).isActive();
+					}
+					return false;
+				}));
 			}
 		}
 

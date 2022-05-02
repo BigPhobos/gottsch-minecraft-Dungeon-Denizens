@@ -87,7 +87,7 @@ public class Headless extends Monster {
 		 * setAlertOthers() will alert ALL mobs based on class hierarchry of instanceof Mob.
 		 */
 		// for the included list. ie this mob will alert the other specific listed mobs.
-		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class, Gazer.class));
+		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class, Orc.class, Gazer.class));
 		
 		/*
 		 * determines who to target
