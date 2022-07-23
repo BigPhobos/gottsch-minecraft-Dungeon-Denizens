@@ -43,6 +43,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 
 /**
@@ -124,7 +125,7 @@ public class Shadow extends DDMonster {
 //		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN)
 //				&& checkAnyLightMonsterSpawnRules(mob, level, spawnType, pos, random);
 
-		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
+		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
 //			IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());
 //			SpawnConfig netherConfig = ((INetherMobConfig)mobConfig).getNetherSpawn();
 //			if (netherConfig.minHeight.get() != SpawnConfig.IGNORE_HEIGHT) {

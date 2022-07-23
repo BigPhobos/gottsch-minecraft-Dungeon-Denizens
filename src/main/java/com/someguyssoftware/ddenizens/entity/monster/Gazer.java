@@ -34,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -98,7 +99,7 @@ public class Gazer extends FlyingMob {
 	 * @return
 	 */
 	public static boolean checkGazerSpawnRules(EntityType<Gazer> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
+		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
 			return DDMonster.checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {

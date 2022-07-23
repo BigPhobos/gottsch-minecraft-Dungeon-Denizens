@@ -30,6 +30,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -98,7 +99,7 @@ public class Daemon extends DDMonster {
 	 * @return
 	 */
 	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
+		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
 			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
