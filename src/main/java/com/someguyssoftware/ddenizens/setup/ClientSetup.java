@@ -13,7 +13,6 @@ import com.someguyssoftware.ddenizens.client.model.ShadowModel;
 import com.someguyssoftware.ddenizens.client.model.ShadowlordModel;
 import com.someguyssoftware.ddenizens.client.renderer.entity.BoulderRenderer;
 import com.someguyssoftware.ddenizens.client.renderer.entity.DaemonRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.EttinRenderer;
 import com.someguyssoftware.ddenizens.client.renderer.entity.GazerRenderer;
 import com.someguyssoftware.ddenizens.client.renderer.entity.GhoulRenderer;
 import com.someguyssoftware.ddenizens.client.renderer.entity.HeadlessRenderer;
@@ -65,7 +64,7 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.HEADLESS_ENTITY_TYPE.get(), HeadlessRenderer::new);
         event.registerEntityRenderer(Registration.ORC_ENTITY_TYPE.get(), OrcRenderer::new);
         event.registerEntityRenderer(Registration.GHOUL_ENTITY_TYPE.get(), GhoulRenderer::new);
-        event.registerEntityRenderer(Registration.ETTIN_ENTITY_TYPE.get(), EttinRenderer::new);
+//        event.registerEntityRenderer(Registration.ETTIN_ENTITY_TYPE.get(), EttinRenderer::new);
         event.registerEntityRenderer(Registration.GAZER_ENTITY_TYPE.get(), GazerRenderer::new);
         event.registerEntityRenderer(Registration.BOULDER_ENTITY_TYPE.get(), BoulderRenderer::new);
         event.registerEntityRenderer(Registration.SHADOW_ENTITY_TYPE.get(), ShadowRenderer::new);
@@ -80,6 +79,9 @@ public class ClientSetup {
         	return new ThrownItemRenderer<>(provider, 1.0F, true);
          });
         event.registerEntityRenderer(Registration.FIRESPOUT_ENTITY_TYPE.get(), (provider) -> {
+        	return new ThrownItemRenderer<>(provider, 1.5F, true);
+         });
+        event.registerEntityRenderer(Registration.ROCK_ENTITY_TYPE.get(), (provider) -> {
         	return new ThrownItemRenderer<>(provider, 1.0F, true);
          });
 	}

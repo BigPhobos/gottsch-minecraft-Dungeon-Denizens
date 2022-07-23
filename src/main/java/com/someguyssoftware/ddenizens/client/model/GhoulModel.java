@@ -43,7 +43,7 @@ import net.minecraft.world.entity.Entity;
  *
  * @param <T>
  */
-public class GhoulModel<T extends Entity> extends DDModel<T> implements HeadedModel {
+public class GhoulModel<T extends Entity> extends DDModel<T> {
 	public static final String MODEL_NAME = "ghoul_model";
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, MODEL_NAME), "main");
 	private final ModelPart torso;
@@ -194,11 +194,6 @@ public class GhoulModel<T extends Entity> extends DDModel<T> implements HeadedMo
 	}
 
 	@Override
-	public ModelPart getHead() {
-		return this.head;
-	}
-
-	@Override
 	public ModelPart getBody() {
 		return body;
 	}
@@ -211,5 +206,10 @@ public class GhoulModel<T extends Entity> extends DDModel<T> implements HeadedMo
 	@Override
 	public ModelPart getLeftArm() {
 		return leftArm;
+	}
+
+	@Override
+	public ModelPart getHead() {
+		return this.head;
 	}
 }

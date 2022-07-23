@@ -39,12 +39,24 @@ public class DDItemModelsProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
+    	// projectiles
         singleTexture(Registration.SLOWBALL_ITEM.get().getRegistryName().getPath(),
                 mcLoc("item/generated"), "layer0", modLoc("item/slowball"));
         
         singleTexture(Registration.HARMBALL_ITEM.get().getRegistryName().getPath(),
                 mcLoc("item/generated"), "layer0", modLoc("item/harmball"));
+        
+        singleTexture(Registration.ROCK_ITEM.get().getRegistryName().getPath(),
+                mcLoc("item/generated"), "layer0", modLoc("item/rock"));
     	
+        // weapons
+        singleTexture(Registration.CLUB.get().getRegistryName().getPath(),
+        		mcLoc("item/generated"), "layer0", modLoc("item/club"));
+        
+        singleTexture(Registration.SPIKED_CLUB.get().getRegistryName().getPath(),
+        		mcLoc("item/generated"), "layer0", modLoc("item/spiked_club"));
+        
+        // eggs
     	withExistingParent(Registration.HEADLESS_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.ORC_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.GHOUL_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));

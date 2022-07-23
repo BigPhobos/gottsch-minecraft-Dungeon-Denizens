@@ -318,7 +318,7 @@ public final class Config {
 		public HeadlessConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Headless properties.", CATEGORY_DIV).push(Registration.HEADLESS);				
 
-			spawnConfig = new SpawnConfig(builder, 85, 1, 3, MIN_HEIGHT, MAX_HEIGHT,
+			spawnConfig = new SpawnConfig(builder, 40, 1, 2, MIN_HEIGHT, MAX_HEIGHT,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			builder.pop();
@@ -331,7 +331,7 @@ public final class Config {
 	public static class OrcConfig extends MobConfig {
 		public OrcConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Orc properties.", CATEGORY_DIV).push(Registration.ORC);
-			spawnConfig = new SpawnConfig(builder, 80, 1, 2, MIN_HEIGHT, MAX_HEIGHT,
+			spawnConfig = new SpawnConfig(builder, 35, 1, 2, MIN_HEIGHT, MAX_HEIGHT,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 			builder.pop();
 		}
@@ -348,7 +348,7 @@ public final class Config {
 		public GhoulConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Ghoul properties.", CATEGORY_DIV).push(Registration.GHOUL);				
 
-			spawnConfig = new SpawnConfig(builder, 75, 1, 1,  MIN_HEIGHT, MAX_HEIGHT,
+			spawnConfig = new SpawnConfig(builder, 25, 1, 1,  MIN_HEIGHT, MAX_HEIGHT,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			healAmount = builder
@@ -388,7 +388,7 @@ public final class Config {
 		public ShadowConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadow properties.", CATEGORY_DIV).push(Registration.SHADOW);				
 
-			spawnConfig = new SpawnConfig(builder, 35, 1, 2,  MIN_HEIGHT, 60,
+			spawnConfig = new SpawnConfig(builder, 30, 1, 2,  MIN_HEIGHT, 60,
 					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, 5, 1, 2, MIN_HEIGHT, MAX_HEIGHT);

@@ -36,10 +36,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
-// Made with Blockbench 4.1.5
-// Exported for Minecraft version 1.17 with Mojang mappings
-// Paste this class into your mod and generate all required imports
-
 /**
  * 
  * @author Mark Gottschling on Apr 6, 2022

@@ -5,15 +5,15 @@
       "rolls": 1,
       "entries": [
         {
-          "entryName": "rotten_flesh",
+          "entryName": "iron_nugget",
           "type": "minecraft:item",
-          "name": "minecraft:rotten_flesh",
+          "name": "minecraft:iron_nugget",
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "min": 0.0,
-                "max": 2.0,
+                "max": 3.0,
                 "type": "minecraft:uniform"
               }
             },
@@ -25,26 +25,6 @@
               }
             }
           ]          
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "entryName": "iron_ingot",
-          "type": "minecraft:item",
-          "name": "minecraft:iron_ingot"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_looting",
-          "chance": 0.025,
-          "looting_multiplier": 0.1
         }
       ]
     }

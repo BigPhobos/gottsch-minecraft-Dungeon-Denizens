@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -40,10 +41,6 @@ import net.minecraft.world.phys.Vec3;
  */
 public class Daemon extends DDMonster {
 	public static final double MELEE_DISTANCE_SQUARED = 25D;
-	private static final double SHOOT_DISTANCE_SQUARED = 4096D;
-//	private static final double FIRESPOUT_MAX_DISTANCE = 10D;
-//	private static final double FIRESPOUT_MAX_DISTANCE_SQUARED = FIRESPOUT_MAX_DISTANCE * FIRESPOUT_MAX_DISTANCE;
-//	private static final int FIRESPOUTS_MAX = 10;
 
 	private double flameParticlesTime;
 
@@ -55,13 +52,15 @@ public class Daemon extends DDMonster {
 	public Daemon(EntityType<? extends Monster> entityType, Level level) {
 		super(entityType, level);
 		isPersistenceRequired();
+		this.xpReward = 10;
 	}
 
 	protected void registerGoals() {
-		this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(1, new FloatGoal(this));
 		this.goalSelector.addGoal(4, new DaemonShootSpellsGoal(this, Config.Mobs.DAEMON.firespoutCooldownTime.get()));
 		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.3D, false));
-		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 64.0F, 0.2F));
+		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 10.0F, 0.2F));
 		this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
@@ -99,7 +98,6 @@ public class Daemon extends DDMonster {
 	 * @return
 	 */
 	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		//		return (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER || (level.getHeight() < 0) && checkMobSpawnRules(mob, level, spawnType, pos, random));
 		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
 			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
@@ -159,18 +157,17 @@ public class Daemon extends DDMonster {
 		}
 
 		@Override
-		public boolean canUse() {
-			return this.daemon.getTarget() != null && getDistanceToTarget() > Daemon.MELEE_DISTANCE_SQUARED;
+		public boolean canUse() {			
+			return this.daemon.getTarget() != null;
 		}
-
+		
 		@Override
 		public void start() {
-			// set the cooldown to be a few seconds to start so the daemon doesn't fire right away.
-			this.cooldownTime = maxCooldownTime / 2;
 		}
 
 		@Override
 		public void stop() {
+			this.cooldownTime = 0;
 		}
 
 		@Override
@@ -189,7 +186,6 @@ public class Daemon extends DDMonster {
 			if (target != null) {
 				double distanceToTarget = getDistanceToTarget();
 				if (distanceToTarget > MELEE_DISTANCE_SQUARED && daemon.hasLineOfSight(target)) {
-					//				if (livingentity.distanceToSqr(daemon) < SHOOT_DISTANCE_SQUARED && daemon.hasLineOfSight(livingentity)) {
 
 					if (this.cooldownTime == 0) {
 						// +6.0 gives you a 2 block buffer from the spell radius

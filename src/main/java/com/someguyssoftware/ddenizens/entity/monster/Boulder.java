@@ -154,15 +154,15 @@ public class Boulder extends Monster {
 
 		// NOTE isSunBurn only works on server
 		if (!WorldInfo.isClientSide(level)) {
-//			DD.LOGGER.info("state -> {}", getState());
-//			DD.LOGGER.info("loyalty ticks -> {}", getLoyaltyTicks());
-//			DD.LOGGER.info("is sun burn -> {}", isSunBurn());
+//			DD.LOGGER.debug("state -> {}", getState());
+//			DD.LOGGER.debug("loyalty ticks -> {}", getLoyaltyTicks());
+//			DD.LOGGER.debug("is sun burn -> {}", isSunBurn());
 			if (isDormant() && getLoyaltyTicks() > 0 && !isSunBurn()) {
-//				DD.LOGGER.info("waking up");
+//				DD.LOGGER.debug("waking up");
 				wakeUp();
 			}
 			else if (isActive() && (getLoyaltyTicks() <= 0 || isSunBurn())) {
-//				DD.LOGGER.info("going to sleep");
+//				DD.LOGGER.debug("going to sleep");
 				goToSleep();
 			}
 			previousAmount = amount;
@@ -216,7 +216,7 @@ public class Boulder extends Monster {
 	}
 
 	public void hibernate() {
-//		DD.LOGGER.info("hibernating/dormant");
+//		DD.LOGGER.debug("hibernating/dormant");
 		setState(DORMANT);
 		setOwnerUUID(null);
 		setLoyaltyTicks(0);
@@ -340,12 +340,12 @@ public class Boulder extends Monster {
 	}
 
 	protected boolean isSunBurn() {
-		//		DD.LOGGER.info("is day -> {}", this.level.isDay());
-		//		DD.LOGGER.info("is server side -> {}", !this.level.isClientSide);
+		//		DD.LOGGER.debug("is day -> {}", this.level.isDay());
+		//		DD.LOGGER.debug("is server side -> {}", !this.level.isClientSide);
 		if (this.level.isDay() && !this.level.isClientSide) {
 			float brightness = this.getBrightness();
 			BlockPos pos = new BlockPos(this.getX(), this.getEyeY(), this.getZ());
-//			DD.LOGGER.info("can see sky -> {}", this.level.canSeeSky(pos));
+//			DD.LOGGER.debug("can see sky -> {}", this.level.canSeeSky(pos));
 			//			boolean flag = this.isInWaterRainOrBubble() || this.isInPowderSnow || this.wasInPowderSnow;
 			if (brightness > 0.5F && this.level.canSeeSky(pos)) {
 				return true;

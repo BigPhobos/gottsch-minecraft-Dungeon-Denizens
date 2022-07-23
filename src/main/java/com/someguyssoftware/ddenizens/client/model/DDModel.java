@@ -46,6 +46,15 @@ public abstract class DDModel<T extends Entity> extends EntityModel<T> implement
 		super(renderType);
 	}
 
+	@Override
+	public abstract ModelPart getHead();
+	@Override
+	public abstract ModelPart getBody();
+	@Override
+	public abstract ModelPart getRightArm();
+	@Override
+	public abstract ModelPart getLeftArm();
+	
 	/**
 	 * 
 	 * @return

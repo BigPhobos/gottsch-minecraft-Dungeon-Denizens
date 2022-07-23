@@ -49,6 +49,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -87,7 +88,7 @@ public class Shadowlord extends DDMonster {
 
 	private double auraOfBlindessTime;
 	private int numSummonDaemons;
-	
+
 
 	/**
 	 * 
@@ -97,6 +98,7 @@ public class Shadowlord extends DDMonster {
 	public Shadowlord(EntityType<? extends Monster> entityType, Level level) {
 		super(entityType, level);
 		setPersistenceRequired();
+		this.xpReward = 8;
 	}
 
 	/**
@@ -104,22 +106,23 @@ public class Shadowlord extends DDMonster {
 	 */
 	protected void registerGoals() {
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
-		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
-		
+		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.1D));
+				
 		this.goalSelector.addGoal(4, new ShadowlordShootHarmGoal(this, Config.Mobs.SHADOWLORD.harmChargeTime.get()));
 		this.goalSelector.addGoal(4, new ShadowlordSummonGoal(this, Config.Mobs.SHADOWLORD.summonCooldownTime.get(), true));
 		// TODO update with strafing movement - see RangedBowAttackGoal
 		//		this.goalSelector.addGoal(5, new ShadowlordMeleeAttackGoal(this, 1.0D, false));
-		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, false));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.1D, false));
 		
-		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 64.0F));
-		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 16.0F));
+		this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+
 
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
 			if (entity instanceof Boulder) {
-				 return ((Boulder)entity).isActive();
+				return ((Boulder)entity).isActive();
 			}
 			return false;
 		}));
@@ -142,9 +145,14 @@ public class Shadowlord extends DDMonster {
 	}
 
 	@Override
+	public MobType getMobType() {
+		return MobType.UNDEAD;
+	}
+
+	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
 			MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag tag) {
-		
+
 		if (difficulty.getDifficulty() == Difficulty.NORMAL) {
 			numSummonDaemons = 1;
 		}
@@ -156,9 +164,8 @@ public class Shadowlord extends DDMonster {
 		}
 		return super.finalizeSpawn(level, difficulty, spawnType, groupData, tag);		
 	}
-	
+
 	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-//		return (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER || (level.getHeight() < 20) && checkMobSpawnRules(mob, level, spawnType, pos, random));
 		if (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER) {
 			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
@@ -166,7 +173,7 @@ public class Shadowlord extends DDMonster {
 			return checkDDSpawnRules(mob, level, spawnType, pos, random);
 		}
 	}
-	
+
 	/**
 	 * Only executed on server side.
 	 * @param entity
@@ -174,7 +181,7 @@ public class Shadowlord extends DDMonster {
 	 */
 	public void drain(LivingEntity entity, float amount) {
 		// add damage to Shadowlord's health
-		DD.LOGGER.info("draining {} hp from player", amount);
+		DD.LOGGER.debug("draining {} hp from player", amount);
 		setHealth(Math.min(getMaxHealth(), getHealth() + amount));
 		if (!WorldInfo.isClientSide(this.level)) {
 			for (int p = 0; p < 20; p++) {
@@ -198,7 +205,7 @@ public class Shadowlord extends DDMonster {
 			auraOfBlindessTime++;
 			auraOfBlindessTime = auraOfBlindessTime % 360;
 		}
-		
+
 		/*
 		 * Apply Aura of Blindness to Players
 		 */
@@ -265,12 +272,12 @@ public class Shadowlord extends DDMonster {
 			else {
 				amount = 1.0F;
 			}
-			DD.LOGGER.info("new gold sword strike amount -> {}", amount);
+			DD.LOGGER.debug("new gold sword strike amount -> {}", amount);
 		}
 
 		return super.hurt(damageSource, amount);
 	}
-	
+
 	/**
 	 * Fires harmball at target every 4 secs.
 	 * @author Mark Gottschling on Apr 19, 2022
@@ -285,7 +292,7 @@ public class Shadowlord extends DDMonster {
 		public ShadowlordShootHarmGoal(Shadowlord mob) {
 			this(mob, DEFAULT_CHARGE_TIME);			
 		}
-		
+
 		public ShadowlordShootHarmGoal(Shadowlord mob, int maxChargeTime) {
 			this.shadowlord = mob;
 			this.maxChargeTime = maxChargeTime;
@@ -293,7 +300,7 @@ public class Shadowlord extends DDMonster {
 
 		@Override
 		public boolean canUse() {
-			return this.shadowlord.getTarget() != null && !(Shadowlord.MELEE_DISTANCE_SQUARED >= this.shadowlord.distanceToSqr(shadowlord.getTarget().getX(), shadowlord.getTarget().getY(), shadowlord.getTarget().getZ()));
+			return this.shadowlord.getTarget() != null; // && !(Shadowlord.MELEE_DISTANCE_SQUARED >= this.shadowlord.distanceToSqr(shadowlord.getTarget().getX(), shadowlord.getTarget().getY(), shadowlord.getTarget().getZ()));
 		}
 
 		@Override
@@ -314,11 +321,13 @@ public class Shadowlord extends DDMonster {
 		public void tick() {
 			LivingEntity livingentity = this.shadowlord.getTarget();
 			if (livingentity != null) {
-				if (livingentity.distanceToSqr(this.shadowlord) < SHOOT_DISTANCE_SQUARED && this.shadowlord.hasLineOfSight(livingentity)) {
+				if (livingentity.distanceToSqr(this.shadowlord) < SHOOT_DISTANCE_SQUARED && this.shadowlord.hasLineOfSight(livingentity) 
+						&& livingentity.distanceToSqr(this.shadowlord) > Shadowlord.MELEE_DISTANCE_SQUARED) {
+
 					Level level = this.shadowlord.level;
 					++this.chargeTime;
 
-					if (this.chargeTime >= maxChargeTime) { 
+					if (this.chargeTime >= maxChargeTime) {
 						Vec3 vec3 = this.shadowlord.getViewVector(1.0F);
 						double x = livingentity.getX() - (this.shadowlord.getX() + vec3.x * 2.0D);
 						double y = livingentity.getY(0.5D) - (this.shadowlord.getY(0.5D));
@@ -333,6 +342,7 @@ public class Shadowlord extends DDMonster {
 				} else if (this.chargeTime > 0) {
 					--this.chargeTime;
 				}
+
 			}
 		}
 
@@ -353,7 +363,7 @@ public class Shadowlord extends DDMonster {
 		public ShadowlordSummonGoal(Shadowlord shadowlord) {
 			this(shadowlord, SUMMON_CHARGE_TIME, true);
 		}
-		
+
 		/**
 		 * 
 		 * @param mob

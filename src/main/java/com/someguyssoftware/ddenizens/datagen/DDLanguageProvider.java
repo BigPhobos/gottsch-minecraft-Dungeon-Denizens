@@ -62,5 +62,10 @@ public class DDLanguageProvider extends LanguageProvider {
         add(Registration.DAEMON_EGG.get(), "Daemon Spawn Egg");
         
         add(Registration.SLOWBALL_ITEM.get(), "Slowball");
+        add(Registration.HARMBALL_ITEM.get(), "Harmball");
+        add(Registration.ROCK_ITEM.get(), "Rock");
+        
+        add(Registration.CLUB.get(), "Club");
+        add(Registration.SPIKED_CLUB.get(), "Spiked Club");
     }
 }

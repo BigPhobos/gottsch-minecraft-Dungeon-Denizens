@@ -28,7 +28,6 @@ import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.DDMonster;
 import com.someguyssoftware.ddenizens.entity.monster.Daemon;
-import com.someguyssoftware.ddenizens.entity.monster.Ettin;
 import com.someguyssoftware.ddenizens.entity.monster.Gazer;
 import com.someguyssoftware.ddenizens.entity.monster.Ghoul;
 import com.someguyssoftware.ddenizens.entity.monster.Headless;
@@ -92,7 +91,7 @@ public class CommonSetup {
 		event.put(Registration.SHADOWLORD_ENTITY_TYPE.get(), Shadowlord.createAttributes().build());
 		event.put(Registration.DAEMON_ENTITY_TYPE.get(), Daemon.createAttributes().build());
 
-		event.put(Registration.ETTIN_ENTITY_TYPE.get(), Ettin.createAttributes().build());
+//		event.put(Registration.ETTIN_ENTITY_TYPE.get(), Ettin.createAttributes().build());
 	}
 
 	@SubscribeEvent
@@ -116,7 +115,7 @@ public class CommonSetup {
 		 */
 		@SubscribeEvent
 		public static void onBiomeLoading(final BiomeLoadingEvent event) {
-			DD.LOGGER.info("event for biome -> {}, category -> {}", event.getName(), event.getCategory().getName());
+			DD.LOGGER.debug("event for biome -> {}, category -> {}", event.getName(), event.getCategory().getName());
 			/* 
 			 * register mob spawns to biomes
 			 */
@@ -128,7 +127,7 @@ public class CommonSetup {
 				if (config.getSpawnConfig().enable.get()) {
 					Result result = isBiomeAllowed(biome, event.getCategory(), config.getSpawnConfig());
 					if (result == Result.OK || result == Result.WHITE_LISTED) {
-						DD.LOGGER.info("registering spawner data -> {}", ((EntityType<?>)entityType.get()).getRegistryName());
+						DD.LOGGER.debug("registering spawner data -> {}", ((EntityType<?>)entityType.get()).getRegistryName());
 
 						if (event.getCategory() == BiomeCategory.NETHER && config instanceof INetherMobConfig) {
 							event.getSpawns().getSpawner(MobCategory.MONSTER)
@@ -236,7 +235,7 @@ public class CommonSetup {
 
 			// do something to player every update tick:
 			if (event.getEntity() instanceof Player && event.getSource().getEntity() instanceof Shadowlord) {
-				DD.LOGGER.info("event: hurting player from shadowlord -> {}", event.getAmount());
+				DD.LOGGER.debug("event: hurting player from shadowlord -> {}", event.getAmount());
 			}
 		}
 

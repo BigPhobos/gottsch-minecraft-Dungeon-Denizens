@@ -24,6 +24,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -96,6 +97,10 @@ public class Shadow extends DDMonster {
 				.add(Attributes.MOVEMENT_SPEED, 0.28F);                
 	}
 
+	public MobType getMobType() {
+		return MobType.UNDEAD;
+	}
+	
 	@Override
 	public void aiStep() {
 		// set on fire if in sun

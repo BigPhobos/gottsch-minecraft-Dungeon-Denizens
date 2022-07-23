@@ -19,7 +19,6 @@
  */
 package com.someguyssoftware.ddenizens.entity.monster;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import com.someguyssoftware.ddenizens.DD;
@@ -63,32 +62,31 @@ import net.minecraft.world.phys.Vec3;
  * @author Mark Gottschling on Apr 27, 2022
  *
  */
-public class Orc extends Monster {
-	private static final EntityDataAccessor<Byte> DATA = SynchedEntityData.defineId(Orc.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Boolean> IS_RANGED = SynchedEntityData.defineId(Orc.class, EntityDataSerializers.BOOLEAN);
+public class _Orc extends Monster {
+	private static final EntityDataAccessor<Byte> DATA = SynchedEntityData.defineId(_Orc.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Boolean> IS_RANGED = SynchedEntityData.defineId(_Orc.class, EntityDataSerializers.BOOLEAN);
 	private static final String DATA_TAG = "data";
 	private static final String IS_RANGED_TAG = "isRanged";
 	private static final byte RIGHT_SHOULDER_PAD = 0;
 	private static final byte LEFT_SHOULDER_PAD = 1;
 	private static final byte HAIR = 2;
 	private static final byte BRACERS = 3;
-//	private static final byte POWERING = 4;
-//	private static final byte LAUNCHING = 5;
+	private static final byte POWERING = 4;
+	private static final byte LAUNCHING = 5;
 	
 	private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.0D, false);
 	private final OrcThrowRockGoal rockGoal = new OrcThrowRockGoal(this);
 	
-//	private float throwTime;
+	private float throwTime;
 
 	/**
 	 * 
 	 * @param entityType
 	 * @param level
 	 */
-	public Orc(EntityType<? extends Monster> entityType, Level level) {
+	public _Orc(EntityType<? extends Monster> entityType, Level level) {
 		super(entityType, level);
-		Arrays.fill(this.handDropChances, 0.25F);
-//		this.reassessWeaponGoal();
+		this.reassessWeaponGoal();
 	}
 
 	protected void registerGoals() {
@@ -98,7 +96,7 @@ public class Orc extends Monster {
 			}
 			return false;
 		}));
-		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
+		//		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
 		this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 1.0D, true, 4, () -> true));
 		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -149,7 +147,7 @@ public class Orc extends Monster {
 
 		// arm the orc
 		this.populateDefaultEquipmentSlots(difficulty);
-//		this.reassessWeaponGoal();
+		this.reassessWeaponGoal();
 
 		Random random = new Random();
 		byte data = 0;
@@ -188,31 +186,17 @@ public class Orc extends Monster {
 
 	@Override
 	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
-		int i = this.random.nextInt(5);
-		switch(i) {
-		case 0:
+		int i = this.random.nextInt(3);
+		if (i == 0) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
-			break;
-		case 1:
+		} else if (i == 1) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
-			break;
-		case 2:
-			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Registration.CLUB.get()));
-			break;
-		case 3:
-			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Registration.SPIKED_CLUB.get()));
-			break;
-		case 4:
-		default:
+		}
+		else {
 			this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-//			this.setRanged(true);
+			this.setRanged(true);
 		}
 		this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-		
-		// setup armor
-		if (this.random.nextInt(5) == 0) {
-			this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.LEATHER_CHESTPLATE));
-		}
 	}
 
 	/**
@@ -242,17 +226,17 @@ public class Orc extends Monster {
 		if (tag.contains(IS_RANGED_TAG)) {
 			this.setRanged(tag.getBoolean(IS_RANGED_TAG));
 		}
-//		DD.LOGGER.debug("isRanged -> {}", this.isRanged());
+		DD.LOGGER.debug("isRanged -> {}", this.isRanged());
 	}
 
 
 	/*
-	 * This needs work 
+	 * 
 	 */
 	static class OrcThrowRockGoal extends Goal {
 		private static final int DEFAULT_CHARGE_TIME = 40;
 		private static final float DEFAULT_ATTACK_RADIUS = 16F;
-		private Orc orc;
+		private _Orc orc;
 		private final double speedModifier;
 		private int maxChargeTime;
 		private int chargeTime;
@@ -265,11 +249,11 @@ public class Orc extends Monster {
 		/*
 		 * 
 		 */
-		public OrcThrowRockGoal(Orc orc) {
+		public OrcThrowRockGoal(_Orc orc) {
 			this(orc, 1.0D, DEFAULT_CHARGE_TIME, DEFAULT_ATTACK_RADIUS);
 		}
 
-		public OrcThrowRockGoal(Orc orc, double speedModifier, int maxChargeTime, float attackRadius) {
+		public OrcThrowRockGoal(_Orc orc, double speedModifier, int maxChargeTime, float attackRadius) {
 			this.orc = orc;
 			this.speedModifier = speedModifier;
 			this.maxChargeTime = maxChargeTime;
@@ -430,21 +414,21 @@ public class Orc extends Monster {
 		return getDataBit(BRACERS) == 1;
 	}
 	
-//	public boolean isPowering() {
-//		return getDataBit(POWERING) == 1;
-//	}
-//
-//	public void setPowering(boolean isPowering) {
-//		setData(POWERING, isPowering);
-//	}
-//	
-//	public boolean isLaunching() {
-//		return getDataBit(LAUNCHING) == 1;
-//	}
-//	
-//	public void setLaunching(boolean isLaunching) {
-//		setData(LAUNCHING, isLaunching);
-//	}
+	public boolean isPowering() {
+		return getDataBit(POWERING) == 1;
+	}
+
+	public void setPowering(boolean isPowering) {
+		setData(POWERING, isPowering);
+	}
+	
+	public boolean isLaunching() {
+		return getDataBit(LAUNCHING) == 1;
+	}
+	
+	public void setLaunching(boolean isLaunching) {
+		setData(LAUNCHING, isLaunching);
+	}
 	
 	public byte getData() {
 		return this.entityData.get(DATA);
@@ -473,11 +457,11 @@ public class Orc extends Monster {
 		this.entityData.set(IS_RANGED, isRanged);
 	}
 
-//	public float getThrowTime() {
-//		return throwTime;
-//	}
-//
-//	public void setThrowTime(float throwTime) {
-//		this.throwTime = throwTime;
-//	}
+	public float getThrowTime() {
+		return throwTime;
+	}
+
+	public void setThrowTime(float throwTime) {
+		this.throwTime = throwTime;
+	}
 }

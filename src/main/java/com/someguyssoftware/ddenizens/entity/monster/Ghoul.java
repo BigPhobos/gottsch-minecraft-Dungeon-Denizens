@@ -13,6 +13,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -81,7 +82,7 @@ public class Ghoul extends Monster {
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
 		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
 			if (entity instanceof Boulder) {
-				 return ((Boulder)entity).isActive();
+				return ((Boulder)entity).isActive();
 			}
 			return false;
 		}));
@@ -110,6 +111,10 @@ public class Ghoul extends Monster {
 				.add(Attributes.MAX_HEALTH)
 				.add(Attributes.FOLLOW_RANGE, 15.0)
 				.add(Attributes.MOVEMENT_SPEED, 0.3F);  // faster than zombie
+	}
+
+	public MobType getMobType() {
+		return MobType.UNDEAD;
 	}
 
 	@Override
@@ -147,7 +152,11 @@ public class Ghoul extends Monster {
 				|| stack.is(Items.BEEF)
 				|| stack.is(Items.MUTTON)
 				|| stack.is(Items.RABBIT)
-				|| stack.is(Items.CHICKEN);
+				|| stack.is(Items.CHICKEN)
+				|| stack.is(Items.COOKED_BEEF)
+				|| stack.is(Items.COOKED_MUTTON)
+				|| stack.is(Items.COOKED_RABBIT)
+				|| stack.is(Items.COOKED_CHICKEN);
 	}
 
 	@Override
@@ -166,16 +175,16 @@ public class Ghoul extends Monster {
 		return false;
 	}
 
-//	@Override
-//	protected void dropCustomDeathLoot(DamageSource p_21385_, int p_21386_, boolean p_21387_) {
-//		super.dropCustomDeathLoot(p_21385_, p_21386_, p_21387_);
-//	}
+	//	@Override
+	//	protected void dropCustomDeathLoot(DamageSource p_21385_, int p_21386_, boolean p_21387_) {
+	//		super.dropCustomDeathLoot(p_21385_, p_21386_, p_21387_);
+	//	}
 
 	public boolean hasMeatInventory() {
 		return !this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()
 				|| !this.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty();
 	}
-	
+
 	protected SoundEvent getAmbientSound() {
 		return SoundEvents.ZOMBIE_AMBIENT;
 	}
@@ -226,7 +235,7 @@ public class Ghoul extends Monster {
 			}
 			if (!meatStack.isEmpty()) {
 				meatStack.shrink(1);
-//				getGhoul().setHealth(Math.min(getGhoul().getHealth() + 4.0F, getGhoul().getMaxHealth()));
+				//				getGhoul().setHealth(Math.min(getGhoul().getHealth() + 4.0F, getGhoul().getMaxHealth()));
 				getGhoul().heal(Config.Mobs.GHOUL.healAmount.get().floatValue());
 			}
 			super.start();

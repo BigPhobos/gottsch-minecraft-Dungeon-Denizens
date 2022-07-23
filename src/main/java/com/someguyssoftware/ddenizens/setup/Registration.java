@@ -16,6 +16,7 @@ import com.someguyssoftware.ddenizens.entity.monster.Shadow;
 import com.someguyssoftware.ddenizens.entity.monster.Shadowlord;
 import com.someguyssoftware.ddenizens.entity.projectile.FireSpout;
 import com.someguyssoftware.ddenizens.entity.projectile.Harmball;
+import com.someguyssoftware.ddenizens.entity.projectile.Rock;
 import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
 
 import net.minecraft.core.particles.ParticleType;
@@ -23,6 +24,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -39,7 +42,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class Registration {
 	public static final String HEADLESS = "headless";
 	public static final String GHOUL = "ghoul";
-	public static final String ETTIN = "ettin";
+//	public static final String ETTIN = "ettin";
 	public static final String SHADOW = "shadow";
 	public static final String SHADOWLORD = "shadowlord";
 	public static final String GAZER = "gazer";
@@ -51,6 +54,7 @@ public class Registration {
 	private static final String SLOWBALL = "slowball";
 	private static final String HARMBALL = "harmball";
 	private static final String FIRESPOUT = "firespout";
+	private static final String ROCK = "rock";
 	
 	// unused
 	public static Capability<GhoulCapability> GHOUL_CAPABILITY = null;
@@ -89,13 +93,13 @@ public class Registration {
 			.setTrackingRange(20)
 			.build(GHOUL));
 	
-	public static final RegistryObject<EntityType<Ettin>> ETTIN_ENTITY_TYPE = Registration.ENTITIES.register(ETTIN, () -> EntityType.Builder.of(Ettin::new, MobCategory.MONSTER)
-			.sized(1.25F, 1.125F)
-			.clientTrackingRange(8)
-			.setShouldReceiveVelocityUpdates(false)
-			.setTrackingRange(20)
-			.fireImmune()
-			.build(ETTIN));
+//	public static final RegistryObject<EntityType<Ettin>> ETTIN_ENTITY_TYPE = Registration.ENTITIES.register(ETTIN, () -> EntityType.Builder.of(Ettin::new, MobCategory.MONSTER)
+//			.sized(1.25F, 1.125F)
+//			.clientTrackingRange(8)
+//			.setShouldReceiveVelocityUpdates(false)
+//			.setTrackingRange(20)
+//			.fireImmune()
+//			.build(ETTIN));
 	
 	public static final RegistryObject<EntityType<Gazer>> GAZER_ENTITY_TYPE = Registration.ENTITIES.register(GAZER, () -> EntityType.Builder.of(Gazer::new, MobCategory.MONSTER)
 			.sized(1.125F, 1.125F)
@@ -154,12 +158,22 @@ public class Registration {
 			.setShouldReceiveVelocityUpdates(false)
 			.build("firespout"));
 	
+	public static final RegistryObject<EntityType<Rock>> ROCK_ENTITY_TYPE = 
+			Registration.ENTITIES.register(ROCK, () -> EntityType.Builder.of(Rock::new, MobCategory.MISC)
+			.sized(0.5F, 0.5F)
+			.clientTrackingRange(12)
+			.setShouldReceiveVelocityUpdates(false)
+			.build(ROCK));
+	
+	/*
+	 * items
+	 */
 	
 	// mod eggs
 	public static final RegistryObject<Item> HEADLESS_EGG = Registration.ITEMS.register(HEADLESS, () -> new ForgeSpawnEggItem(HEADLESS_ENTITY_TYPE, 0xc8b486, 0x6f5e48, Registration.ITEM_PROPERTIES));
 	public static final RegistryObject<Item> ORC_EGG = Registration.ITEMS.register(ORC, () -> new ForgeSpawnEggItem(ORC_ENTITY_TYPE, 0xc8b486, 0x6f5e48, Registration.ITEM_PROPERTIES));
 	public static final RegistryObject<Item> GHOUL_EGG = Registration.ITEMS.register(GHOUL, () -> new ForgeSpawnEggItem(GHOUL_ENTITY_TYPE, 0x93aba3, 0x869e96, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> ETTIN_EGG = Registration.ITEMS.register(ETTIN, () -> new ForgeSpawnEggItem(ETTIN_ENTITY_TYPE, 0x626262, 0x6f5e48, Registration.ITEM_PROPERTIES));
+//	public static final RegistryObject<Item> ETTIN_EGG = Registration.ITEMS.register(ETTIN, () -> new ForgeSpawnEggItem(ETTIN_ENTITY_TYPE, 0x626262, 0x6f5e48, Registration.ITEM_PROPERTIES));
 	
 	public static final RegistryObject<Item> GAZER_EGG = Registration.ITEMS.register(GAZER, () -> new ForgeSpawnEggItem(GAZER_ENTITY_TYPE, 0x7a2e2f, 0x63181d, Registration.ITEM_PROPERTIES));
 	public static final RegistryObject<Item> BOULDER_EGG = Registration.ITEMS.register(BOULDER, () -> new ForgeSpawnEggItem(BOULDER_ENTITY_TYPE, 0x747474, 0x8f8f8f, Registration.ITEM_PROPERTIES));
@@ -171,10 +185,20 @@ public class Registration {
 	public static final RegistryObject<Item> SLOWBALL_ITEM = Registration.ITEMS.register(SLOWBALL, () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> HARMBALL_ITEM = Registration.ITEMS.register(HARMBALL, () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> FIRESPOUT_ITEM = Registration.ITEMS.register("firespout", () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> ROCK_ITEM = Registration.ITEMS.register(ROCK, () -> new Item(new Item.Properties()));
+	
+	/*
+	 *  weapons
+	 */
+	// club is equal to an stone sword but slower
+	public static final RegistryObject<Item> CLUB = Registration.ITEMS.register("club", () -> new SwordItem(Tiers.WOOD, 4, -3.0F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT)));
+	// spiked club is equal to an iron sword but slower
+	public static final RegistryObject<Item> SPIKED_CLUB = Registration.ITEMS.register("spiked_club", () -> new SwordItem(Tiers.WOOD, 5, -3.0F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT)));
 	
 	// particles
 //	public static final RegistryObject<SimpleParticleType> SHADOW_PARTICLE = Registration.PARTICLES.register("shadow_particle", () -> new SimpleParticleType(true));
 	
+	// NOTE must add mob to ALL_MOBS collection in order to register them to the biomes - see CommonSetup.onBiomeLoading
 	static {
 		ALL_MOBS.add(HEADLESS_ENTITY_TYPE);
 		ALL_MOBS.add(GHOUL_ENTITY_TYPE);
@@ -183,6 +207,7 @@ public class Registration {
 		ALL_MOBS.add(GAZER_ENTITY_TYPE);
 		ALL_MOBS.add(SHADOWLORD_ENTITY_TYPE);
 		ALL_MOBS.add(DAEMON_ENTITY_TYPE);
+		ALL_MOBS.add(ORC_ENTITY_TYPE);
 	}
 	
 	/**

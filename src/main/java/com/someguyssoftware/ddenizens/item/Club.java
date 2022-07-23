@@ -17,18 +17,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
  */
-package com.someguyssoftware.ddenizens.client.model;
+package com.someguyssoftware.ddenizens.item;
 
-import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
 
 /**
  * 
- * @author Mark Gottschling on Apr 30, 2022
+ * @author Mark Gottschling on Jul 21, 2022
  *
  */
-public interface IHumanlikeModel {
-	public ModelPart getHead();
-	public ModelPart getBody();
-	public ModelPart getRightArm();
-	public ModelPart getLeftArm();
+@Deprecated
+public class Club extends SwordItem {
+
+	public Club(Tier tier, int damage, float speedModifier, Properties properties) {
+		super(tier, damage, speedModifier, properties);
+	}
+
+	// NOTE if this weapon isn't going to do anything special other than change damage properties, do we really need a new class? - no.
 }

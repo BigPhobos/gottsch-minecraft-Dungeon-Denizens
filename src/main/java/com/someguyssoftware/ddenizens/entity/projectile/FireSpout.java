@@ -19,7 +19,6 @@
  */
 package com.someguyssoftware.ddenizens.entity.projectile;
 
-import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.gottschcore.world.WorldInfo;
 
