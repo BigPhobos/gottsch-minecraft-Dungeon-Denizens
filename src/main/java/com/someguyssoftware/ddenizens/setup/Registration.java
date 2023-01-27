@@ -1,3 +1,20 @@
+/*
+ * This file is part of  Dungeon Denizens.
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
+ *
+ * Dungeon Denizens is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Dungeon Denizens is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
+ */
 package com.someguyssoftware.ddenizens.setup;
 
 import java.util.List;
@@ -7,7 +24,6 @@ import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.capability.GhoulCapability;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.Daemon;
-import com.someguyssoftware.ddenizens.entity.monster.Ettin;
 import com.someguyssoftware.ddenizens.entity.monster.Gazer;
 import com.someguyssoftware.ddenizens.entity.monster.Ghoul;
 import com.someguyssoftware.ddenizens.entity.monster.Headless;
@@ -42,7 +58,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class Registration {
 	public static final String HEADLESS = "headless";
 	public static final String GHOUL = "ghoul";
-//	public static final String ETTIN = "ettin";
 	public static final String SHADOW = "shadow";
 	public static final String SHADOWLORD = "shadowlord";
 	public static final String GAZER = "gazer";
@@ -63,7 +78,7 @@ public class Registration {
 	 * deferred registries
 	 */
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DD.MODID);
-	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, DD.MODID);
+	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DD.MODID);
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, DD.MODID);
 
 	// item properties convenience property
@@ -73,6 +88,14 @@ public class Registration {
 	public static final List<RegistryObject<?>> ALL_MOBS = Lists.newArrayList();
 	
 	// entities
+	public static final RegistryObject<EntityType<Boulder>> BOULDER_ENTITY_TYPE = Registration.ENTITIES.register(BOULDER, () -> EntityType.Builder.of(Boulder::new, MobCategory.AMBIENT)
+			.sized(1F, 1F)
+			.clientTrackingRange(8)
+			.setShouldReceiveVelocityUpdates(false)
+			.setTrackingRange(20)
+			.fireImmune()
+			.build(BOULDER));
+	
 	public static final RegistryObject<EntityType<Headless>> HEADLESS_ENTITY_TYPE = Registration.ENTITIES.register(HEADLESS, () -> EntityType.Builder.of(Headless::new, MobCategory.MONSTER)
 			.sized(0.6F, 1.5F)
 			.clientTrackingRange(8)
@@ -93,14 +116,6 @@ public class Registration {
 			.setTrackingRange(20)
 			.build(GHOUL));
 	
-//	public static final RegistryObject<EntityType<Ettin>> ETTIN_ENTITY_TYPE = Registration.ENTITIES.register(ETTIN, () -> EntityType.Builder.of(Ettin::new, MobCategory.MONSTER)
-//			.sized(1.25F, 1.125F)
-//			.clientTrackingRange(8)
-//			.setShouldReceiveVelocityUpdates(false)
-//			.setTrackingRange(20)
-//			.fireImmune()
-//			.build(ETTIN));
-	
 	public static final RegistryObject<EntityType<Gazer>> GAZER_ENTITY_TYPE = Registration.ENTITIES.register(GAZER, () -> EntityType.Builder.of(Gazer::new, MobCategory.MONSTER)
 			.sized(1.125F, 1.125F)
 			.clientTrackingRange(8)
@@ -108,14 +123,6 @@ public class Registration {
 			.setTrackingRange(20)
 			.fireImmune()
 			.build(GAZER));
-	
-	public static final RegistryObject<EntityType<Boulder>> BOULDER_ENTITY_TYPE = Registration.ENTITIES.register(BOULDER, () -> EntityType.Builder.of(Boulder::new, MobCategory.CREATURE)
-			.sized(1F, 1F)
-			.clientTrackingRange(8)
-			.setShouldReceiveVelocityUpdates(false)
-			.setTrackingRange(20)
-			.fireImmune()
-			.build(BOULDER));
 	
 	public static final RegistryObject<EntityType<Shadow>> SHADOW_ENTITY_TYPE = Registration.ENTITIES.register(SHADOW, () -> EntityType.Builder.of(Shadow::new, MobCategory.MONSTER)
 			.sized(0.6F, 1.95F)

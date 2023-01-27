@@ -29,10 +29,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -213,17 +211,17 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 			}
 		}
 	}
-
-	@Override
-	public float getBrightness() {
-		return 1.0F;
-	}
+	
+//	@Override
+//	public float getBrightness() {
+//		return 1.0F;
+//	}
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
 		Entity entity = this.getOwner();
 		int i = entity == null ? 0 : entity.getId();
-		return new ClientboundAddEntityPacket(this.getId(), this.getUUID(), this.getX(), this.getY(), this.getZ(), this.getXRot(), this.getYRot(), this.getType(), i, new Vec3(this.xPower, this.yPower, this.zPower));
+		return new ClientboundAddEntityPacket(this.getId(), this.getUUID(), this.getX(), this.getY(), this.getZ(), this.getXRot(), this.getYRot(), this.getType(), i, new Vec3(this.xPower, this.yPower, this.zPower), 0D);
 	}
 
 	@Override

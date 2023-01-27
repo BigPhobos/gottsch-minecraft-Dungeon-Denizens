@@ -3,16 +3,15 @@
  */
 package com.someguyssoftware.ddenizens.entity.monster;
 
-import java.util.Random;
-
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.projectile.FireSpout;
 import com.someguyssoftware.ddenizens.setup.Registration;
-import com.someguyssoftware.gottschcore.random.RandomHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -30,8 +29,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -44,7 +41,8 @@ public class Daemon extends DDMonster {
 	public static final double MELEE_DISTANCE_SQUARED = 25D;
 
 	private double flameParticlesTime;
-
+	private int particlesReset = 4;
+	
 	/**
 	 * 
 	 * @param entityType
@@ -98,8 +96,8 @@ public class Daemon extends DDMonster {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
+	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+		if (level.getBiome(pos).is(BiomeTags.IS_NETHER)) {
 			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
@@ -118,10 +116,12 @@ public class Daemon extends DDMonster {
 			}
 			this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
 
-			if (RandomHelper.checkProbability(random, 24)) {
+			if (--particlesReset <= 0) {
+					//RandomHelper.checkProbability(new Random(), 24)) {
 				double x = 0.75D * Math.sin(flameParticlesTime);
 				double z = 0.75D * Math.cos(flameParticlesTime);
 				this.level.addParticle(ParticleTypes.FLAME, this.position().x + x, this.position().y + 0.1D, position().z + z, 0, 0, 0);
+				particlesReset = 4;
 			}
 			flameParticlesTime++;
 			flameParticlesTime = flameParticlesTime % 360;

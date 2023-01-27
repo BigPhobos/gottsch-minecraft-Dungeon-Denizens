@@ -5,15 +5,11 @@ package com.someguyssoftware.ddenizens.entity.monster;
 
 import java.util.Random;
 
-import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
-import com.someguyssoftware.ddenizens.config.Config.INetherMobConfig;
-import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
-import com.someguyssoftware.gottschcore.random.RandomHelper;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
-
+import mod.gottsch.forge.gottschcore.random.RandomHelper;
+import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,15 +32,12 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 
 /**
  * NOTE: 	mob.level.getBrightness(LightLayer.BLOCK, pos), mob.level.getMaxLocalRawBrightness(pos));
@@ -121,38 +114,21 @@ public class Shadow extends DDMonster {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkShadowSpawnRules(EntityType<Shadow> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-//		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN)
-//				&& checkAnyLightMonsterSpawnRules(mob, level, spawnType, pos, random);
+	public static boolean checkShadowSpawnRules(EntityType<Shadow> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 
-		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
-//			IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());
-//			SpawnConfig netherConfig = ((INetherMobConfig)mobConfig).getNetherSpawn();
-//			if (netherConfig.minHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
-//				result |= pos.getY() > netherConfig.minHeight.get();
-//			}
-//			if (netherConfig.maxHeight.get() != SpawnConfig.IGNORE_HEIGHT) {
-//				result |= pos.getY() < netherConfig.maxHeight.get();
-//			}
-//			result |= checkMobSpawnRules(mob, level, spawnType, pos, random);
+		if (level.getBiome(pos).is(BiomeTags.IS_NETHER) ) {
 			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
 			return checkDDSpawnRules(mob, level, spawnType, pos, random);
 		}
-
-//		return (
-//				
-//				||
-//				 (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER && pos.getY() > netherConfig.minHeight.get() && pos.getY() < netherConfig.maxHeight.get() && checkDDSpawnRules(mob, level, spawnType, pos, random))
-//				); 
-//		return (level.getBiome(pos).getBiomeCategory() == BiomeCategory.NETHER && checkMobSpawnRules(mob, level, spawnType, pos, random)) 
-//				|| (level.getBiome(pos).getBiomeCategory() != BiomeCategory.NETHER && checkDDSpawnRules(mob, level, spawnType, pos, random));
 	}
 
 	// TODO change difficulty seconds to ticks pulled in from Config
 	@Override
 	public boolean doHurtTarget(Entity target) {
+		Random random = new Random();
+		
 		if (super.doHurtTarget(target)) {
 			if (target instanceof Player) {
 				int seconds = 0;

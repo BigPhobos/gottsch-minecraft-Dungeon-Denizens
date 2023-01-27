@@ -20,8 +20,8 @@
 package com.someguyssoftware.ddenizens.entity.projectile;
 
 import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
 
+import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;

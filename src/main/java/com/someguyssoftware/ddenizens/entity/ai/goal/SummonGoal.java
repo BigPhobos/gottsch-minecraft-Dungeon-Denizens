@@ -19,15 +19,13 @@
  */
 package com.someguyssoftware.ddenizens.entity.ai.goal;
 
-import java.util.Random;
-
-import com.someguyssoftware.gottschcore.spatial.Coords;
-import com.someguyssoftware.gottschcore.spatial.ICoords;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
-
+import mod.gottsch.forge.gottschcore.spatial.Coords;
+import mod.gottsch.forge.gottschcore.spatial.ICoords;
+import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -62,7 +60,7 @@ public abstract class SummonGoal extends Goal {
 	 * @param target
 	 * @return
 	 */
-	protected boolean spawn(ServerLevel level, Random random, LivingEntity owner, EntityType<? extends Mob> entityType, ICoords coords, LivingEntity target) {
+	protected boolean spawn(ServerLevel level, RandomSource random, LivingEntity owner, EntityType<? extends Mob> entityType, ICoords coords, LivingEntity target) {
 		for (int i = 0; i < 20; i++) { // 20 tries
 			int spawnX = coords.getX() + Mth.nextInt(random, 1, 2) * Mth.nextInt(random, -1, 1);
 			int spawnY = coords.getY() + Mth.nextInt(random, 1, 2) * Mth.nextInt(random, -1, 1);

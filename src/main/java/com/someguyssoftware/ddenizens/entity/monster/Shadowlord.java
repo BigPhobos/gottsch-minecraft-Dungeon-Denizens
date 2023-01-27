@@ -28,14 +28,16 @@ import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.ai.goal.SummonGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.Harmball;
 import com.someguyssoftware.ddenizens.setup.Registration;
-import com.someguyssoftware.gottschcore.random.RandomHelper;
-import com.someguyssoftware.gottschcore.spatial.Coords;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
 
+import mod.gottsch.forge.gottschcore.random.RandomHelper;
+import mod.gottsch.forge.gottschcore.spatial.Coords;
+import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -70,8 +72,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -166,8 +166,8 @@ public class Shadowlord extends DDMonster {
 		return super.finalizeSpawn(level, difficulty, spawnType, groupData, tag);		
 	}
 
-	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
+	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+		if (level.getBiome(pos).is(BiomeTags.IS_NETHER)) {
 			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
@@ -400,7 +400,7 @@ public class Shadowlord extends DDMonster {
 						boolean spawnSuccess = false;
 						// summon daemon is health < max/3
 						if (shadowlord.getHealth() < shadowlord.getMaxHealth() / 3 && shadowlord.numSummonDaemons > 0) {
-							spawnSuccess |=spawn((ServerLevel)level, random, shadowlord, Registration.DAEMON_ENTITY_TYPE.get(), new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
+							spawnSuccess |=spawn((ServerLevel)level, level.getRandom(), shadowlord, Registration.DAEMON_ENTITY_TYPE.get(), new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
 							if (spawnSuccess) {
 								shadowlord.numSummonDaemons--;
 							}
@@ -415,7 +415,7 @@ public class Shadowlord extends DDMonster {
 								else {
 									mob = Registration.GHOUL_ENTITY_TYPE.get();
 								}
-								spawnSuccess |=spawn((ServerLevel)level, random, shadowlord, mob, new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
+								spawnSuccess |=spawn((ServerLevel)level, level.getRandom(), shadowlord, mob, new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
 							}
 						}
 						if (!WorldInfo.isClientSide(level) && spawnSuccess) {

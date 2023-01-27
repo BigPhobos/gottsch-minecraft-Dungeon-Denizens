@@ -22,7 +22,6 @@ package com.someguyssoftware.ddenizens.entity.monster;
 import java.util.Arrays;
 import java.util.Random;
 
-import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.entity.projectile.Rock;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
@@ -31,6 +30,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
@@ -148,7 +148,7 @@ public class Orc extends Monster {
 		}
 
 		// arm the orc
-		this.populateDefaultEquipmentSlots(difficulty);
+		this.populateDefaultEquipmentSlots(level.getRandom(), difficulty);
 //		this.reassessWeaponGoal();
 
 		Random random = new Random();
@@ -187,7 +187,7 @@ public class Orc extends Monster {
 	}
 
 	@Override
-	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+	protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance p_217056_) {
 		int i = this.random.nextInt(5);
 		switch(i) {
 		case 0:

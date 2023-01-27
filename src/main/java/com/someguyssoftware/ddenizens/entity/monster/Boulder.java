@@ -20,23 +20,24 @@
 package com.someguyssoftware.ddenizens.entity.monster;
 
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.config.Config.CommonSpawnConfig;
 import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
-import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
 
+import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -49,8 +50,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
@@ -99,11 +98,11 @@ public class Boulder extends Monster {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkSpawnRules(EntityType<? extends Monster> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
+	public static boolean checkSpawnRules(EntityType<? extends Monster> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		//		return (level.getHeight() < 60 || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
-		IMobConfig mobConfig = Config.Mobs.MOBS.get(mob.getRegistryName());	
-		SpawnConfig config = mobConfig.getSpawnConfig();
-		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.MOUNTAIN)
+		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));	
+		CommonSpawnConfig config = mobConfig.getSpawnConfig();
+		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).is(BiomeTags.IS_MOUNTAIN) )
 				&& checkAnyLightMonsterSpawnRules(mob, level, spawnType, pos, random);
 	}
 
@@ -155,15 +154,10 @@ public class Boulder extends Monster {
 
 		// NOTE isSunBurn only works on server
 		if (!WorldInfo.isClientSide(level)) {
-//			DD.LOGGER.debug("state -> {}", getState());
-//			DD.LOGGER.debug("loyalty ticks -> {}", getLoyaltyTicks());
-//			DD.LOGGER.debug("is sun burn -> {}", isSunBurn());
 			if (isDormant() && getLoyaltyTicks() > 0 && !isSunBurn()) {
-//				DD.LOGGER.debug("waking up");
 				wakeUp();
 			}
 			else if (isActive() && (getLoyaltyTicks() <= 0 || isSunBurn())) {
-//				DD.LOGGER.debug("going to sleep");
 				goToSleep();
 			}
 			previousAmount = amount;
@@ -344,7 +338,7 @@ public class Boulder extends Monster {
 		//		DD.LOGGER.debug("is day -> {}", this.level.isDay());
 		//		DD.LOGGER.debug("is server side -> {}", !this.level.isClientSide);
 		if (this.level.isDay() && !this.level.isClientSide) {
-			float brightness = this.getBrightness();
+			float brightness = this.getLightLevelDependentMagicValue();
 			BlockPos pos = new BlockPos(this.getX(), this.getEyeY(), this.getZ());
 //			DD.LOGGER.debug("can see sky -> {}", this.level.canSeeSky(pos));
 			//			boolean flag = this.isInWaterRainOrBubble() || this.isInPowderSnow || this.wasInPowderSnow;

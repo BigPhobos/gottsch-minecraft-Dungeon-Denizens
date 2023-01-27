@@ -40,30 +40,30 @@ public class DDItemModelsProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
     	// projectiles
-        singleTexture(Registration.SLOWBALL_ITEM.get().getRegistryName().getPath(),
+        singleTexture("slowball",
                 mcLoc("item/generated"), "layer0", modLoc("item/slowball"));
         
-        singleTexture(Registration.HARMBALL_ITEM.get().getRegistryName().getPath(),
+        singleTexture("harmball",
                 mcLoc("item/generated"), "layer0", modLoc("item/harmball"));
         
-        singleTexture(Registration.ROCK_ITEM.get().getRegistryName().getPath(),
+        singleTexture("rock",
                 mcLoc("item/generated"), "layer0", modLoc("item/rock"));
     	
         // weapons
-        singleTexture(Registration.CLUB.get().getRegistryName().getPath(),
+        singleTexture("club",
         		mcLoc("item/generated"), "layer0", modLoc("item/club"));
         
-        singleTexture(Registration.SPIKED_CLUB.get().getRegistryName().getPath(),
+        singleTexture("spiked_club",
         		mcLoc("item/generated"), "layer0", modLoc("item/spiked_club"));
         
         // eggs
-    	withExistingParent(Registration.HEADLESS_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.ORC_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.GHOUL_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.GAZER_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.BOULDER_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.SHADOW_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.SHADOWLORD_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.DAEMON_EGG.get().getRegistryName().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.HEADLESS, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.ORC, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.GHOUL, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.GAZER, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.BOULDER, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.SHADOW, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.SHADOWLORD, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.DAEMON, mcLoc("item/template_spawn_egg"));
     }
 }

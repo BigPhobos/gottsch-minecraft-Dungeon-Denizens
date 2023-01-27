@@ -22,9 +22,6 @@ package com.someguyssoftware.ddenizens.setup;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.capability.GhoulCapability;
 import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
-import com.someguyssoftware.ddenizens.config.Config.INetherMobConfig;
-import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.DDMonster;
 import com.someguyssoftware.ddenizens.entity.monster.Daemon;
@@ -34,14 +31,9 @@ import com.someguyssoftware.ddenizens.entity.monster.Headless;
 import com.someguyssoftware.ddenizens.entity.monster.Orc;
 import com.someguyssoftware.ddenizens.entity.monster.Shadow;
 import com.someguyssoftware.ddenizens.entity.monster.Shadowlord;
-import com.someguyssoftware.gottschcore.biome.BiomeHelper;
-import com.someguyssoftware.gottschcore.biome.BiomeHelper.Result;
-import com.someguyssoftware.gottschcore.world.WorldInfo;
 
-import net.minecraft.resources.ResourceLocation;
+import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -50,17 +42,14 @@ import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -74,6 +63,20 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 @Mod.EventBusSubscriber(modid = DD.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonSetup {
 	public static void init(final FMLCommonSetupEvent event) {
+//		event.enqueueWork(() -> {
+//			SpawnPlacements.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, DDMonster::checkDDSpawnRules);
+//			SpawnPlacements.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, DDMonster::checkDDSpawnRules);
+//			SpawnPlacements.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, DDMonster::checkDDSpawnRules);
+//			SpawnPlacements.register(Registration.BOULDER_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, Boulder::checkSpawnRules);
+//
+//			SpawnPlacements.register(Registration.SHADOW_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadow::checkShadowSpawnRules);
+//			SpawnPlacements.register(Registration.SHADOWLORD_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadowlord::checkShadowlordSpawnRules);
+//			SpawnPlacements.register(Registration.GAZER_ENTITY_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Gazer::checkGazerSpawnRules);
+//			SpawnPlacements.register(Registration.DAEMON_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Daemon::checkDaemonSpawnRules);
+//
+//		});
+		Config.instance.addRollingFileAppender(DD.MODID);
+		DD.LOGGER.info("starting Dungeon Denizens");
 	}
 
 	/**
@@ -91,21 +94,19 @@ public class CommonSetup {
 		event.put(Registration.SHADOWLORD_ENTITY_TYPE.get(), Shadowlord.createAttributes().build());
 		event.put(Registration.DAEMON_ENTITY_TYPE.get(), Daemon.createAttributes().build());
 
-//		event.put(Registration.ETTIN_ENTITY_TYPE.get(), Ettin.createAttributes().build());
 	}
 
 	@SubscribeEvent
-	public static void registerEntitySpawn(RegistryEvent.Register<EntityType<?>> event) {
-		SpawnPlacements.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
-		SpawnPlacements.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
-		SpawnPlacements.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
-		SpawnPlacements.register(Registration.BOULDER_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Boulder::checkSpawnRules);
+	public static void registerEntitySpawn(SpawnPlacementRegisterEvent event) {
+		event.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.BOULDER_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, Boulder::checkSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 
-		SpawnPlacements.register(Registration.SHADOW_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadow::checkShadowSpawnRules);
-		SpawnPlacements.register(Registration.SHADOWLORD_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadowlord::checkShadowlordSpawnRules);
-		SpawnPlacements.register(Registration.GAZER_ENTITY_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Gazer::checkGazerSpawnRules);
-		SpawnPlacements.register(Registration.DAEMON_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Daemon::checkDaemonSpawnRules);
-
+		event.register(Registration.SHADOW_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadow::checkShadowSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.SHADOWLORD_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadowlord::checkShadowlordSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.GAZER_ENTITY_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Gazer::checkGazerSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.DAEMON_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Daemon::checkDaemonSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 	}
 
 	@Mod.EventBusSubscriber(modid = DD.MODID, bus = EventBusSubscriber.Bus.FORGE)
@@ -113,42 +114,42 @@ public class CommonSetup {
 		/*
 		 * Register the Features with Biomes
 		 */
-		@SubscribeEvent
-		public static void onBiomeLoading(final BiomeLoadingEvent event) {
-			DD.LOGGER.debug("event for biome -> {}, category -> {}", event.getName(), event.getCategory().getName());
-			/* 
-			 * register mob spawns to biomes
-			 */
-			ResourceLocation biome = event.getName();
-
-			Registration.ALL_MOBS.forEach(entityType -> {				
-				IMobConfig config = Config.Mobs.MOBS.get(((EntityType<?>)entityType.get()).getRegistryName());
-
-				if (config.getSpawnConfig().enable.get()) {
-					Result result = isBiomeAllowed(biome, event.getCategory(), config.getSpawnConfig());
-					if (result == Result.OK || result == Result.WHITE_LISTED) {
-						DD.LOGGER.debug("registering spawner data -> {}", ((EntityType<?>)entityType.get()).getRegistryName());
-
-						if (event.getCategory() == BiomeCategory.NETHER && config instanceof INetherMobConfig) {
-							event.getSpawns().getSpawner(MobCategory.MONSTER)
-							.add(new MobSpawnSettings.SpawnerData(
-									(EntityType<?>)entityType.get(), 
-									((INetherMobConfig)config).getNetherSpawn().spawnWeight.get(), 
-									((INetherMobConfig)config).getNetherSpawn().minSpawn.get(), 
-									((INetherMobConfig)config).getNetherSpawn().maxSpawn.get()));
-						}
-						else {
-							event.getSpawns().getSpawner(MobCategory.MONSTER)
-							.add(new MobSpawnSettings.SpawnerData(
-									(EntityType<?>)entityType.get(), 
-									config.getSpawnConfig().spawnWeight.get(), 
-									config.getSpawnConfig().minSpawn.get(), 
-									config.getSpawnConfig().maxSpawn.get()));
-						}
-					}						
-				}
-			});
-		}
+//		@SubscribeEvent
+//		public static <BiomeLoadingEvent> void onBiomeLoading(final BiomeLoadingEvent event) {
+//			DD.LOGGER.debug("event for biome -> {}, category -> {}", event.getName(), event.getCategory().getName());
+//			/* 
+//			 * register mob spawns to biomes
+//			 */
+//			ResourceLocation biome = event.getName();
+//
+//			Registration.ALL_MOBS.forEach(entityType -> {				
+//				IMobConfig config = Config.Mobs.MOBS.get(((EntityType<?>)entityType.get()).getRegistryName());
+//
+//				if (config.getSpawnConfig().enable.get()) {
+//					Result result = isBiomeAllowed(biome, event.getCategory(), config.getSpawnConfig());
+//					if (result == Result.OK || result == Result.WHITE_LISTED) {
+//						DD.LOGGER.debug("registering spawner data -> {}", ((EntityType<?>)entityType.get()).getRegistryName());
+//
+//						if (event.getCategory() == BiomeCategory.NETHER && config instanceof INetherMobConfig) {
+//							event.getSpawns().getSpawner(MobCategory.MONSTER)
+//							.add(new MobSpawnSettings.SpawnerData(
+//									(EntityType<?>)entityType.get(), 
+//									((INetherMobConfig)config).getNetherSpawn().spawnWeight.get(), 
+//									((INetherMobConfig)config).getNetherSpawn().minSpawn.get(), 
+//									((INetherMobConfig)config).getNetherSpawn().maxSpawn.get()));
+//						}
+//						else {
+//							event.getSpawns().getSpawner(MobCategory.MONSTER)
+//							.add(new MobSpawnSettings.SpawnerData(
+//									(EntityType<?>)entityType.get(), 
+//									config.getSpawnConfig().spawnWeight.get(), 
+//									config.getSpawnConfig().minSpawn.get(), 
+//									config.getSpawnConfig().maxSpawn.get()));
+//						}
+//					}						
+//				}
+//			});
+//		}
 
 		//	    @SubscribeEvent
 		//	    public static void registerParticle(ParticleFactoryRegisterEvent event){
@@ -162,13 +163,13 @@ public class CommonSetup {
 		 * @param config
 		 * @return
 		 */
-		public static Result isBiomeAllowed(ResourceLocation biome, BiomeCategory category, SpawnConfig config) {
-			return BiomeHelper.isBiomeAllowed(biome, category, config.biomeWhitelist.get(), config.biomeBlacklist.get(),
-					config.biomeCategoryWhitelist.get(), config.biomeCategoryBlacklist.get());
-		}
+//		public static Result isBiomeAllowed(ResourceLocation biome, BiomeCategory category, SpawnConfig config) {
+//			return BiomeHelper.isBiomeAllowed(biome, category, config.biomeWhitelist.get(), config.biomeBlacklist.get(),
+//					config.biomeCategoryWhitelist.get(), config.biomeCategoryBlacklist.get());
+//		}
 
 		@SubscribeEvent
-		public static void addGoals(final EntityJoinWorldEvent event) {
+		public static void addGoals(final EntityJoinLevelEvent event) {
 			if (event.getEntity() instanceof Zombie) {
 				((Zombie)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Zombie)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
 					if (entity instanceof Boulder) {
@@ -206,7 +207,7 @@ public class CommonSetup {
 
 				if (event.getTarget() instanceof Boulder) {
 					Boulder boulder = (Boulder)event.getTarget();
-					boulder.feed(event.getPlayer().getUUID());
+					boulder.feed(event.getEntity().getUUID());
 				}
 			}
 		}
@@ -239,10 +240,5 @@ public class CommonSetup {
 			}
 		}
 
-	}
-
-//	@SubscribeEvent
-	public static void register(final RegisterCapabilitiesEvent event) {
-		event.register(GhoulCapability.class);
 	}
 }

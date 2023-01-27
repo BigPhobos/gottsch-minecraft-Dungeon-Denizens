@@ -19,20 +19,18 @@
  */
 package com.someguyssoftware.ddenizens.config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
+import mod.gottsch.forge.gottschcore.config.AbstractConfig;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
@@ -46,7 +44,7 @@ import net.minecraftforge.fml.config.ModConfig;
  *
  */
 @EventBusSubscriber(modid = DD.MODID, bus = EventBusSubscriber.Bus.MOD)
-public final class Config {
+public final class Config extends AbstractConfig {
 	protected static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
 
 	public static final String CATEGORY_DIV = "##############################";
@@ -58,6 +56,11 @@ public final class Config {
 	public static final int MIN_HEIGHT = -64;
 	public static final int MAX_HEIGHT = 319;
 
+	public static ForgeConfigSpec COMMON_CONFIG;
+	public static Logging LOGGING;
+	
+	public static Config instance = new Config();
+	
 	/**
 	 * 
 	 */
@@ -66,42 +69,49 @@ public final class Config {
 	}
 
 	/**
-	 * 
+	 * TODO change this to SERVER SPEC
 	 */
 	private static void registerServerConfigs() {
 		ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
+		LOGGING = new Logging(COMMON_BUILDER);
 		Mobs.register(COMMON_BUILDER);
 		Spells.register(COMMON_BUILDER);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
 	}
 
-	public abstract static class CommonSpawnConfig {
-		public IntValue minSpawn;
-		public IntValue maxSpawn;
-		public ConfigValue<Integer> spawnWeight;
+	public static class CommonSpawnConfig {
+//		public IntValue minSpawn;
+//		public IntValue maxSpawn;
+//		public ConfigValue<Integer> spawnWeight;
 
 		public IntValue minHeight;
 		public IntValue maxHeight;
 		
+		public CommonSpawnConfig() {}
+		
+		public CommonSpawnConfig(Builder builder, int i, int j, int k, int minHeight2, int maxHeight2) {
+			configure(builder, maxHeight2, i, k, minHeight2, maxHeight2);
+		}
+
 		/*
 		 * sets the property values with a push()/pop()
 		 */
 		public void configure(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
 				int minHeight, int maxHeight) {
 			
-			this.minSpawn = builder
-					.comment(" Minimum spawn group size.")
-					.defineInRange("minSpawnSize: ", minSpawn, 1, Integer.MAX_VALUE);
-
-			this.maxSpawn = builder
-					.comment(" Maximum spawn group size.")
-					.defineInRange("maxSpawnSize", maxSpawn, 1, Integer.MAX_VALUE);
-
-			this.spawnWeight = builder
-					.comment(" Weight of the spawn. A higher number represents a greater probability.", 
-							" A zombie in the overworld is 95.", 
-							" Use 0 for default, which uses a calculation based on zombie's weight.")
-					.defineInRange("spawnWeight: ", weight, 0, Integer.MAX_VALUE);
+//			this.minSpawn = builder
+//					.comment(" Minimum spawn group size.")
+//					.defineInRange("minSpawnSize: ", minSpawn, 1, Integer.MAX_VALUE);
+//
+//			this.maxSpawn = builder
+//					.comment(" Maximum spawn group size.")
+//					.defineInRange("maxSpawnSize", maxSpawn, 1, Integer.MAX_VALUE);
+//
+//			this.spawnWeight = builder
+//					.comment(" Weight of the spawn. A higher number represents a greater probability.", 
+//							" A zombie in the overworld is 95.", 
+//							" Use 0 for default, which uses a calculation based on zombie's weight.")
+//					.defineInRange("spawnWeight: ", weight, 0, Integer.MAX_VALUE);
 
 			this.minHeight = builder
 					.comment(" Minimum world height for spawning.")
@@ -130,50 +140,51 @@ public final class Config {
 	 * @author Mark Gottschling on Apr 26, 2022
 	 *
 	 */
-	public static class SpawnConfig extends CommonSpawnConfig {
-		@Deprecated
-		public static final int IGNORE_HEIGHT = -65;
-
-		public final BooleanValue  enable;
-
-		public ConfigValue<List<? extends String>> biomeWhitelist;
-		public ConfigValue<List<? extends String>> biomeBlacklist;
-
-		public ConfigValue<List<? extends String>> biomeCategoryWhitelist;
-		public ConfigValue<List<? extends String>> biomeCategoryBlacklist;
-
-		private static final Predicate<Object> STRING_PREDICATE = s -> s instanceof String;
-
-		public SpawnConfig(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
-				int minHeight, int maxHeight,
-				List<String> biomeWhitelist, List<String> biomeBlacklist,
-				List<String> categoryWhitelist, List<String> categoryBlacklist) {
-
-			builder.push("spawning");
-
-			this.enable = builder
-					.comment(" Enable / disable spawning.")
-					.define("enable", true);
-
-			// configure the common properties
-			configure(builder, weight, minSpawn, maxSpawn, minHeight, maxHeight);
-
-			this.biomeWhitelist = builder.comment(" Allowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains", " Supercedes blacklist.",
-					" Biome white/black lists superced biome category white/black lists.")
-					.defineList("biomeWhitelist", biomeWhitelist, STRING_PREDICATE);
-
-			this.biomeBlacklist = builder.comment(" Disallowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains")
-					.defineList("biomeBlacklist", biomeBlacklist, STRING_PREDICATE);
-
-			this.biomeCategoryWhitelist = builder.comment(" Allowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether", " Supercedes blacklist.")
-					.defineList("biomeCategoryWhitelist", categoryWhitelist, STRING_PREDICATE);
-
-			this.biomeCategoryBlacklist = builder.comment(" Disallowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether")
-					.defineList("biomeCategoryBlacklist", categoryBlacklist, STRING_PREDICATE);
-
-			builder.pop();
-		}
-	}
+//	@Deprecated
+//	public static class SpawnConfig extends CommonSpawnConfig {
+//		@Deprecated
+//		public static final int IGNORE_HEIGHT = -65;
+//
+//		public final BooleanValue  enable;
+//
+//		public ConfigValue<List<? extends String>> biomeWhitelist;
+//		public ConfigValue<List<? extends String>> biomeBlacklist;
+//
+//		public ConfigValue<List<? extends String>> biomeCategoryWhitelist;
+//		public ConfigValue<List<? extends String>> biomeCategoryBlacklist;
+//
+//		private static final Predicate<Object> STRING_PREDICATE = s -> s instanceof String;
+//
+//		public SpawnConfig(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
+//				int minHeight, int maxHeight,
+//				List<String> biomeWhitelist, List<String> biomeBlacklist,
+//				List<String> categoryWhitelist, List<String> categoryBlacklist) {
+//
+//			builder.push("spawning");
+//
+//			this.enable = builder
+//					.comment(" Enable / disable spawning.")
+//					.define("enable", true);
+//
+//			// configure the common properties
+//			configure(builder, weight, minSpawn, maxSpawn, minHeight, maxHeight);
+//
+//			this.biomeWhitelist = builder.comment(" Allowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains", " Supercedes blacklist.",
+//					" Biome white/black lists superced biome category white/black lists.")
+//					.defineList("biomeWhitelist", biomeWhitelist, STRING_PREDICATE);
+//
+//			this.biomeBlacklist = builder.comment(" Disallowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains")
+//					.defineList("biomeBlacklist", biomeBlacklist, STRING_PREDICATE);
+//
+//			this.biomeCategoryWhitelist = builder.comment(" Allowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether", " Supercedes blacklist.")
+//					.defineList("biomeCategoryWhitelist", categoryWhitelist, STRING_PREDICATE);
+//
+//			this.biomeCategoryBlacklist = builder.comment(" Disallowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether")
+//					.defineList("biomeCategoryBlacklist", categoryBlacklist, STRING_PREDICATE);
+//
+//			builder.pop();
+//		}
+//	}
 
 	/*
 	 * 
@@ -281,7 +292,7 @@ public final class Config {
 	}
 
 	public static interface IMobConfig {
-		public SpawnConfig getSpawnConfig();
+		public CommonSpawnConfig getSpawnConfig();
 	}
 
 	public static interface INetherMobConfig {
@@ -289,16 +300,16 @@ public final class Config {
 	}
 
 	public static abstract class MobConfig implements IMobConfig {
-		public SpawnConfig spawnConfig;
-		public SpawnConfig getSpawnConfig() {
+		public CommonSpawnConfig spawnConfig;
+		public CommonSpawnConfig getSpawnConfig() {
 			return spawnConfig;
 		}
 	}
 
 	public static abstract class NetherMobConfig implements IMobConfig, INetherMobConfig {
-		public SpawnConfig spawnConfig;
+		public CommonSpawnConfig spawnConfig;
 		public NetherSpawnConfig netherSpawnConfig;
-		public SpawnConfig getSpawnConfig() {
+		public CommonSpawnConfig getSpawnConfig() {
 			return spawnConfig;
 		}
 		public NetherSpawnConfig getNetherSpawn() {
@@ -318,8 +329,8 @@ public final class Config {
 		public HeadlessConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Headless properties.", CATEGORY_DIV).push(Registration.HEADLESS);				
 
-			spawnConfig = new SpawnConfig(builder, 40, 1, 2, MIN_HEIGHT, MAX_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 40, 1, 2, MIN_HEIGHT, MAX_HEIGHT); //,
+			//		new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),  Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			builder.pop();
 		}
@@ -331,8 +342,8 @@ public final class Config {
 	public static class OrcConfig extends MobConfig {
 		public OrcConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Orc properties.", CATEGORY_DIV).push(Registration.ORC);
-			spawnConfig = new SpawnConfig(builder, 35, 1, 2, MIN_HEIGHT, MAX_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 35, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
+//					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 			builder.pop();
 		}
 	}
@@ -348,8 +359,8 @@ public final class Config {
 		public GhoulConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Ghoul properties.", CATEGORY_DIV).push(Registration.GHOUL);				
 
-			spawnConfig = new SpawnConfig(builder, 25, 1, 1,  MIN_HEIGHT, MAX_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 25, 1, 1,  MIN_HEIGHT, MAX_HEIGHT);//,
+//					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			healAmount = builder
 					.comment(" The amount a ghoul can heal themselves when eating meat.")
@@ -372,8 +383,8 @@ public final class Config {
 		public BoulderConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Boulder properties.", CATEGORY_DIV).push("boulder");				
 
-			spawnConfig = new SpawnConfig(builder, 35, 1, 1,  MIN_HEIGHT, 60,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 35, 1, 1,  MIN_HEIGHT, 60);//,
+//					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.NETHER.getName(), BiomeCategory.THEEND.getName()));
 
 			builder.pop();
 		}
@@ -388,8 +399,8 @@ public final class Config {
 		public ShadowConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadow properties.", CATEGORY_DIV).push(Registration.SHADOW);				
 
-			spawnConfig = new SpawnConfig(builder, 30, 1, 2,  MIN_HEIGHT, 60,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 30, 1, 2,  MIN_HEIGHT, 60);//,
+//					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, 5, 1, 2, MIN_HEIGHT, MAX_HEIGHT);
 
@@ -411,8 +422,8 @@ public final class Config {
 		public GazerConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Gazer properties.", CATEGORY_DIV).push(Registration.GAZER);				
 
-			spawnConfig = new SpawnConfig(builder, 25, 1, 1,  MIN_HEIGHT, UNDERGROUND_HEIGHT,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 25, 1, 1,  MIN_HEIGHT, UNDERGROUND_HEIGHT);//,
+//					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, 10, 1, 1, MIN_HEIGHT, MAX_HEIGHT);
 
@@ -453,8 +464,8 @@ public final class Config {
 		public ShadowlordConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadowlord properties.", CATEGORY_DIV).push(Registration.SHADOWLORD);				
 
-			spawnConfig = new SpawnConfig(builder, 15, 1, 1,  MIN_HEIGHT, 20,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 15, 1, 1,  MIN_HEIGHT, 20);//,
+//					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, 15, 1, 1,  MIN_HEIGHT, MAX_HEIGHT);
 
@@ -489,8 +500,8 @@ public final class Config {
 		public DaemonConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Daemon properties.", CATEGORY_DIV).push(Registration.DAEMON);				
 
-			spawnConfig = new SpawnConfig(builder, 1, 1, 1,  MIN_HEIGHT, 0,
-					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
+			spawnConfig = new CommonSpawnConfig(builder, 1, 1, 1,  MIN_HEIGHT, 0);//,
+//					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, 10, 1, 1,  MIN_HEIGHT, MAX_HEIGHT);
 
@@ -504,5 +515,19 @@ public final class Config {
 
 			builder.pop();
 		}
+	}
+	
+	@Override
+	public String getLogsFolder() {
+		return Config.LOGGING.folder.get();
+	}
+	
+	public void setLogsFolder(String folder) {
+		Config.LOGGING.folder.set(folder);
+	}
+	
+	@Override
+	public String getLoggingLevel() {
+		return Config.LOGGING.level.get();
 	}
 }

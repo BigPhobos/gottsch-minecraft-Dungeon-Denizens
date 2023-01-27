@@ -6,36 +6,33 @@ package com.someguyssoftware.ddenizens.entity.monster;
 import java.util.EnumSet;
 import java.util.Random;
 
+import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.ai.goal.SummonGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
 import com.someguyssoftware.ddenizens.setup.Registration;
-import com.someguyssoftware.gottschcore.random.RandomHelper;
-import com.someguyssoftware.gottschcore.spatial.Coords;
-import com.someguyssoftware.gottschcore.spatial.ICoords;
 
+import mod.gottsch.forge.gottschcore.random.RandomHelper;
+import mod.gottsch.forge.gottschcore.spatial.Coords;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.NaturalSpawner;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -98,8 +95,8 @@ public class Gazer extends FlyingMob {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkGazerSpawnRules(EntityType<Gazer> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
-		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
+	public static boolean checkGazerSpawnRules(EntityType<Gazer> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+		if (level.getBiome(pos).is(BiomeTags.IS_NETHER) ) {
 			return DDMonster.checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
@@ -177,7 +174,7 @@ public class Gazer extends FlyingMob {
 							else {
 								mob = Registration.DAEMON_ENTITY_TYPE.get();
 							}
-							boolean spawnSuccess = super.spawn((ServerLevel)level, random, gazer, mob, new Coords(gazer.blockPosition().getX(), y + 1, gazer.blockPosition().getZ()), target);
+							boolean spawnSuccess = super.spawn((ServerLevel)level, level.random, gazer, mob, new Coords(gazer.blockPosition().getX(), y + 1, gazer.blockPosition().getZ()), target);
 							if (!level.isClientSide() && spawnSuccess) {
 								for (int p = 0; p < 20; p++) {
 									double xSpeed = random.nextGaussian() * 0.02D;
@@ -332,7 +329,8 @@ public class Gazer extends FlyingMob {
 	 */
 	static class GazerRandomFloatAroundGoal extends Goal {
 		private final Gazer gazer;
-
+		private Random random = new Random();
+		
 		public GazerRandomFloatAroundGoal(Gazer gazer) {
 			this.gazer = gazer;
 			this.setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -360,7 +358,6 @@ public class Gazer extends FlyingMob {
 		 * 
 		 */
 		public void start() {
-			Random random = this.gazer.getRandom();
 			double x = this.gazer.getX() + (double)((random.nextFloat() * 2.0F - 1.0F) * 8.0F);
 			double y = this.gazer.getY() + (double)((random.nextFloat() * 2.0F - 1.0F) * 8.0F);
 			double z = this.gazer.getZ() + (double)((random.nextFloat() * 2.0F - 1.0F) * 8.0F);
