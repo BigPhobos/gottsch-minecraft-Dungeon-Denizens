@@ -20,7 +20,6 @@
 package com.someguyssoftware.ddenizens.setup;
 
 import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.capability.GhoulCapability;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.DDMonster;
@@ -40,10 +39,12 @@ import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab.TabVisibility;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.CreativeModeTabEvent.BuildContents;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
@@ -63,18 +64,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 @Mod.EventBusSubscriber(modid = DD.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonSetup {
 	public static void init(final FMLCommonSetupEvent event) {
-//		event.enqueueWork(() -> {
-//			SpawnPlacements.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, DDMonster::checkDDSpawnRules);
-//			SpawnPlacements.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, DDMonster::checkDDSpawnRules);
-//			SpawnPlacements.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, DDMonster::checkDDSpawnRules);
-//			SpawnPlacements.register(Registration.BOULDER_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, Boulder::checkSpawnRules);
-//
-//			SpawnPlacements.register(Registration.SHADOW_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadow::checkShadowSpawnRules);
-//			SpawnPlacements.register(Registration.SHADOWLORD_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadowlord::checkShadowlordSpawnRules);
-//			SpawnPlacements.register(Registration.GAZER_ENTITY_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Gazer::checkGazerSpawnRules);
-//			SpawnPlacements.register(Registration.DAEMON_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Daemon::checkDaemonSpawnRules);
-//
-//		});
 		Config.instance.addRollingFileAppender(DD.MODID);
 		DD.LOGGER.info("starting Dungeon Denizens");
 	}
@@ -109,6 +98,25 @@ public class CommonSetup {
 		event.register(Registration.DAEMON_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Daemon::checkDaemonSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 	}
 
+	@SubscribeEvent
+	public static void registemItemsToTab(BuildContents event) {
+		if (event.getTab() == CreativeModeTabs.SPAWN_EGGS) {
+			event.accept(Registration.HEADLESS_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.ORC_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.GHOUL_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.BOULDER_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+
+			event.accept(Registration.SHADOW_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.SHADOWLORD_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.GAZER_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.DAEMON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+		}
+		else if (event.getTab() == CreativeModeTabs.COMBAT) {
+			event.accept(Registration.CLUB.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.SPIKED_CLUB.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+		}
+	}
+	
 	@Mod.EventBusSubscriber(modid = DD.MODID, bus = EventBusSubscriber.Bus.FORGE)
 	public static class ForgeBusSucscriber {
 		/*

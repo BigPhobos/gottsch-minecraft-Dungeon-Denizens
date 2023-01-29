@@ -38,7 +38,6 @@ import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
@@ -80,9 +79,6 @@ public class Registration {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DD.MODID);
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DD.MODID);
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, DD.MODID);
-
-	// item properties convenience property
-	public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(CreativeModeTab.TAB_MISC);
 	
 	// mob collections
 	public static final List<RegistryObject<?>> ALL_MOBS = Lists.newArrayList();
@@ -177,16 +173,16 @@ public class Registration {
 	 */
 	
 	// mod eggs
-	public static final RegistryObject<Item> HEADLESS_EGG = Registration.ITEMS.register(HEADLESS, () -> new ForgeSpawnEggItem(HEADLESS_ENTITY_TYPE, 0xc8b486, 0x6f5e48, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> ORC_EGG = Registration.ITEMS.register(ORC, () -> new ForgeSpawnEggItem(ORC_ENTITY_TYPE, 0xc8b486, 0x6f5e48, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> GHOUL_EGG = Registration.ITEMS.register(GHOUL, () -> new ForgeSpawnEggItem(GHOUL_ENTITY_TYPE, 0x93aba3, 0x869e96, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> HEADLESS_EGG = Registration.ITEMS.register(HEADLESS, () -> new ForgeSpawnEggItem(HEADLESS_ENTITY_TYPE, 0xc8b486, 0x6f5e48, new Item.Properties()));
+	public static final RegistryObject<Item> ORC_EGG = Registration.ITEMS.register(ORC, () -> new ForgeSpawnEggItem(ORC_ENTITY_TYPE, 0xc8b486, 0x6f5e48, new Item.Properties()));
+	public static final RegistryObject<Item> GHOUL_EGG = Registration.ITEMS.register(GHOUL, () -> new ForgeSpawnEggItem(GHOUL_ENTITY_TYPE, 0x93aba3, 0x869e96, new Item.Properties()));
 //	public static final RegistryObject<Item> ETTIN_EGG = Registration.ITEMS.register(ETTIN, () -> new ForgeSpawnEggItem(ETTIN_ENTITY_TYPE, 0x626262, 0x6f5e48, Registration.ITEM_PROPERTIES));
 	
-	public static final RegistryObject<Item> GAZER_EGG = Registration.ITEMS.register(GAZER, () -> new ForgeSpawnEggItem(GAZER_ENTITY_TYPE, 0x7a2e2f, 0x63181d, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> BOULDER_EGG = Registration.ITEMS.register(BOULDER, () -> new ForgeSpawnEggItem(BOULDER_ENTITY_TYPE, 0x747474, 0x8f8f8f, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> SHADOW_EGG = Registration.ITEMS.register(SHADOW, () -> new ForgeSpawnEggItem(SHADOW_ENTITY_TYPE, 0x000000, 0x2b2b2b, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD, () -> new ForgeSpawnEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x050831, Registration.ITEM_PROPERTIES));
-	public static final RegistryObject<Item> DAEMON_EGG = Registration.ITEMS.register(DAEMON, () -> new ForgeSpawnEggItem(DAEMON_ENTITY_TYPE, 0xff0000, 0xfc0000, Registration.ITEM_PROPERTIES));
+	public static final RegistryObject<Item> GAZER_EGG = Registration.ITEMS.register(GAZER, () -> new ForgeSpawnEggItem(GAZER_ENTITY_TYPE, 0x7a2e2f, 0x63181d, new Item.Properties()));
+	public static final RegistryObject<Item> BOULDER_EGG = Registration.ITEMS.register(BOULDER, () -> new ForgeSpawnEggItem(BOULDER_ENTITY_TYPE, 0x747474, 0x8f8f8f, new Item.Properties()));
+	public static final RegistryObject<Item> SHADOW_EGG = Registration.ITEMS.register(SHADOW, () -> new ForgeSpawnEggItem(SHADOW_ENTITY_TYPE, 0x000000, 0x2b2b2b, new Item.Properties()));
+	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD, () -> new ForgeSpawnEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x050831, new Item.Properties()));
+	public static final RegistryObject<Item> DAEMON_EGG = Registration.ITEMS.register(DAEMON, () -> new ForgeSpawnEggItem(DAEMON_ENTITY_TYPE, 0xff0000, 0xfc0000, new Item.Properties()));
 	
 	// projectiles
 	public static final RegistryObject<Item> SLOWBALL_ITEM = Registration.ITEMS.register(SLOWBALL, () -> new Item(new Item.Properties()));
@@ -198,13 +194,10 @@ public class Registration {
 	 *  weapons
 	 */
 	// club is equal to an stone sword but slower
-	public static final RegistryObject<Item> CLUB = Registration.ITEMS.register("club", () -> new SwordItem(Tiers.WOOD, 4, -3.0F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT)));
+	public static final RegistryObject<Item> CLUB = Registration.ITEMS.register("club", () -> new SwordItem(Tiers.WOOD, 4, -3.0F, new Item.Properties()));
 	// spiked club is equal to an iron sword but slower
-	public static final RegistryObject<Item> SPIKED_CLUB = Registration.ITEMS.register("spiked_club", () -> new SwordItem(Tiers.WOOD, 5, -3.0F, (new Item.Properties()).tab(CreativeModeTab.TAB_COMBAT)));
-	
-	// particles
-//	public static final RegistryObject<SimpleParticleType> SHADOW_PARTICLE = Registration.PARTICLES.register("shadow_particle", () -> new SimpleParticleType(true));
-	
+	public static final RegistryObject<Item> SPIKED_CLUB = Registration.ITEMS.register("spiked_club", () -> new SwordItem(Tiers.WOOD, 5, -3.0F, new Item.Properties()));
+
 	// NOTE must add mob to ALL_MOBS collection in order to register them to the biomes - see CommonSetup.onBiomeLoading
 	static {
 		ALL_MOBS.add(HEADLESS_ENTITY_TYPE);

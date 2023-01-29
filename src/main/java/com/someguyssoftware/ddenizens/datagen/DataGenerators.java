@@ -22,6 +22,7 @@ package com.someguyssoftware.ddenizens.datagen;
 import com.someguyssoftware.ddenizens.DD;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +38,7 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
+        PackOutput output = generator.getPackOutput();
         if (event.includeServer()) {
 //            generator.addProvider(new TutRecipes(generator));
 //            generator.addProvider(new TutLootTables(generator));
@@ -46,8 +48,8 @@ public class DataGenerators {
         }
         if (event.includeClient()) {
 //            generator.addProvider(new TutBlockStates(generator, event.getExistingFileHelper()));
-            generator.addProvider(false, new DDItemModelsProvider(generator, event.getExistingFileHelper()));
-            generator.addProvider(false, new DDLanguageProvider(generator, "en_us"));
+            generator.addProvider(true, new DDItemModelsProvider(output, event.getExistingFileHelper()));
+            generator.addProvider(true, new DDLanguageProvider(output, "en_us"));
         }
     }
 }

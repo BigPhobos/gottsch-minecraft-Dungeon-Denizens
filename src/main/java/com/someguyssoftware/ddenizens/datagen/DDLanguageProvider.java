@@ -22,7 +22,7 @@ package com.someguyssoftware.ddenizens.datagen;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 
 /**
@@ -32,8 +32,8 @@ import net.minecraftforge.common.data.LanguageProvider;
  */
 public class DDLanguageProvider extends LanguageProvider {
 
-    public DDLanguageProvider(DataGenerator gen, String locale) {
-        super(gen, DD.MODID, locale);
+    public DDLanguageProvider(PackOutput pack, String locale) {
+        super(pack, DD.MODID, locale);
     }
 
     @Override

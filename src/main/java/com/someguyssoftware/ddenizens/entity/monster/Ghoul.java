@@ -158,7 +158,7 @@ public class Ghoul extends Monster {
 	}
 
 	@Override
-	public boolean equipItemIfPossible(ItemStack stack) {
+	public ItemStack equipItemIfPossible(ItemStack stack) {
 		EquipmentSlot slot = EquipmentSlot.MAINHAND;
 		ItemStack heldStack = this.getItemBySlot(slot);
 		if (heldStack != null && !heldStack.isEmpty()) {
@@ -168,9 +168,9 @@ public class Ghoul extends Monster {
 		if (heldStack == null || heldStack.isEmpty()) {
 			this.setItemSlotAndDropWhenKilled(slot, stack);
 			this.equipItemIfPossible(stack);
-			return true;
+			return stack;
 		}
-		return false;
+		return ItemStack.EMPTY;
 	}
 
 	//	@Override

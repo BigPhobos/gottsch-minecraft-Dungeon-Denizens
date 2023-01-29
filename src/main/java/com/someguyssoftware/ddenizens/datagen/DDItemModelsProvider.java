@@ -22,7 +22,7 @@ package com.someguyssoftware.ddenizens.datagen;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -33,8 +33,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
  */
 public class DDItemModelsProvider extends ItemModelProvider {
 
-    public DDItemModelsProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, DD.MODID, existingFileHelper);
+    public DDItemModelsProvider(PackOutput pack, ExistingFileHelper existingFileHelper) {
+        super(pack, DD.MODID, existingFileHelper);
     }
 
     @Override
