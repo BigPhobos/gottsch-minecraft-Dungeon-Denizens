@@ -98,7 +98,8 @@ public class Slowball extends AbstractHurtingProjectile implements ItemSupplier 
 		if (!this.level.isClientSide) {
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
-			target.hurt(DamageSource.indirectMagic(this, ownerEntity), Config.Spells.PARALYSIS.damage.get());
+			target.hurt(level.damageSources().indirectMagic(this, ownerEntity), Config.Spells.PARALYSIS.damage.get());
+			
 			if (target instanceof LivingEntity) {
 				((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Config.Spells.PARALYSIS.duration.get(), 0), this);
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);

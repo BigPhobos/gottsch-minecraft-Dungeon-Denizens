@@ -9,7 +9,7 @@ issueTrackerURL="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/i
 
 [[mods]] #mandatory
 modId="ddenizens" #mandatory
-version="1.0.0" #mandatory
+version="1.1.0" #mandatory
 displayName="Dungeon Denizens" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/

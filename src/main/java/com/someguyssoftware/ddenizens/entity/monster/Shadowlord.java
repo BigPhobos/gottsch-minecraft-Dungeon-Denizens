@@ -166,12 +166,12 @@ public class Shadowlord extends DDMonster {
 		return super.finalizeSpawn(level, difficulty, spawnType, groupData, tag);		
 	}
 
-	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		if (level.getBiome(pos).is(BiomeTags.IS_NETHER)) {
-			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
-			return checkDDSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterSpawnRules(mob, level, spawnType, pos, random);
 		}
 	}
 

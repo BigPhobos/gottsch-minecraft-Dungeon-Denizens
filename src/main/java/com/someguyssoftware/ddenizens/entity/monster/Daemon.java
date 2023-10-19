@@ -28,7 +28,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -96,12 +96,12 @@ public class Daemon extends DDMonster {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		if (level.getBiome(pos).is(BiomeTags.IS_NETHER)) {
-			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
-			return checkDDSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterSpawnRules(mob, level, spawnType, pos, random);
 		}
 	}
 
@@ -232,7 +232,7 @@ public class Daemon extends DDMonster {
 					}
 
 					// calculate Y (on ground)
-					BlockPos pos = new BlockPos(Math.floor(x), y, Math.floor(z));
+					BlockPos pos = new BlockPos((int)Math.floor(x), (int)y, (int)Math.floor(z));
 					BlockState state = daemon.level.getBlockState(pos);
 					int count = 0;
 					while (true) {

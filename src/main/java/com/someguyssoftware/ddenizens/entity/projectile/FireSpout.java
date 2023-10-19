@@ -20,6 +20,7 @@
 package com.someguyssoftware.ddenizens.entity.projectile;
 
 import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.damagesource.ModDamageTypes;
 
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.Util;
@@ -30,8 +31,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -151,8 +150,10 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
 
-			DamageSource damageSource = new IndirectEntityDamageSource("firespout", this, ownerEntity).setIsFire().setProjectile();
-			target.hurt(damageSource, Config.Spells.FIRESPOUT.damage.get());
+//			DamageSource damageSource = new IndirectEntityDamageSource("firespout", this, ownerEntity).setIsFire().setProjectile();
+
+			target.hurt(level.damageSources().source(ModDamageTypes.FIRESPOUT), Config.Spells.FIRESPOUT.damage.get());
+//			target.hurt(damageSource, Config.Spells.FIRESPOUT.damage.get());
 			if (target instanceof LivingEntity) {
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);
 			}

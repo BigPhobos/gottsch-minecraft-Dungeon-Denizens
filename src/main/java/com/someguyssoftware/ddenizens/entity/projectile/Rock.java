@@ -77,7 +77,7 @@ public class Rock extends AbstractDDHurtingProjectile implements ItemSupplier {
 	protected void onHitEntity(EntityHitResult result) {
 		super.onHitEntity(result);
 		Entity entity = result.getEntity();
-		entity.hurt(DamageSource.thrown(this, this.getOwner()), 4F);
+		entity.hurt(level.damageSources().thrown(this, this.getOwner()), 4F);
 	}
 
 	@Override

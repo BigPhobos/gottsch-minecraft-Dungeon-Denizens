@@ -20,6 +20,7 @@
 package com.someguyssoftware.ddenizens.entity.projectile;
 
 import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.damagesource.ModDamageTypes;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import net.minecraft.Util;
@@ -29,8 +30,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -97,8 +96,9 @@ public class Harmball extends AbstractHurtingProjectile implements ItemSupplier 
 		if (!this.level.isClientSide) {
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
-			DamageSource damageSource = new IndirectEntityDamageSource("harmball", this, ownerEntity).setProjectile();
-			target.hurt(damageSource, Config.Spells.HARMBALL.damage.get());
+//			DamageSource damageSource = new IndirectEntityDamageSource("harmball", this, ownerEntity).setProjectile();
+			target.hurt(level.damageSources().source(ModDamageTypes.HARMBALL), Config.Spells.HARMBALL.damage.get());
+//			target.hurt(damageSource, Config.Spells.HARMBALL.damage.get());
 			if (target instanceof LivingEntity) {
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);
 			}

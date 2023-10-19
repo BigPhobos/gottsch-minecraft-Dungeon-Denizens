@@ -339,7 +339,7 @@ public class Boulder extends Monster {
 		//		DD.LOGGER.debug("is server side -> {}", !this.level.isClientSide);
 		if (this.level.isDay() && !this.level.isClientSide) {
 			float brightness = this.getLightLevelDependentMagicValue();
-			BlockPos pos = new BlockPos(this.getX(), this.getEyeY(), this.getZ());
+			BlockPos pos = new BlockPos(this.blockPosition());
 //			DD.LOGGER.debug("can see sky -> {}", this.level.canSeeSky(pos));
 			//			boolean flag = this.isInWaterRainOrBubble() || this.isInPowderSnow || this.wasInPowderSnow;
 			if (brightness > 0.5F && this.level.canSeeSky(pos)) {
