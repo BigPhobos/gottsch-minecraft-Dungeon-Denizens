@@ -158,6 +158,13 @@ repositories {
     maven {
         url "${project.projectDir}/../maven"
     }
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+    }
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
             
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
      //flatDir {
@@ -170,25 +177,8 @@ def minimap_path="/libs/Xaeros_Minimap_22.3.0_Forge_1.18.jar"
 println gottschcore_path
 
 dependencies {
-    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
-
-    // Real mod deobf dependency examples - these get remapped to your current mappings
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
-    // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-	//compileOnly files(gottschcore_path)
-	compileOnly fg.deobf("someguyssoftware.gottschcore:GottschCore:mc1.18.1-f39.1.0-v1.6.0")
-	// implementation files(gottschcore_path)
-	//runtimeOnly files(minimap_path)
-    // Examples using mod jars from ./libs
-    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+	compileOnly fg.deobf("someguyssoftware.gottschcore:GottschCore:mc1.18.2-f40.1.0-v2.1.0")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
