@@ -85,7 +85,7 @@ public class Harmball extends AbstractHurtingProjectile implements ItemSupplier 
 	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			this.discard();
 		}
 	}
@@ -93,11 +93,11 @@ public class Harmball extends AbstractHurtingProjectile implements ItemSupplier 
 	@Override
 	protected void onHitEntity(EntityHitResult hitResult) {
 		super.onHitEntity(hitResult);
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
 //			DamageSource damageSource = new IndirectEntityDamageSource("harmball", this, ownerEntity).setProjectile();
-			target.hurt(level.damageSources().source(ModDamageTypes.HARMBALL), Config.Spells.HARMBALL.damage.get());
+			target.hurt(level().damageSources().source(ModDamageTypes.HARMBALL), Config.Spells.HARMBALL.damage.get());
 //			target.hurt(damageSource, Config.Spells.HARMBALL.damage.get());
 			if (target instanceof LivingEntity) {
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);

@@ -71,7 +71,7 @@ public class HeadlessHurtByTargetGoal extends TargetGoal {
 		int i = this.mob.getLastHurtByMobTimestamp();
 		LivingEntity livingentity = this.mob.getLastHurtByMob();
 		if (i != this.timeStamp && livingentity != null) {
-			if (livingentity.getType() == EntityType.PLAYER && this.mob.level.getGameRules().getBoolean(GameRules.RULE_UNIVERSAL_ANGER)) {
+			if (livingentity.getType() == EntityType.PLAYER && this.mob.level().getGameRules().getBoolean(GameRules.RULE_UNIVERSAL_ANGER)) {
 				return false;
 			} else {
 				for(Class<?> oclass : this.toIgnoreDamage) {
@@ -112,7 +112,7 @@ public class HeadlessHurtByTargetGoal extends TargetGoal {
 	protected void alertOthers() {
 		double distance = this.getFollowDistance();
 		AABB aabb = AABB.unitCubeFromLowerCorner(this.mob.position()).inflate(distance, ALERT_RANGE_Y, distance);
-		List<? extends Mob> list = this.mob.level.getEntitiesOfClass(Mob.class, aabb, EntitySelector.NO_SPECTATORS);
+		List<? extends Mob> list = this.mob.level().getEntitiesOfClass(Mob.class, aabb, EntitySelector.NO_SPECTATORS);
 		Iterator<? extends Mob> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			Mob otherMob = (Mob)iterator.next();

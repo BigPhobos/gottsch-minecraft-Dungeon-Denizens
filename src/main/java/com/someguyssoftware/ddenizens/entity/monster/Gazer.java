@@ -138,7 +138,7 @@ public class Gazer extends FlyingMob {
 			LivingEntity target = this.gazer.getTarget();
 			if (target != null) {
 				if (target.distanceToSqr(this.gazer) < 1024.0D && this.gazer.hasLineOfSight(target)) {
-					Level level = this.gazer.level;
+					Level level = this.gazer.level();
 					++this.cooldownTime;
 
 					if (this.cooldownTime >= summonCooldownTime) {
@@ -239,7 +239,7 @@ public class Gazer extends FlyingMob {
 			LivingEntity livingentity = this.gazer.getTarget();
 			if (livingentity != null) {
 				if (livingentity.distanceToSqr(this.gazer) < 4096.0D && this.gazer.hasLineOfSight(livingentity)) {
-					Level level = this.gazer.level;
+					Level level = this.gazer.level();
 					++this.chargeTime;
 
 					if (this.chargeTime >= maxChargeTime) {
@@ -361,7 +361,7 @@ public class Gazer extends FlyingMob {
 			double y = this.gazer.getY() + (double)((random.nextFloat() * 2.0F - 1.0F) * 8.0F);
 			double z = this.gazer.getZ() + (double)((random.nextFloat() * 2.0F - 1.0F) * 8.0F);
 
-			int height = gazer.level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, gazer.blockPosition().getX(), gazer.blockPosition().getZ());
+			int height = gazer.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, gazer.blockPosition().getX(), gazer.blockPosition().getZ());
 			// ie above ground (anywhere)
 			if (gazer.blockPosition().getY() > height) {
 				y = Math.min(y, height + 12);
@@ -445,7 +445,7 @@ public class Gazer extends FlyingMob {
 
 			for(int i = 1; i < p_32772_; ++i) {
 				aabb = aabb.move(vec3);
-				if (!gazer.level.noCollision(gazer, aabb)) {
+				if (!gazer.level().noCollision(gazer, aabb)) {
 					return false;
 				}
 			}

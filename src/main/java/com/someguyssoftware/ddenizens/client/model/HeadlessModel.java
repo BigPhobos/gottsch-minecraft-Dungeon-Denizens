@@ -214,7 +214,7 @@ public class HeadlessModel<T extends Entity> extends DDModel<T> {
 		leftArm.yRot = 0;
 		leftArm.zRot = -rightArm.zRot;
 		if (this.attackTime > 0) {
-			if (changeAttackArm && entity.level.getGameTime() - changeAttackArmTime > 20) {
+			if (changeAttackArm && entity.level().getGameTime() - changeAttackArmTime > 20) {
 				if (attackArm == getRightArm()) {
 					attackArm = getLeftArm();
 				}
@@ -227,7 +227,7 @@ public class HeadlessModel<T extends Entity> extends DDModel<T> {
 		else {
 			if (!changeAttackArm) {
 				changeAttackArm = true;
-				changeAttackArmTime = entity.level.getGameTime();
+				changeAttackArmTime = entity.level().getGameTime();
 			}
 		}
 	}

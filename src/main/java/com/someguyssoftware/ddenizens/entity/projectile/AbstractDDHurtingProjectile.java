@@ -97,7 +97,7 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 	@Override
 	public void tick() {
 		Entity entity = this.getOwner();
-		if (this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) {
+		if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
 			super.tick();
 			clientSideTick();
 		} else {
@@ -114,7 +114,7 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 			this.setSecondsOnFire(1);
 		}
 
-		HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+		HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 		if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
 			this.onHit(hitresult);
 		}
@@ -129,14 +129,14 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 		if (this.isInWater()) {
 			for(int i = 0; i < 4; ++i) {
 				float f1 = 0.25F;
-				this.level.addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
+				this.level().addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
 			}
 
 			f = 0.8F;
 		}
 
 		this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale((double)f));
-		this.level.addParticle(this.getTrailParticle(), d0, d1 + 0.5D, d2, 0.0D, 0.0D, 0.0D);
+		this.level().addParticle(this.getTrailParticle(), d0, d1 + 0.5D, d2, 0.0D, 0.0D, 0.0D);
 		this.setPos(d0, d1, d2);
 	}
 

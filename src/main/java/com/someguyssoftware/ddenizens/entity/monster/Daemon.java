@@ -110,17 +110,17 @@ public class Daemon extends DDMonster {
 	 */
 	@Override
 	public void aiStep() {
-		if (this.level.isClientSide && !isInWater()) {
+		if (this.level().isClientSide && !isInWater()) {
 			for(int i = 0; i < 2; ++i) {
-				this.level.addParticle(ParticleTypes.FLAME, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
+				this.level().addParticle(ParticleTypes.FLAME, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
 			}
-			this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
+			this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
 
 			if (--particlesReset <= 0) {
 					//RandomHelper.checkProbability(new Random(), 24)) {
 				double x = 0.75D * Math.sin(flameParticlesTime);
 				double z = 0.75D * Math.cos(flameParticlesTime);
-				this.level.addParticle(ParticleTypes.FLAME, this.position().x + x, this.position().y + 0.1D, position().z + z, 0, 0, 0);
+				this.level().addParticle(ParticleTypes.FLAME, this.position().x + x, this.position().y + 0.1D, position().z + z, 0, 0, 0);
 				particlesReset = 4;
 			}
 			flameParticlesTime++;
@@ -204,7 +204,7 @@ public class Daemon extends DDMonster {
 				}
 			}
 
-			if (shootFireSpouts && daemon.level.getGameTime() % 3 == 0) {
+			if (shootFireSpouts && daemon.level().getGameTime() % 3 == 0) {
 				if (fireSpoutCount < maxFireSpouts) {
 					// view vector
 					Vec3 vec3 = this.viewVector;
@@ -233,23 +233,23 @@ public class Daemon extends DDMonster {
 
 					// calculate Y (on ground)
 					BlockPos pos = new BlockPos((int)Math.floor(x), (int)y, (int)Math.floor(z));
-					BlockState state = daemon.level.getBlockState(pos);
+					BlockState state = daemon.level().getBlockState(pos);
 					int count = 0;
 					while (true) {
 						count++;
-						if (state.getMaterial().isLiquid() || daemon.level.getBlockState(pos.below()).getMaterial().isLiquid()) {
+						if (!state.getFluidState().isEmpty() || !daemon.level().getBlockState(pos.below()).getFluidState().isEmpty()) {
 							resetShootFireSpout();
 							return;
 						}
 						else if (state.getBlock() == Blocks.AIR) {
-							if (daemon.level.getBlockState(pos.below()).getBlock() != Blocks.AIR) {
+							if (daemon.level().getBlockState(pos.below()).getBlock() != Blocks.AIR) {
 								break;
 							}
 							pos = pos.below();
 						}
 						else {
 							pos = pos.above();
-							if (daemon.level.getBlockState(pos).getBlock() == Blocks.AIR) {
+							if (daemon.level().getBlockState(pos).getBlock() == Blocks.AIR) {
 								break;
 							}							
 						}
@@ -257,7 +257,7 @@ public class Daemon extends DDMonster {
 							resetShootFireSpout();
 							return;
 						}
-						state = daemon.level.getBlockState(pos);
+						state = daemon.level().getBlockState(pos);
 					}
 					if (pos.getY() - lastY > 2 || lastY - pos.getY() > 2) {
 						resetShootFireSpout();
@@ -272,13 +272,13 @@ public class Daemon extends DDMonster {
 					double z2 = z;
 
 					// create the firespout and initialize
-					FireSpout spell = new FireSpout(Registration.FIRESPOUT_ENTITY_TYPE.get(), daemon.level);
+					FireSpout spell = new FireSpout(Registration.FIRESPOUT_ENTITY_TYPE.get(), daemon.level());
 					spell.init(daemon, x, y, z, x2, y2, z2);
 
 					// add the entity to the level
-					daemon.level.addFreshEntity(spell);
+					daemon.level().addFreshEntity(spell);
 					// add some particle effects
-					((ServerLevel) daemon.level).sendParticles(ParticleTypes.LARGE_SMOKE, x, y + 0.2, z, 5, 0, 0, 0, (double)0.15F);
+					((ServerLevel) daemon.level()).sendParticles(ParticleTypes.LARGE_SMOKE, x, y + 0.2, z, 5, 0, 0, 0, (double)0.15F);
 
 					// increment the count
 					fireSpoutCount++;

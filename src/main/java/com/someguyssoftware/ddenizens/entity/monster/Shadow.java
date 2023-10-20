@@ -132,9 +132,9 @@ public class Shadow extends DDMonster {
 		if (super.doHurtTarget(target)) {
 			if (target instanceof Player) {
 				int seconds = 0;
-				if (this.level.getDifficulty() == Difficulty.NORMAL) {
+				if (this.level().getDifficulty() == Difficulty.NORMAL) {
 					seconds = NORMAL_DIFFICULTY_SECONDS;
-				} else if (this.level.getDifficulty() == Difficulty.HARD) {
+				} else if (this.level().getDifficulty() == Difficulty.HARD) {
 					seconds = HARD_DIFFICULTY_SECONDS;
 				}
 				// inflict blindness and/or weakness
@@ -163,7 +163,7 @@ public class Shadow extends DDMonster {
 	 */
 	@Override
 	public boolean hurt(DamageSource damageSource, float amount) {
-		if (WorldInfo.isClientSide(this.level)) {
+		if (WorldInfo.isClientSide(this.level())) {
 			return false;
 		}
 		

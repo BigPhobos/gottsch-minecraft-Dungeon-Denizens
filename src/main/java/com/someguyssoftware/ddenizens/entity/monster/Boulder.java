@@ -99,7 +99,7 @@ public class Boulder extends Monster {
 	 * @return
 	 */
 	public static boolean checkSpawnRules(EntityType<? extends Monster> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
-		//		return (level.getHeight() < 60 || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		//		return (level().getHeight() < 60 || level().getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));	
 		CommonSpawnConfig config = mobConfig.getSpawnConfig();
 		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).is(BiomeTags.IS_MOUNTAIN) )
@@ -138,9 +138,9 @@ public class Boulder extends Monster {
 
 	@Override
 	public void aiStep() {		
-		if (this.level.isClientSide) {
-			if (this.level.getGameTime() % 20 == 0)
-				this.level.addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
+		if (this.level().isClientSide) {
+			if (this.level().getGameTime() % 20 == 0)
+				this.level().addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
 		}
 		///////
 
@@ -153,7 +153,7 @@ public class Boulder extends Monster {
 		setLoyaltyTicks(ticks);
 
 		// NOTE isSunBurn only works on server
-		if (!WorldInfo.isClientSide(level)) {
+		if (!WorldInfo.isClientSide(level())) {
 			if (isDormant() && getLoyaltyTicks() > 0 && !isSunBurn()) {
 				wakeUp();
 			}
@@ -328,21 +328,21 @@ public class Boulder extends Monster {
 	public LivingEntity getOwner() {
 		try {
 			UUID uuid = this.getOwnerUUID();
-			return uuid == null ? null : this.level.getPlayerByUUID(uuid);
+			return uuid == null ? null : this.level().getPlayerByUUID(uuid);
 		} catch (IllegalArgumentException illegalargumentexception) {
 			return null;
 		}
 	}
 
 	protected boolean isSunBurn() {
-		//		DD.LOGGER.debug("is day -> {}", this.level.isDay());
-		//		DD.LOGGER.debug("is server side -> {}", !this.level.isClientSide);
-		if (this.level.isDay() && !this.level.isClientSide) {
+		//		DD.LOGGER.debug("is day -> {}", this.level().isDay());
+		//		DD.LOGGER.debug("is server side -> {}", !this.level().isClientSide);
+		if (this.level().isDay() && !this.level().isClientSide) {
 			float brightness = this.getLightLevelDependentMagicValue();
 			BlockPos pos = new BlockPos(this.blockPosition());
-//			DD.LOGGER.debug("can see sky -> {}", this.level.canSeeSky(pos));
+//			DD.LOGGER.debug("can see sky -> {}", this.level().canSeeSky(pos));
 			//			boolean flag = this.isInWaterRainOrBubble() || this.isInPowderSnow || this.wasInPowderSnow;
-			if (brightness > 0.5F && this.level.canSeeSky(pos)) {
+			if (brightness > 0.5F && this.level().canSeeSky(pos)) {
 				return true;
 			}
 		}
@@ -392,7 +392,7 @@ public class Boulder extends Monster {
 			this.boulder = boulder;
 			this.startDistance = startDistance;
 			this.stopDistance = stopDistance;
-			this.level = boulder.level;
+			this.level = boulder.level();
 			this.navigation = boulder.getNavigation();
 		}
 

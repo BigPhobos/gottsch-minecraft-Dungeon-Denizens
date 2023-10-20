@@ -174,7 +174,7 @@ public class Orc extends Monster {
 	 * 
 	 */
 	public void reassessWeaponGoal() {
-		if (this.level != null && !this.level.isClientSide) {
+		if (this.level() != null && !this.level().isClientSide) {
 			this.goalSelector.removeGoal(this.meleeGoal);
 			this.goalSelector.removeGoal(this.rockGoal);
 			ItemStack itemStack = this.getMainHandItem();
@@ -370,10 +370,10 @@ public class Orc extends Monster {
 					double x = target.getX() - (this.orc.getX() + vec3.x * 1.0D);
 					double y = target.getY(0.5D) - (this.orc.getY(0.5D));
 					double z = target.getZ() - (this.orc.getZ() + vec3.z * 1.0D);
-					Rock rock = new Rock(Registration.ROCK_ENTITY_TYPE.get(), orc.level);
+					Rock rock = new Rock(Registration.ROCK_ENTITY_TYPE.get(), orc.level());
 					rock.init(this.orc, orc.getX(), orc.getY(), orc.getZ(), x, y, z);
 					rock.setPos(this.orc.getX() + vec3.x * 1.0D, this.orc.getY(0.5D), rock.getZ() + vec3.z * 1.0);
-					orc.level.addFreshEntity(rock);					
+					orc.level().addFreshEntity(rock);					
 					chargeTime = 0;
 				}
 
@@ -393,15 +393,15 @@ public class Orc extends Monster {
 	public void performRangedAttack(LivingEntity target, float power) {
 		// TODO remove power - its only use is to affect the base damage - which is moot for rocks
 		// TODO refactor Rock to be a AbstractHurtingProjectile like Slowball, Harmball, but add gravity to the movement calcs.
-		Rock rock = new Rock(Registration.ROCK_ENTITY_TYPE.get(), level);
+		Rock rock = new Rock(Registration.ROCK_ENTITY_TYPE.get(), level());
 		rock.setOwner(this);
 		double d0 = target.getX() - this.getX();
 		double d1 = target.getY(0.3333333333333333D) - rock.getY();
 		double d2 = target.getZ() - this.getZ();
 		double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-		rock.shoot(d0, d1 + d3 * (double)0.2F, d2, 1.6F, (float)(14 - this.level.getDifficulty().getId() * 4));
+		rock.shoot(d0, d1 + d3 * (double)0.2F, d2, 1.6F, (float)(14 - this.level().getDifficulty().getId() * 4));
 		this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-		this.level.addFreshEntity(rock);
+		this.level().addFreshEntity(rock);
 		
 		this.swing(InteractionHand.MAIN_HAND);
 	}

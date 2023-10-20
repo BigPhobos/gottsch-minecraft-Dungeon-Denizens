@@ -152,7 +152,7 @@ public class Headless extends Monster {
 		protected void alertOthers() {
 			double distance = this.getFollowDistance();
 			AABB aabb = AABB.unitCubeFromLowerCorner(this.mob.position()).inflate(distance, ALERT_RANGE_Y, distance);
-			List<? extends Mob> list = this.mob.level.getEntitiesOfClass(Mob.class, aabb, EntitySelector.NO_SPECTATORS);
+			List<? extends Mob> list = this.mob.level().getEntitiesOfClass(Mob.class, aabb, EntitySelector.NO_SPECTATORS);
 			Iterator<? extends Mob> iterator = list.iterator();
 			while (iterator.hasNext()) {
 				Mob otherMob = (Mob)iterator.next();

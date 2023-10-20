@@ -184,12 +184,12 @@ public class Shadowlord extends DDMonster {
 		// add damage to Shadowlord's health
 		DD.LOGGER.debug("draining {} hp from player", amount);
 		setHealth(Math.min(getMaxHealth(), getHealth() + amount));
-		if (!WorldInfo.isClientSide(this.level)) {
+		if (!WorldInfo.isClientSide(this.level())) {
 			for (int p = 0; p < 20; p++) {
 				double xSpeed = random.nextGaussian() * 0.02D;
 				double ySpeed = random.nextGaussian() * 0.02D;
 				double zSpeed = random.nextGaussian() * 0.02D;
-				((ServerLevel)level).sendParticles(ParticleTypes.SOUL, blockPosition().getX() + 0.5D, blockPosition().getY(), blockPosition().getZ() + 0.5D, 1, xSpeed, ySpeed, zSpeed, (double)0.15F);
+				((ServerLevel)level()).sendParticles(ParticleTypes.SOUL, blockPosition().getX() + 0.5D, blockPosition().getY(), blockPosition().getZ() + 0.5D, 1, xSpeed, ySpeed, zSpeed, (double)0.15F);
 			}
 		}
 	}
@@ -199,10 +199,10 @@ public class Shadowlord extends DDMonster {
 		/*
 		 * Create a ring of smoke particles to delineate the boundary of the Aura of Blindness 
 		 */
-		if (WorldInfo.isClientSide(this.getLevel())) {
+		if (WorldInfo.isClientSide(this.level())) {
 			double x = 2D * Math.sin(auraOfBlindessTime);
 			double z = 2D * Math.cos(auraOfBlindessTime);
-			this.level.addParticle(ParticleTypes.SMOKE, this.position().x + x, position().y, position().z + z, 0, 0, 0);
+			this.level().addParticle(ParticleTypes.SMOKE, this.position().x + x, position().y, position().z + z, 0, 0, 0);
 			auraOfBlindessTime++;
 			auraOfBlindessTime = auraOfBlindessTime % 360;
 		}
@@ -213,7 +213,7 @@ public class Shadowlord extends DDMonster {
 		// get all entities with radius
 		double distance = 2;
 		AABB aabb = AABB.unitCubeFromLowerCorner(this.position()).inflate(distance, distance, distance);
-		List<? extends Player> list = this.getLevel().getEntitiesOfClass(Player.class, aabb, EntitySelector.NO_SPECTATORS);
+		List<? extends Player> list = this.level().getEntitiesOfClass(Player.class, aabb, EntitySelector.NO_SPECTATORS);
 		Iterator<? extends Player> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			Player target = (Player)iterator.next();
@@ -253,7 +253,7 @@ public class Shadowlord extends DDMonster {
 	 */
 	@Override
 	public boolean hurt(DamageSource damageSource, float amount) {
-		if (WorldInfo.isClientSide(this.level)) {
+		if (WorldInfo.isClientSide(this.level())) {
 			return false;
 		}
 
@@ -325,7 +325,7 @@ public class Shadowlord extends DDMonster {
 				if (livingentity.distanceToSqr(this.shadowlord) < SHOOT_DISTANCE_SQUARED && this.shadowlord.hasLineOfSight(livingentity) 
 						&& livingentity.distanceToSqr(this.shadowlord) > Shadowlord.MELEE_DISTANCE_SQUARED) {
 
-					Level level = this.shadowlord.level;
+					Level level = this.shadowlord.level();
 					++this.chargeTime;
 
 					if (this.chargeTime >= maxChargeTime) {
@@ -391,7 +391,7 @@ public class Shadowlord extends DDMonster {
 			LivingEntity target = this.shadowlord.getTarget();
 			if (target != null) {
 				if (target.distanceToSqr(this.shadowlord) < SUMMON_DISTANCE_SQUARED && this.shadowlord.hasLineOfSight(target)) {
-					Level level = this.shadowlord.level;
+					Level level = this.shadowlord.level();
 					++this.cooldownTime;
 
 					if (this.cooldownTime >= summonCooldownTime) {

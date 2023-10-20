@@ -44,7 +44,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.CreativeModeTabEvent.BuildContents;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
@@ -99,8 +99,8 @@ public class CommonSetup {
 	}
 
 	@SubscribeEvent
-	public static void registemItemsToTab(BuildContents event) {
-		if (event.getTab() == CreativeModeTabs.SPAWN_EGGS) {
+	public static void registemItemsToTab(BuildCreativeModeTabContentsEvent event) {
+		if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
 			event.accept(Registration.HEADLESS_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.ORC_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.GHOUL_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
@@ -111,7 +111,7 @@ public class CommonSetup {
 			event.accept(Registration.GAZER_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.DAEMON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 		}
-		else if (event.getTab() == CreativeModeTabs.COMBAT) {
+		else if (event.getTabKey() == CreativeModeTabs.COMBAT) {
 			event.accept(Registration.CLUB.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.SPIKED_CLUB.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 		}
@@ -222,7 +222,7 @@ public class CommonSetup {
 
 		@SubscribeEvent
 		public static void hitFromShadowlord(LivingDamageEvent event) {
-			if (WorldInfo.isClientSide(event.getEntity().level)) {
+			if (WorldInfo.isClientSide(event.getEntity().level())) {
 				return;
 			}
 
@@ -238,7 +238,7 @@ public class CommonSetup {
 
 		//		@SubscribeEvent
 		public static void hitFromShadowlord(LivingHurtEvent event) {
-			if (WorldInfo.isClientSide(event.getEntity().level)) {
+			if (WorldInfo.isClientSide(event.getEntity().level())) {
 				return;
 			}
 

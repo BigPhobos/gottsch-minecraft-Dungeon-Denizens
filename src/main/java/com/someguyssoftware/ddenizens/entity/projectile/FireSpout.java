@@ -108,7 +108,7 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 			this.setSecondsOnFire(1);
 		}
 
-		HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+		HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 		if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
 			this.onHit(hitresult);
 		}
@@ -122,9 +122,9 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 		ProjectileUtil.rotateTowardsMovement(this, 0.2F);
 		float f = this.getInertia();
 		this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale((double)f));
-		this.level.addParticle(this.getTrailParticle(), d0, d1 + 0.5D, d2, 0.0D, 0.0D, 0.0D);
+		this.level().addParticle(this.getTrailParticle(), d0, d1 + 0.5D, d2, 0.0D, 0.0D, 0.0D);
 		for (int i = 0; i < 2; i++) {
-			this.level.addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+			this.level().addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
 		}
 		this.setPos(d0, d1, d2);
 
@@ -136,9 +136,9 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
-		if (!WorldInfo.isClientSide(level)) {
-			boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
-			this.level.explode((Entity)null, this.getX(), this.getY(), this.getZ(), (float)this.explosionPower, flag, flag ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+		if (!WorldInfo.isClientSide(level())) {
+			boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this.getOwner());
+			this.level().explode((Entity)null, this.getX(), this.getY(), this.getZ(), (float)this.explosionPower, flag, flag ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
 			this.discard();
 		}
 	}
@@ -146,13 +146,13 @@ public class FireSpout extends AbstractDDHurtingProjectile implements ItemSuppli
 	@Override
 	protected void onHitEntity(EntityHitResult hitResult) {
 		super.onHitEntity(hitResult);
-		if (!WorldInfo.isClientSide(level)) {
+		if (!WorldInfo.isClientSide(level())) {
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
 
 //			DamageSource damageSource = new IndirectEntityDamageSource("firespout", this, ownerEntity).setIsFire().setProjectile();
 
-			target.hurt(level.damageSources().source(ModDamageTypes.FIRESPOUT), Config.Spells.FIRESPOUT.damage.get());
+			target.hurt(level().damageSources().   source(ModDamageTypes.FIRESPOUT), Config.Spells.FIRESPOUT.damage.get());
 //			target.hurt(damageSource, Config.Spells.FIRESPOUT.damage.get());
 			if (target instanceof LivingEntity) {
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);

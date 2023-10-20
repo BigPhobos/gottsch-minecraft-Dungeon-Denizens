@@ -87,7 +87,7 @@ public class Slowball extends AbstractHurtingProjectile implements ItemSupplier 
 	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			this.discard();
 		}
 	}
@@ -95,10 +95,10 @@ public class Slowball extends AbstractHurtingProjectile implements ItemSupplier 
 	@Override
 	protected void onHitEntity(EntityHitResult hitResult) {
 		super.onHitEntity(hitResult);
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
-			target.hurt(level.damageSources().indirectMagic(this, ownerEntity), Config.Spells.PARALYSIS.damage.get());
+			target.hurt(level().damageSources().indirectMagic(this, ownerEntity), Config.Spells.PARALYSIS.damage.get());
 			
 			if (target instanceof LivingEntity) {
 				((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Config.Spells.PARALYSIS.duration.get(), 0), this);

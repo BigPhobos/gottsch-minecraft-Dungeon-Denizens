@@ -212,7 +212,7 @@ public class Ghoul extends Monster {
 			if (!getGhoul().isAlive()) {
 				return false;
 			}
-			else if (!getGhoul().onGround) {
+			else if (!getGhoul().onGround()) {
 				return false;
 			}
 			else {
