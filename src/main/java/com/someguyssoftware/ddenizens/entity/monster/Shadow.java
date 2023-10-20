@@ -5,11 +5,6 @@ package com.someguyssoftware.ddenizens.entity.monster;
 
 import java.util.Random;
 
-import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
-import com.someguyssoftware.ddenizens.config.Config.INetherMobConfig;
-import com.someguyssoftware.ddenizens.config.Config.SpawnConfig;
 import com.someguyssoftware.gottschcore.random.RandomHelper;
 import com.someguyssoftware.gottschcore.world.WorldInfo;
 
@@ -36,13 +31,12 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 
@@ -121,7 +115,7 @@ public class Shadow extends DDMonster {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkShadowSpawnRules(EntityType<Shadow> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
+	public static boolean checkShadowSpawnRules(EntityType<Shadow> mob,ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
 //		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN)
 //				&& checkAnyLightMonsterSpawnRules(mob, level, spawnType, pos, random);
 
@@ -135,10 +129,10 @@ public class Shadow extends DDMonster {
 //				result |= pos.getY() < netherConfig.maxHeight.get();
 //			}
 //			result |= checkMobSpawnRules(mob, level, spawnType, pos, random);
-			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
-			return checkDDSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterSpawnRules(mob, level, spawnType, pos, random);
 		}
 
 //		return (

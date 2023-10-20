@@ -68,7 +68,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
@@ -166,12 +165,12 @@ public class Shadowlord extends DDMonster {
 		return super.finalizeSpawn(level, difficulty, spawnType, groupData, tag);		
 	}
 
-	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
+	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
 		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
-			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
-			return checkDDSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterSpawnRules(mob, level, spawnType, pos, random);
 		}
 	}
 

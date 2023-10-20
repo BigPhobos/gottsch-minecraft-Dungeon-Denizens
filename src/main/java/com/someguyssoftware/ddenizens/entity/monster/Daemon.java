@@ -29,7 +29,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.block.Blocks;
@@ -98,12 +98,12 @@ public class Daemon extends DDMonster {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
+	public static boolean checkDaemonSpawnRules(EntityType<Daemon> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, Random random) {
 		if (Biome.getBiomeCategory(level.getBiome(pos)) == BiomeCategory.NETHER) {
-			return checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
-			return checkDDSpawnRules(mob, level, spawnType, pos, random);
+			return checkDDMonsterSpawnRules(mob, level, spawnType, pos, random);
 		}
 	}
 

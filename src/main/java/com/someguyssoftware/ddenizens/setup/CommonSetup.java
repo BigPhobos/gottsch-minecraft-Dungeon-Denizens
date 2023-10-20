@@ -96,9 +96,9 @@ public class CommonSetup {
 
 	@SubscribeEvent
 	public static void registerEntitySpawn(RegistryEvent.Register<EntityType<?>> event) {
-		SpawnPlacements.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
-		SpawnPlacements.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
-		SpawnPlacements.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDSpawnRules);
+		SpawnPlacements.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDMonsterSpawnRules);
+		SpawnPlacements.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDMonsterSpawnRules);
+		SpawnPlacements.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DDMonster::checkDDMonsterSpawnRules);
 		SpawnPlacements.register(Registration.BOULDER_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Boulder::checkSpawnRules);
 
 		SpawnPlacements.register(Registration.SHADOW_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Shadow::checkShadowSpawnRules);
