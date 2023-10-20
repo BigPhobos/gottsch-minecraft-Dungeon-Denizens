@@ -158,6 +158,13 @@ repositories {
     maven {
         url "${project.projectDir}/../maven"
     }
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+    }
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
             
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
      //flatDir {
@@ -165,13 +172,11 @@ repositories {
     // }
 }
 
-def gottschcore_path="/libs/GottschCore-mc1.18.1-f39.1.0-v1.5.0.jar"
-def minimap_path="/libs/Xaeros_Minimap_22.3.0_Forge_1.18.jar"
-println gottschcore_path
 
 dependencies {
      minecraft 'net.minecraftforge:forge:1.19.2-43.2.0'
-    compileOnly fg.deobf("someguyssoftware.gottschcore:GottschCore:mc1.19.2-f43.2.0-v2.0.0")
+	compileOnly fg.deobf("someguyssoftware.gottschcore:GottschCore:mc1.19.2-f43.2.0-v2.1.0")
+	compileOnly fg.deobf("curse.maven:jade-324717:4433884") // 1.19.1-8.8.1
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
