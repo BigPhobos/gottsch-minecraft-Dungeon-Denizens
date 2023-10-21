@@ -28,12 +28,14 @@ import com.someguyssoftware.ddenizens.config.Config.NetherSpawnConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 
 /**
  * @author Mark Gottschling on Apr 13, 2022
@@ -56,18 +58,20 @@ public abstract class DDMonster extends Monster {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkDDSpawnRules(EntityType<? extends Mob> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
-		
+	public static boolean checkDDMonsterSpawnRules(EntityType<? extends Mob> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));		
 		CommonSpawnConfig config = mobConfig.getSpawnConfig();
-
-		return pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get() && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		return level.getDifficulty() != Difficulty.PEACEFUL && isValidHeight(pos, config) && isDarkEnoughToSpawn(level, pos, random) && checkMobSpawnRules(mob, level, spawnType, pos, random);
 	}
 	
-	public static boolean checkDDNetherSpawnRules(EntityType<? extends Mob> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	public static boolean isValidHeight(BlockPos pos, CommonSpawnConfig config) {
+		return pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get();
+	}
+	
+	public static boolean checkDDMonsterNetherSpawnRules(EntityType<? extends Mob> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		DD.LOGGER.info("checking nether spawn rules at -> {}", pos);
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));
 		NetherSpawnConfig config = ((INetherMobConfig)mobConfig).getNetherSpawn();
-		return pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get() && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		return level.getDifficulty() != Difficulty.PEACEFUL && isValidHeight(pos, config) && isDarkEnoughToSpawn(level, pos, random) && checkMobSpawnRules(mob, level, spawnType, pos, random);
 	}
 }

@@ -9,11 +9,11 @@ issueTrackerURL="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/i
 
 [[mods]] #mandatory
 modId="ddenizens" #mandatory
-version="1.0.0" #mandatory
+version="1.1.0" #mandatory
 displayName="Dungeon Denizens" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
-updateJSONURL="https://raw.githubusercontent.com/gottsch/gottsch-minecraft-Dungeon-Denizens/1.18.2-main/update.json"
+updateJSONURL="https://raw.githubusercontent.com/gottsch/gottsch-minecraft-Dungeon-Denizens/1.19.3-main/update.json"
 
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://www.curseforge.com/minecraft/mc-mods/dungeon-denizens" #optional

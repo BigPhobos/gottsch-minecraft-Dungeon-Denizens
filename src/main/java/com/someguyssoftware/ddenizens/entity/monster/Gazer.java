@@ -6,7 +6,6 @@ package com.someguyssoftware.ddenizens.entity.monster;
 import java.util.EnumSet;
 import java.util.Random;
 
-import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.ai.goal.SummonGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
@@ -20,11 +19,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.FlyingMob;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -32,7 +27,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -95,12 +90,12 @@ public class Gazer extends FlyingMob {
 	 * @param random
 	 * @return
 	 */
-	public static boolean checkGazerSpawnRules(EntityType<Gazer> mob, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	public static boolean checkGazerSpawnRules(EntityType<Gazer> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		if (level.getBiome(pos).is(BiomeTags.IS_NETHER) ) {
-			return DDMonster.checkDDNetherSpawnRules(mob, level, spawnType, pos, random);
+			return DDMonster.checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random);
 		}
 		else {
-			return DDMonster.checkDDSpawnRules(mob, level, spawnType, pos, random);
+			return DDMonster.checkDDMonsterSpawnRules(mob, level, spawnType, pos, random);
 		}
 	}
 	
