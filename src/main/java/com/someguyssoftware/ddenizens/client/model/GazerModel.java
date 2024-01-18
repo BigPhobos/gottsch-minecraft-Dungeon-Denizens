@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -24,6 +24,7 @@ import java.util.Random;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import com.someguyssoftware.ddenizens.DD;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -43,23 +44,27 @@ import net.minecraft.world.entity.Entity;
  *
  * @param <T>
  */
-public class GazerModel<T extends Entity> extends EntityModel<T> {
-	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "custom_model"), "main");
+public class GazerModel<T extends Entity> extends BeholderkinModel<T> {
+	public static final String MODEL_NAME = "gazer_model";
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, MODEL_NAME), "main");
+
 	private final ModelPart head;
 	private final ModelPart body;
 	private final ModelPart mouth;
-	private final ModelPart tentacle1;
-	private final ModelPart tentacle2;
+	private final ModelPart eyeStalk1;
+	private final ModelPart eyeStalk2;
 	private final ModelPart tentacle3;
 	private final ModelPart tentacle4;
-	private final ModelPart tentacle5;
+	private final ModelPart eyeStalk5;
 	private final ModelPart eye1;
 	private final ModelPart eye2;
 	private final ModelPart eye3;
 	private final ModelPart eye4;
 	private final ModelPart eye5;
-	
+
+	private final float bodyY;
+	private final float headY;
+
 	private int[] eyeOffsets = new int[5];
 	
 	/**
@@ -70,21 +75,24 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 		this.head = root.getChild("head");
 		this.body = root.getChild("body");
 		this.mouth = root.getChild("mouth");
-		this.tentacle1 = root.getChild("tentacle1");
-		this.tentacle2 = root.getChild("tentacle2");
+		this.eyeStalk1 = root.getChild("tentacle1");
+		this.eyeStalk2 = root.getChild("tentacle2");
 		this.tentacle3 = root.getChild("tentacle3");
 		this.tentacle4 = root.getChild("tentacle4");
-		this.tentacle5 = root.getChild("tentacle5");
-		this.eye1 = tentacle1.getChild("eye");
-		this.eye2 = tentacle2.getChild("eye2");
+		this.eyeStalk5 = root.getChild("tentacle5");
+		this.eye1 = eyeStalk1.getChild("eye");
+		this.eye2 = eyeStalk2.getChild("eye2");
 		this.eye3 = tentacle3.getChild("eye3");
 		this.eye4 = tentacle4.getChild("eye4");
-		this.eye5 = tentacle5.getChild("eye5");
+		this.eye5 = eyeStalk5.getChild("eye5");
 		
 		Random random = new Random();
 		for (int i = 0; i < 5; i++) {
 			eyeOffsets[i] = random.nextInt(0, 180);
 		}
+
+		bodyY = body.y;
+		headY = head.y;
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -129,27 +137,15 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		if (netHeadYaw < 0) {
-			this.head.yRot = Math.max(-20, netHeadYaw) * ((float)Math.PI / 180F);
-		}
-		else {
-			this.head.yRot = Math.min(20, netHeadYaw) * ((float)Math.PI / 180F);
-		}
+		setRestrictedEyeRotations(netHeadYaw, headPitch, -20, 20, -20, 20);
 
-		if (headPitch < 0) {
-			this.head.xRot = Math.max(-20, headPitch) * ((float)Math.PI / 180F);
-		}
-		else {
-			this.head.xRot = Math.min(20, headPitch) * ((float)Math.PI / 180F);
-		}
-		
 		// reset tentacle rotations before bobbing
 		float tentacleRotation = 0.4363323F; // 25 degrees
-		this.tentacle1.xRot = 0F;
-		this.tentacle1.zRot = tentacleRotation;
+		this.eyeStalk1.xRot = 0F;
+		this.eyeStalk1.zRot = tentacleRotation;
 		
-		this.tentacle2.xRot = 0F;
-		this.tentacle2.zRot = -tentacleRotation;
+		this.eyeStalk2.xRot = 0F;
+		this.eyeStalk2.zRot = -tentacleRotation;
 		
 		this.tentacle3.xRot = 0F;
 		this.tentacle3.zRot = -tentacleRotation;
@@ -157,53 +153,56 @@ public class GazerModel<T extends Entity> extends EntityModel<T> {
 		this.tentacle4.xRot = 0F;
 		this.tentacle4.zRot = tentacleRotation;
 		
-		this.tentacle5.xRot = tentacleRotation;
-		this.tentacle5.zRot = 0F;
+		this.eyeStalk5.xRot = tentacleRotation;
+		this.eyeStalk5.zRot = 0F;
 		
 		// bob tentacles
-		bobSideTentaclePart(tentacle1, eye1, ageInTicks, 0.612F, 1.0F, eyeOffsets[0]);
-		bobSideTentaclePart(tentacle2, eye2, ageInTicks, 0.35F, -1.0F, eyeOffsets[1]);
+		bobSideTentaclePart(eyeStalk1, eye1, ageInTicks, 0.612F, 1.0F, eyeOffsets[0]);
+		bobSideTentaclePart(eyeStalk2, eye2, ageInTicks, 0.35F, -1.0F, eyeOffsets[1]);
 		bobSideTentaclePart(tentacle3, eye3, ageInTicks, 0.55F, 1.0F, eyeOffsets[2]);
 		bobSideTentaclePart(tentacle4, eye4, ageInTicks, 0.45F, 1.0F, eyeOffsets[3]);
-		bobTopTentaclePart(tentacle5, eye5, ageInTicks, 0.3F, 1.0F, eyeOffsets[4]);
+		bobTopEyeStalk(eyeStalk5, eye5, ageInTicks, 0.3F, 1.0F, 0, 0.05F);
 		
 		// reset mouth
 		this.mouth.xRot = 0.2181662F;
 		
 		// bob mouth
-		bobMouthPart(mouth, ageInTicks);
+		bobMouthPart(mouth, ageInTicks, 0.3F, -0.2181662F);
+
+		// bob entire body
+		body.y = bodyY + (Mth.cos(ageInTicks * 0.15F) * 0.5F + 0.05F);
+		head.y = headY + (Mth.cos(ageInTicks * 0.15F) * 0.5F + 0.05F);
 	}
 
 
-	public static void bobSideTentaclePart(ModelPart tentacle, ModelPart eye, float age, float radians, float direction, int eyeOffset) {
+	// TODO can completely replace as the eye shouldn't stay level as it does
+	public static void bobSideTentaclePart(ModelPart stalk, ModelPart eye, float age, float radians, float direction, int eyeOffset) {
 		float speed = 0.05F; // 1/20th speed
 		float eyeSpeed = 0.1F;
-		tentacle.zRot += direction * (Mth.cos(age * speed) *  radians + 0.05F);
-		eye.zRot = -tentacle.zRot;
+		stalk.zRot += direction * (Mth.cos(age * speed) *  radians + 0.05F);
+		eye.zRot = -stalk.zRot;
 		eye.yRot = (Mth.cos((age + eyeOffset) * eyeSpeed) * 0.3490659F + 0.05F);
 	}
-	
-	public static void bobTopTentaclePart(ModelPart tentacle, ModelPart eye, float age, float radians, float direction, int eyeOffset) {
-		float speed = 0.05F; // 1/20th speed
-		float eyeSpeed = 0.1F;
-		tentacle.xRot += direction * (Mth.cos(age * speed) * radians + 0.05F);
-		eye.xRot = -tentacle.xRot;
-		eye.yRot = (Mth.cos((age + eyeOffset) * eyeSpeed) * 0.3490659F + 0.05F);
-	}
-	
-	public static void bobMouthPart(ModelPart mouth, float age) {
-		mouth.xRot += Mth.cos(age * 0.05F) * -0.2181662F + 0.05F;
-	}
-	
+
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		head.render(poseStack, buffer, packedLight, packedOverlay);
 		body.render(poseStack, buffer, packedLight, packedOverlay);
 		mouth.render(poseStack, buffer, packedLight, packedOverlay);
-		tentacle1.render(poseStack, buffer, packedLight, packedOverlay);
-		tentacle2.render(poseStack, buffer, packedLight, packedOverlay);
+		eyeStalk1.render(poseStack, buffer, packedLight, packedOverlay);
+		eyeStalk2.render(poseStack, buffer, packedLight, packedOverlay);
 		tentacle3.render(poseStack, buffer, packedLight, packedOverlay);
 		tentacle4.render(poseStack, buffer, packedLight, packedOverlay);
-		tentacle5.render(poseStack, buffer, packedLight, packedOverlay);
+		eyeStalk5.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
+	@Override
+	public ModelPart getBody() {
+		return this.body;
+	}
+
+	@Override
+	public ModelPart getEye() {
+		return this.head;
 	}
 }

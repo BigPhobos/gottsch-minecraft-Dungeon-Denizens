@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -26,7 +26,8 @@ import java.util.Random;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.ai.goal.SummonGoal;
-import com.someguyssoftware.ddenizens.entity.projectile.Harmball;
+import com.someguyssoftware.ddenizens.entity.ai.goal.CastHarmGoal;
+import com.someguyssoftware.ddenizens.entity.projectile.HarmSpell;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import mod.gottsch.forge.gottschcore.random.RandomHelper;
@@ -70,7 +71,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -80,7 +80,7 @@ import net.minecraft.world.phys.Vec3;
  * @author Mark Gottschling on Apr 15, 2022
  *
  */
-public class Shadowlord extends DDMonster {
+public class Shadowlord extends DenizensMonster {
 	private static final int SUN_BURN_SECONDS = 2;
 	protected static final double MELEE_DISTANCE_SQUARED = 16D;
 	protected static final double SUMMON_DISTANCE_SQUARED = 1024D;
@@ -97,8 +97,8 @@ public class Shadowlord extends DDMonster {
 	 * @param level
 	 */
 	public Shadowlord(EntityType<? extends Monster> entityType, Level level) {
-		super(entityType, level);
-		setPersistenceRequired();
+		super(entityType, level, MonsterSize.LARGE);
+//		setPersistenceRequired();
 		this.xpReward = 8;
 	}
 
@@ -109,7 +109,8 @@ public class Shadowlord extends DDMonster {
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.1D));
 				
-		this.goalSelector.addGoal(4, new ShadowlordShootHarmGoal(this, Config.Mobs.SHADOWLORD.harmChargeTime.get()));
+//		this.goalSelector.addGoal(4, new ShadowlordShootHarmGoal(this, Config.Mobs.SHADOWLORD.harmChargeTime.get()));
+		this.goalSelector.addGoal(4, new CastHarmGoal(this, Config.Mobs.SHADOWLORD.harmChargeTime.get(), SHOOT_DISTANCE_SQUARED, MELEE_DISTANCE_SQUARED));
 		this.goalSelector.addGoal(4, new ShadowlordSummonGoal(this, Config.Mobs.SHADOWLORD.summonCooldownTime.get(), true));
 		// TODO update with strafing movement - see RangedBowAttackGoal
 		//		this.goalSelector.addGoal(5, new ShadowlordMeleeAttackGoal(this, 1.0D, false));
@@ -334,7 +335,7 @@ public class Shadowlord extends DDMonster {
 						double y = livingentity.getY(0.5D) - (this.shadowlord.getY(0.5D));
 						double z = livingentity.getZ() - (this.shadowlord.getZ() + vec3.z * 2.0D);
 
-						Harmball spell = new Harmball(Registration.HARMBALL_ENTITY_TYPE.get(), level);
+						HarmSpell spell = new HarmSpell(Registration.HARM_SPELL_ENTITY_TYPE.get(), level);
 						spell.init(this.shadowlord, x, y, z);
 						spell.setPos(this.shadowlord.getX() + vec3.x * 2.0D, this.shadowlord.getY(0.5D), spell.getZ() + vec3.z * 2.0);
 						level.addFreshEntity(spell);
@@ -379,7 +380,7 @@ public class Shadowlord extends DDMonster {
 
 		@Override
 		public void start() {
-			this.cooldownTime = summonCooldownTime / 2;
+			this.cooldownCount = cooldownTime / 2;
 		}
 
 		@Override
@@ -392,9 +393,9 @@ public class Shadowlord extends DDMonster {
 			if (target != null) {
 				if (target.distanceToSqr(this.shadowlord) < SUMMON_DISTANCE_SQUARED && this.shadowlord.hasLineOfSight(target)) {
 					Level level = this.shadowlord.level();
-					++this.cooldownTime;
+					++this.cooldownCount;
 
-					if (this.cooldownTime >= summonCooldownTime) {
+					if (this.cooldownCount >= cooldownTime) {
 
 						int y = shadowlord.blockPosition().getY();
 						boolean spawnSuccess = false;
@@ -426,7 +427,7 @@ public class Shadowlord extends DDMonster {
 								((ServerLevel)level).sendParticles(ParticleTypes.POOF, shadowlord.blockPosition().getX() + 0.5D, shadowlord.blockPosition().getY(), shadowlord.blockPosition().getZ() + 0.5D, 1, xSpeed, ySpeed, zSpeed, (double)0.15F);
 							}
 						}
-						this.cooldownTime = 0;
+						this.cooldownCount = 0;
 					}
 				}
 			}

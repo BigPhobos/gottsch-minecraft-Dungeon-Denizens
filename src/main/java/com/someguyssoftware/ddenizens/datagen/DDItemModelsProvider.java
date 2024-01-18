@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -40,12 +40,15 @@ public class DDItemModelsProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
     	// projectiles
-        singleTexture("slowball",
-                mcLoc("item/generated"), "layer0", modLoc("item/slowball"));
+        singleTexture(Registration.SLOW_SPELL_ITEM.getId().getPath(),
+                mcLoc("item/generated"), "layer0", modLoc("item/slow"));
         
-        singleTexture("harmball",
-                mcLoc("item/generated"), "layer0", modLoc("item/harmball"));
-        
+        singleTexture("harm",
+                mcLoc("item/generated"), "layer0", modLoc("item/harm"));
+
+        singleTexture("disintegrate",
+                mcLoc("item/generated"), "layer0", modLoc("item/disintegrate"));
+
         singleTexture("rock",
                 mcLoc("item/generated"), "layer0", modLoc("item/rock"));
     	
@@ -60,7 +63,10 @@ public class DDItemModelsProvider extends ItemModelProvider {
     	withExistingParent(Registration.HEADLESS, mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.ORC, mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.GHOUL, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.GAZER, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.BEHOLDER, mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.DEATH_TYRANT, mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.GAZER, mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.SPECTATOR, mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.BOULDER, mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.SHADOW, mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.SHADOWLORD, mcLoc("item/template_spawn_egg"));

@@ -6,6 +6,8 @@ package com.someguyssoftware.ddenizens.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.client.model.GazerModel;
+import com.someguyssoftware.ddenizens.client.renderer.entity.layer.BeholderEyeLayer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.layer.GazerEyeLayer;
 import com.someguyssoftware.ddenizens.entity.monster.Gazer;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -29,7 +31,8 @@ public class GazerRenderer<T extends Gazer> extends MobRenderer<T, GazerModel<T>
 	 */
 	public GazerRenderer(EntityRendererProvider.Context context) {
 		super(context, new GazerModel<>(context.bakeLayer(GazerModel.LAYER_LOCATION)), 0.8F);
-		this.scale = 0.88F; // makes the body approx 16x16
+		this.addLayer(new GazerEyeLayer<>(this));
+		this.scale = 1F; // makes the body approx 16x16
 	}
 
 	@Override

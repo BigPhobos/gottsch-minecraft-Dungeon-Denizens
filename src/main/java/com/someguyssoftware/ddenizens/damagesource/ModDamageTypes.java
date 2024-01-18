@@ -32,9 +32,11 @@ import net.minecraft.world.damagesource.DamageType;
  *
  */
 public class ModDamageTypes {
-    public static final ResourceKey<DamageType> FIRESPOUT = register("firespout");
-    public static final ResourceKey<DamageType> HARMBALL = register("harmball");
-    
+    public static final ResourceKey<DamageType> FIRESPOUT_SPELL = register("firespout_spell");
+    public static final ResourceKey<DamageType> HARM_SPELL = register("harm_spell");
+    public static final ResourceKey<DamageType> DISINTEGRATE_SPELL = register("disintegrate_spell");
+    public static final ResourceKey<DamageType> SLOW_SPELL = register("slow_spell");
+    public static final ResourceKey<DamageType> DISARM_SPELL = register("disarm_spell");
     private static ResourceKey<DamageType> register(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(DD.MODID, name));
     }

@@ -1,0 +1,10 @@
+{
+	"type": "forge:add_spawns",
+	"biomes": "#ddenizens:is_nether_wastes",
+	"spawners": {
+		"type": "ddenizens:death_tyrant",
+		"weight": 1,
+		"minCount": 1,
+		"maxCount":1
+	}
+}

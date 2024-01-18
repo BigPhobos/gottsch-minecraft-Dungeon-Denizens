@@ -22,22 +22,20 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.capability.GhoulCapability;
-import com.someguyssoftware.ddenizens.entity.monster.Boulder;
-import com.someguyssoftware.ddenizens.entity.monster.Daemon;
-import com.someguyssoftware.ddenizens.entity.monster.Gazer;
-import com.someguyssoftware.ddenizens.entity.monster.Ghoul;
-import com.someguyssoftware.ddenizens.entity.monster.Headless;
-import com.someguyssoftware.ddenizens.entity.monster.Orc;
-import com.someguyssoftware.ddenizens.entity.monster.Shadow;
-import com.someguyssoftware.ddenizens.entity.monster.Shadowlord;
-import com.someguyssoftware.ddenizens.entity.projectile.FireSpout;
-import com.someguyssoftware.ddenizens.entity.projectile.Harmball;
-import com.someguyssoftware.ddenizens.entity.projectile.Rock;
-import com.someguyssoftware.ddenizens.entity.projectile.Slowball;
+import com.someguyssoftware.ddenizens.config.Config;
+import com.someguyssoftware.ddenizens.entity.monster.*;
+import com.someguyssoftware.ddenizens.entity.projectile.*;
 
+import com.someguyssoftware.ddenizens.item.BeholderEggItem;
+import com.someguyssoftware.ddenizens.item.DeathTyrantEggItem;
+import com.someguyssoftware.ddenizens.item.GazerEggItem;
+import com.someguyssoftware.ddenizens.item.SpectatorEggItem;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
@@ -59,15 +57,21 @@ public class Registration {
 	public static final String GHOUL = "ghoul";
 	public static final String SHADOW = "shadow";
 	public static final String SHADOWLORD = "shadowlord";
+	public static final String BEHOLDER = "beholder";
+	public static final String DEATH_TYRANT = "death_tyrant";
+	public static final String SPECTATOR = "spectator";
 	public static final String GAZER = "gazer";
 	public static final String DAEMON = "daemon";
 	public static final String BOULDER = "boulder";
 	public static final String ORC = "orc";
+	public static final String SKELETON_WARRIOR = "skeleton_warrior";
 	
 	// projectile names
-	private static final String SLOWBALL = "slowball";
-	private static final String HARMBALL = "harmball";
-	private static final String FIRESPOUT = "firespout";
+	private static final String SLOW_SPELL = "slow";
+	private static final String HARM_SPELL = "harm";
+	private static final String DISINTEGRATE_SPELL = "disintegrate";
+	private static final String DISARM_SPELL = "disarm";
+	private static final String FIRESPOUT_SPELL = "firespout";
 	private static final String ROCK = "rock";
 	
 	// unused
@@ -79,7 +83,8 @@ public class Registration {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DD.MODID);
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DD.MODID);
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, DD.MODID);
-	
+	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DD.MODID);
+
 	// mob collections
 	public static final List<RegistryObject<?>> ALL_MOBS = Lists.newArrayList();
 	
@@ -111,14 +116,37 @@ public class Registration {
 			.setShouldReceiveVelocityUpdates(false)
 			.setTrackingRange(20)
 			.build(GHOUL));
-	
+
+	public static final RegistryObject<EntityType<Beholder>> BEHOLDER_ENTITY_TYPE = Registration.ENTITIES.register(BEHOLDER, () -> EntityType.Builder.of(Beholder::new, MobCategory.MONSTER)
+			.sized(2.25F, 3.25F)
+			.clientTrackingRange(8)
+			.setShouldReceiveVelocityUpdates(false)
+			.setTrackingRange(20)
+			.fireImmune()
+			.build(BEHOLDER));
+
+	public static final RegistryObject<EntityType<DeathTyrant>> DEATH_TYRANT_TYPE = Registration.ENTITIES.register(DEATH_TYRANT, () -> EntityType.Builder.of(DeathTyrant::new, MobCategory.MONSTER)
+			.sized(2.25F, 3.25F)
+			.clientTrackingRange(8)
+			.setShouldReceiveVelocityUpdates(false)
+			.setTrackingRange(20)
+			.fireImmune()
+			.build(DEATH_TYRANT));
+
 	public static final RegistryObject<EntityType<Gazer>> GAZER_ENTITY_TYPE = Registration.ENTITIES.register(GAZER, () -> EntityType.Builder.of(Gazer::new, MobCategory.MONSTER)
-			.sized(1.125F, 1.125F)
+			.sized(1.125F, 1.25F)
 			.clientTrackingRange(8)
 			.setShouldReceiveVelocityUpdates(false)
 			.setTrackingRange(20)
 			.fireImmune()
 			.build(GAZER));
+
+	public static final RegistryObject<EntityType<Spectator>> SPECTATOR_TYPE = Registration.ENTITIES.register(SPECTATOR, () -> EntityType.Builder.of(Spectator::new, MobCategory.MONSTER)
+			.sized(0.84375F, 1.21875F)
+			.clientTrackingRange(8)
+			.setShouldReceiveVelocityUpdates(false)
+			.setTrackingRange(20)
+			.build(SPECTATOR));
 	
 	public static final RegistryObject<EntityType<Shadow>> SHADOW_ENTITY_TYPE = Registration.ENTITIES.register(SHADOW, () -> EntityType.Builder.of(Shadow::new, MobCategory.MONSTER)
 			.sized(0.6F, 1.95F)
@@ -138,28 +166,48 @@ public class Registration {
 			.setShouldReceiveVelocityUpdates(false)
 			.fireImmune()
 			.build(DAEMON));
+
+	public static final RegistryObject<EntityType<Skeleton>> SKELETON_WARRIOR_TYPE = Registration.ENTITIES.register(SKELETON_WARRIOR, () -> EntityType.Builder.of(Skeleton::new, MobCategory.MONSTER)
+			.sized(0.6F, 1.95F)
+			.clientTrackingRange(12)
+			.setShouldReceiveVelocityUpdates(false)
+			.build(SKELETON_WARRIOR));
 	
 	// projectile entities
-	public static final RegistryObject<EntityType<Slowball>> SLOWBALL_ENTITY_TYPE = 
-			Registration.ENTITIES.register(SLOWBALL, () -> EntityType.Builder.of(Slowball::new, MobCategory.MISC)
-			.sized(0.5F, 0.5F)
+	public static final RegistryObject<EntityType<SlowSpell>> SLOW_SPELL_ENTITY_TYPE =
+			Registration.ENTITIES.register(SLOW_SPELL, () -> EntityType.Builder.of(SlowSpell::new, MobCategory.MISC)
+			.sized(1F, 1F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
-			.build(SLOWBALL));
+			.build(SLOW_SPELL));
 	
-	public static final RegistryObject<EntityType<Harmball>> HARMBALL_ENTITY_TYPE = 
-			Registration.ENTITIES.register(HARMBALL, () -> EntityType.Builder.of(Harmball::new, MobCategory.MISC)
-			.sized(0.5F, 0.5F)
+	public static final RegistryObject<EntityType<HarmSpell>> HARM_SPELL_ENTITY_TYPE =
+			Registration.ENTITIES.register(HARM_SPELL, () -> EntityType.Builder.of(HarmSpell::new, MobCategory.MISC)
+			.sized(1F, 1F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
-			.build(HARMBALL));
+			.build(HARM_SPELL));
+
+	public static final RegistryObject<EntityType<DisarmSpell>> DISARM_SPELL_ENTITY_TYPE =
+			Registration.ENTITIES.register(DISARM_SPELL, () -> EntityType.Builder.of(DisarmSpell::new, MobCategory.MISC)
+					.sized(0.5F, 0.75F)
+					.clientTrackingRange(12)
+					.setShouldReceiveVelocityUpdates(false)
+					.build(DISARM_SPELL));
+
+	public static final RegistryObject<EntityType<DisintegrateSpell>> DISINTEGRATE_SPELL_ENTITY_TYPE =
+			Registration.ENTITIES.register(DISINTEGRATE_SPELL, () -> EntityType.Builder.of(DisintegrateSpell::new, MobCategory.MISC)
+					.sized(0.5F, 0.75F)
+					.clientTrackingRange(12)
+					.setShouldReceiveVelocityUpdates(false)
+					.build(DISINTEGRATE_SPELL));
 	
-	public static final RegistryObject<EntityType<FireSpout>> FIRESPOUT_ENTITY_TYPE = 
-			Registration.ENTITIES.register("firespout", () -> EntityType.Builder.of(FireSpout::new, MobCategory.MISC)
+	public static final RegistryObject<EntityType<FireSpoutSpell>> FIRESPOUT_SPELL_ENTITY_TYPE =
+			Registration.ENTITIES.register(FIRESPOUT_SPELL, () -> EntityType.Builder.of(FireSpoutSpell::new, MobCategory.MISC)
 			.sized(0.5F, 0.5F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
-			.build("firespout"));
+			.build(FIRESPOUT_SPELL));
 	
 	public static final RegistryObject<EntityType<Rock>> ROCK_ENTITY_TYPE = 
 			Registration.ENTITIES.register(ROCK, () -> EntityType.Builder.of(Rock::new, MobCategory.MISC)
@@ -176,17 +224,24 @@ public class Registration {
 	public static final RegistryObject<Item> HEADLESS_EGG = Registration.ITEMS.register(HEADLESS, () -> new ForgeSpawnEggItem(HEADLESS_ENTITY_TYPE, 0xc8b486, 0x6f5e48, new Item.Properties()));
 	public static final RegistryObject<Item> ORC_EGG = Registration.ITEMS.register(ORC, () -> new ForgeSpawnEggItem(ORC_ENTITY_TYPE, 0xc8b486, 0x6f5e48, new Item.Properties()));
 	public static final RegistryObject<Item> GHOUL_EGG = Registration.ITEMS.register(GHOUL, () -> new ForgeSpawnEggItem(GHOUL_ENTITY_TYPE, 0x93aba3, 0x869e96, new Item.Properties()));
-//	public static final RegistryObject<Item> ETTIN_EGG = Registration.ITEMS.register(ETTIN, () -> new ForgeSpawnEggItem(ETTIN_ENTITY_TYPE, 0x626262, 0x6f5e48, Registration.ITEM_PROPERTIES));
-	
-	public static final RegistryObject<Item> GAZER_EGG = Registration.ITEMS.register(GAZER, () -> new ForgeSpawnEggItem(GAZER_ENTITY_TYPE, 0x7a2e2f, 0x63181d, new Item.Properties()));
+
+	public static final RegistryObject<Item> BEHOLDER_EGG = Registration.ITEMS.register(BEHOLDER, () -> new BeholderEggItem(BEHOLDER_ENTITY_TYPE, 0x871e00, 0xc15227, new Item.Properties()));
+	public static final RegistryObject<Item> DEATH_TYRANT_EGG = Registration.ITEMS.register(DEATH_TYRANT, () -> new DeathTyrantEggItem(DEATH_TYRANT_TYPE, 0x86765a, 0xcdc3bb, new Item.Properties()));
+
+	public static final RegistryObject<Item> GAZER_EGG = Registration.ITEMS.register(GAZER, () -> new GazerEggItem(GAZER_ENTITY_TYPE, 0x7a2e2f, 0x63181d, new Item.Properties()));
+	public static final RegistryObject<Item> SPECTATOR_EGG = Registration.ITEMS.register(SPECTATOR, () -> new SpectatorEggItem(SPECTATOR_TYPE, 0x344133, 0xabb685, new Item.Properties()));
+
 	public static final RegistryObject<Item> BOULDER_EGG = Registration.ITEMS.register(BOULDER, () -> new ForgeSpawnEggItem(BOULDER_ENTITY_TYPE, 0x747474, 0x8f8f8f, new Item.Properties()));
 	public static final RegistryObject<Item> SHADOW_EGG = Registration.ITEMS.register(SHADOW, () -> new ForgeSpawnEggItem(SHADOW_ENTITY_TYPE, 0x000000, 0x2b2b2b, new Item.Properties()));
 	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD, () -> new ForgeSpawnEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x050831, new Item.Properties()));
 	public static final RegistryObject<Item> DAEMON_EGG = Registration.ITEMS.register(DAEMON, () -> new ForgeSpawnEggItem(DAEMON_ENTITY_TYPE, 0xff0000, 0xfc0000, new Item.Properties()));
 	
 	// projectiles
-	public static final RegistryObject<Item> SLOWBALL_ITEM = Registration.ITEMS.register(SLOWBALL, () -> new Item(new Item.Properties()));
-	public static final RegistryObject<Item> HARMBALL_ITEM = Registration.ITEMS.register(HARMBALL, () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> SLOW_SPELL_ITEM = Registration.ITEMS.register(SLOW_SPELL, () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> HARM_SPELL_ITEM = Registration.ITEMS.register(HARM_SPELL, () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> DISINTEGRATE_SPELL_ITEM = Registration.ITEMS.register(DISINTEGRATE_SPELL, () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> DISARM_SPELL_ITEM = Registration.ITEMS.register(DISARM_SPELL, () -> new Item(new Item.Properties()));
+
 	public static final RegistryObject<Item> FIRESPOUT_ITEM = Registration.ITEMS.register("firespout", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> ROCK_ITEM = Registration.ITEMS.register(ROCK, () -> new Item(new Item.Properties()));
 	
@@ -198,16 +253,26 @@ public class Registration {
 	// spiked club is equal to an iron sword but slower
 	public static final RegistryObject<Item> SPIKED_CLUB = Registration.ITEMS.register("spiked_club", () -> new SwordItem(Tiers.WOOD, 5, -3.0F, new Item.Properties()));
 
+	public static final RegistryObject<SoundEvent> AMBIENT_DAEMON = registerSoundEvent("ambient_daemon");
+	public static final RegistryObject<SoundEvent> AMBIENT_BEHOLDER = registerSoundEvent("ambient_beholder");
+	public static final RegistryObject<SoundEvent> AMBIENT_DEATH_TYRANT = registerSoundEvent("ambient_death_tyrant");
+	public static final RegistryObject<SoundEvent> AMBIENT_GAZER = registerSoundEvent("ambient_gazer");
+	public static final RegistryObject<SoundEvent> AMBIENT_SPECTATOR = registerSoundEvent("ambient_spectator");
+
 	// NOTE must add mob to ALL_MOBS collection in order to register them to the biomes - see CommonSetup.onBiomeLoading
 	static {
 		ALL_MOBS.add(HEADLESS_ENTITY_TYPE);
 		ALL_MOBS.add(GHOUL_ENTITY_TYPE);
 		ALL_MOBS.add(BOULDER_ENTITY_TYPE);
 		ALL_MOBS.add(SHADOW_ENTITY_TYPE);
+		ALL_MOBS.add(BEHOLDER_ENTITY_TYPE);
+		ALL_MOBS.add(DEATH_TYRANT_TYPE);
 		ALL_MOBS.add(GAZER_ENTITY_TYPE);
+		ALL_MOBS.add(SPECTATOR_TYPE);
 		ALL_MOBS.add(SHADOWLORD_ENTITY_TYPE);
 		ALL_MOBS.add(DAEMON_ENTITY_TYPE);
 		ALL_MOBS.add(ORC_ENTITY_TYPE);
+//		ALL_MOBS.add(SKELETON_WARRIOR_TYPE);
 	}
 	
 	/**
@@ -217,6 +282,11 @@ public class Registration {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ITEMS.register(eventBus);	
 		ENTITIES.register(eventBus);		
-		PARTICLES.register(eventBus);		
+		PARTICLES.register(eventBus);
+		SOUNDS.register(eventBus);
+	}
+
+	private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
+		return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(DD.MODID, name)));
 	}
 }

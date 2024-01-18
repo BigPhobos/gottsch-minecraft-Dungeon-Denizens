@@ -1,7 +1,7 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
- * 
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
+ *
  * All rights reserved.
  *
  * Dungeon Denizens is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ import net.minecraft.world.phys.Vec3;
  * that tick() separates out the execution code after the call to super.tick().
  * This is done so that this class can be extended with different motion behaviours,
  * while still being able to call super.tick().
- * 
+ *
  * @author Mark Gottschling on Apr 22, 2022
  *
  */
@@ -52,14 +52,19 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 	public double yPower;
 	public double zPower;
 
+	public abstract AbstractDDHurtingProjectile create(Level level);
+
 	/**
-	 * 
+	 *
 	 * @param entityType
 	 * @param level
 	 */
 	public AbstractDDHurtingProjectile(EntityType<? extends AbstractDDHurtingProjectile> entityType, Level level) {
 		super(entityType, level);
 	}
+
+//	public void init(Mob mob, double x, double y, double z) {
+//	}
 
 	/**
 	 * This method is separated out from the original vanilla constructor that includes the vector xyz values.
@@ -68,6 +73,26 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 	 * @param y
 	 * @param z
 	 */
+	public void init(LivingEntity owner, double x, double y, double z) {
+
+//	public void init(LivingEntity owner, double x, double y, double z, double x2, double y2, double z2) {
+//		this.moveTo(x, y, z, this.getYRot(), this.getXRot());
+		this.moveTo(owner.getX(), owner.getY(), owner.getZ(), this.getYRot(), this.getXRot());
+		this.reapplyPosition();
+//		double d0 = Math.sqrt(x2 * x2 + y2 * y2 + z2 * z2);
+		double d0 = Math.sqrt(x * x + y * y + z * z);
+		if (d0 != 0.0D) {
+//			this.xPower = x2 / d0 * 0.1D;
+//			this.yPower = y2 / d0 * 0.1D;
+//			this.zPower = z2 / d0 * 0.1D;
+			this.xPower = x / d0 * 0.1D;
+			this.yPower = y / d0 * 0.1D;
+			this.zPower = z / d0 * 0.1D;
+		}
+		this.setOwner(owner);
+		this.setRot(owner.getYRot(), owner.getXRot());
+	}
+
 	public void init(LivingEntity owner, double x, double y, double z, double x2, double y2, double z2) {
 		this.moveTo(x, y, z, this.getYRot(), this.getXRot());
 		this.reapplyPosition();
@@ -76,6 +101,9 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 			this.xPower = x2 / d0 * 0.1D;
 			this.yPower = y2 / d0 * 0.1D;
 			this.zPower = z2 / d0 * 0.1D;
+//			this.xPower = x / d0 * 0.1D;
+//			this.yPower = y / d0 * 0.1D;
+//			this.zPower = z / d0 * 0.1D;
 		}
 		this.setOwner(owner);
 		this.setRot(owner.getYRot(), owner.getXRot());
@@ -136,7 +164,7 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 		}
 
 		this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale((double)f));
-		this.level().addParticle(this.getTrailParticle(), d0, d1 + 0.5D, d2, 0.0D, 0.0D, 0.0D);
+		this.level().addParticle(this.getTrailParticle(), d0, d1+ 0.5D, d2, 0.0D, 0.0D, 0.0D);
 		this.setPos(d0, d1, d2);
 	}
 
@@ -165,8 +193,8 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 	public void addAdditionalSaveData(CompoundTag tag) {
 		super.addAdditionalSaveData(tag);
 		tag.put(POWER_TAG, this.newDoubleList(new double[]{
-				this.xPower, 
-				this.yPower, 
+				this.xPower,
+				this.yPower,
 				this.zPower}));
 	}
 
@@ -212,7 +240,7 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 			}
 		}
 	}
-	
+
 //	@Override
 //	public float getBrightness() {
 //		return 1.0F;

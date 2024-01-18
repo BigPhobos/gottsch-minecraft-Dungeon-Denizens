@@ -1,0 +1,17 @@
+{
+  "name": "Beholder",
+  "icon": "ddenizens:beholder_egg",
+  "category": "ddenizens:root",
+  "pages": [
+      "A Beholder is a large aberration that spawns in the deep depths of the Underworld or in the Nether. They are powerful magic users and have a formidable bite.",
+      {
+        "type": "patchouli:image",
+        "images": ["ddenizens:textures/gui/entries/beholder_patchouli.png"],
+        "title": "",
+        "text": "",
+        "border": true
+      },
+      "$(l)Number$(): 1$(br)$(l)Size$(): Large$(br)$(l)Level$(): Mini Boss$(br)$(l)Rarity$(): Rare$(br)$(l)Movement$(): Flies/Hovers$(br)$(l)Speed$(): Normal$(br)$(l)Health$(): 36hp$(br)$(l)Damage/Strength$(): 8hp$(br)$(l)Daylight$(): Yes$(br)$(l)Despawn$(): Yes$(br)$(l)Spawns$(): Underworld, Nether",
+      "$(l)Weapons/Specials$():$(br)- Randomly casts one of four spells: Paralysis, Harm, Disintegrate and Disarm.$(br)- Can summon one minion at a time: Headless, Orc, Spectator, or Blaze.$(br)- Every 2 minutes, has a 10% chance to summon a Daemon."
+  ]
+}

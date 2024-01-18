@@ -1,24 +1,28 @@
+/*
+ * This file is part of  Dungeon Denizens.
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
+ *
+ * All rights reserved.
+ *
+ * Dungeon Denizens is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Dungeon Denizens is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
+ */
 package com.someguyssoftware.ddenizens.setup;
 
 
 import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.client.model.BoulderModel;
-import com.someguyssoftware.ddenizens.client.model.DaemonModel;
-import com.someguyssoftware.ddenizens.client.model.EttinModel;
-import com.someguyssoftware.ddenizens.client.model.GazerModel;
-import com.someguyssoftware.ddenizens.client.model.GhoulModel;
-import com.someguyssoftware.ddenizens.client.model.HeadlessModel;
-import com.someguyssoftware.ddenizens.client.model.OrcModel;
-import com.someguyssoftware.ddenizens.client.model.ShadowModel;
-import com.someguyssoftware.ddenizens.client.model.ShadowlordModel;
-import com.someguyssoftware.ddenizens.client.renderer.entity.BoulderRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.DaemonRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.GazerRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.GhoulRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.HeadlessRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.OrcRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.ShadowRenderer;
-import com.someguyssoftware.ddenizens.client.renderer.entity.ShadowlordRenderer;
+import com.someguyssoftware.ddenizens.client.model.*;
+import com.someguyssoftware.ddenizens.client.renderer.entity.*;
 
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -48,7 +52,10 @@ public class ClientSetup {
 		event.registerLayerDefinition(OrcModel.LAYER_LOCATION, OrcModel::createBodyLayer);
 		event.registerLayerDefinition(GhoulModel.LAYER_LOCATION, GhoulModel::createBodyLayer);
 		event.registerLayerDefinition(EttinModel.LAYER_LOCATION, EttinModel::createBodyLayer);
+		event.registerLayerDefinition(BeholderModel.LAYER_LOCATION, BeholderModel::createBodyLayer);
+		event.registerLayerDefinition(DeathTyrantModel.LAYER_LOCATION, DeathTyrantModel::createBodyLayer);
 		event.registerLayerDefinition(GazerModel.LAYER_LOCATION, GazerModel::createBodyLayer);
+		event.registerLayerDefinition(SpectatorModel.LAYER_LOCATION, SpectatorModel::createBodyLayer);
 		event.registerLayerDefinition(BoulderModel.LAYER_LOCATION, BoulderModel::createBodyLayer);
 		event.registerLayerDefinition(ShadowModel.LAYER_LOCATION, ShadowModel::createBodyLayer);
 		event.registerLayerDefinition(ShadowlordModel.LAYER_LOCATION, ShadowlordModel::createBodyLayer);
@@ -64,21 +71,29 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.HEADLESS_ENTITY_TYPE.get(), HeadlessRenderer::new);
         event.registerEntityRenderer(Registration.ORC_ENTITY_TYPE.get(), OrcRenderer::new);
         event.registerEntityRenderer(Registration.GHOUL_ENTITY_TYPE.get(), GhoulRenderer::new);
-//        event.registerEntityRenderer(Registration.ETTIN_ENTITY_TYPE.get(), EttinRenderer::new);
+		event.registerEntityRenderer(Registration.BEHOLDER_ENTITY_TYPE.get(), BeholderRenderer::new);
+		event.registerEntityRenderer(Registration.DEATH_TYRANT_TYPE.get(), DeathTyrantRenderer::new);
         event.registerEntityRenderer(Registration.GAZER_ENTITY_TYPE.get(), GazerRenderer::new);
-        event.registerEntityRenderer(Registration.BOULDER_ENTITY_TYPE.get(), BoulderRenderer::new);
+		event.registerEntityRenderer(Registration.SPECTATOR_TYPE.get(), SpectatorRenderer::new);
+		event.registerEntityRenderer(Registration.BOULDER_ENTITY_TYPE.get(), BoulderRenderer::new);
         event.registerEntityRenderer(Registration.SHADOW_ENTITY_TYPE.get(), ShadowRenderer::new);
         event.registerEntityRenderer(Registration.SHADOWLORD_ENTITY_TYPE.get(), ShadowlordRenderer::new);
         event.registerEntityRenderer(Registration.DAEMON_ENTITY_TYPE.get(), DaemonRenderer::new);
         
-        event.registerEntityRenderer(Registration.SLOWBALL_ENTITY_TYPE.get(), (provider) -> {
+        event.registerEntityRenderer(Registration.SLOW_SPELL_ENTITY_TYPE.get(), (provider) -> {
             // 1.0 = scale, true = full bright
         	return new ThrownItemRenderer<>(provider, 1.0F, true);
          });
-        event.registerEntityRenderer(Registration.HARMBALL_ENTITY_TYPE.get(), (provider) -> {
+        event.registerEntityRenderer(Registration.HARM_SPELL_ENTITY_TYPE.get(), (provider) -> {
         	return new ThrownItemRenderer<>(provider, 1.0F, true);
          });
-        event.registerEntityRenderer(Registration.FIRESPOUT_ENTITY_TYPE.get(), (provider) -> {
+		event.registerEntityRenderer(Registration.DISINTEGRATE_SPELL_ENTITY_TYPE.get(), (provider) -> {
+			return new ThrownItemRenderer<>(provider, 1.5F, true);
+		});
+		event.registerEntityRenderer(Registration.DISARM_SPELL_ENTITY_TYPE.get(), (provider) -> {
+			return new ThrownItemRenderer<>(provider, 1.5F, true);
+		});
+        event.registerEntityRenderer(Registration.FIRESPOUT_SPELL_ENTITY_TYPE.get(), (provider) -> {
         	return new ThrownItemRenderer<>(provider, 1.5F, true);
          });
         event.registerEntityRenderer(Registration.ROCK_ENTITY_TYPE.get(), (provider) -> {

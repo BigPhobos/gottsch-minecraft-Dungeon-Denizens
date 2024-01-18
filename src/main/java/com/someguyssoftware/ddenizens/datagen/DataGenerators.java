@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -21,11 +21,14 @@ package com.someguyssoftware.ddenizens.datagen;
 
 import com.someguyssoftware.ddenizens.DD;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 
@@ -39,7 +42,13 @@ public class DataGenerators {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+
         if (event.includeServer()) {
+            DDBlockTagsProvider blockTags = new DDBlockTagsProvider(output, lookupProvider, event.getExistingFileHelper());
+            generator.addProvider(true, blockTags);
+            generator.addProvider(true, new DDItemTagsProvider(output, lookupProvider, blockTags.contentsGetter(), event.getExistingFileHelper()));
+
 //            generator.addProvider(new TutRecipes(generator));
 //            generator.addProvider(new TutLootTables(generator));
 //            TutBlockTags blockTags = new TutBlockTags(generator, event.getExistingFileHelper());

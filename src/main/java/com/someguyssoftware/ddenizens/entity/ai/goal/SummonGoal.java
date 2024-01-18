@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -19,6 +19,7 @@
  */
 package com.someguyssoftware.ddenizens.entity.ai.goal;
 
+import com.someguyssoftware.ddenizens.entity.monster.IDenizensMonster;
 import mod.gottsch.forge.gottschcore.spatial.Coords;
 import mod.gottsch.forge.gottschcore.spatial.ICoords;
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
@@ -31,6 +32,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.NaturalSpawner;
 
 /**
@@ -39,17 +42,23 @@ import net.minecraft.world.level.NaturalSpawner;
  *
  */
 public abstract class SummonGoal extends Goal {
-	protected int summonCooldownTime;
 	protected int cooldownTime;
+	protected int cooldownCount;
 	
 	/**
 	 * 
 	 * @param summonCoolDownTime
 	 */
 	public SummonGoal(int summonCoolDownTime) {
-		this.summonCooldownTime = summonCoolDownTime;
+		this.cooldownTime = summonCoolDownTime;
 	}
-	
+
+	@Override
+	public boolean canUse() {
+        return true;
+    }
+
+	// TODO move out to Util - check Treasure2 and GOttschCore.... but this one is going to be slightly different
 	/**
 	 * 
 	 * @param level
@@ -75,6 +84,12 @@ public abstract class SummonGoal extends Goal {
 					Mob mob = entityType.create(level);
 					mob.setPos((double)spawnX, (double)spawnY, (double)spawnZ);
 					mob.setTarget(target);
+					if (mob instanceof IDenizensMonster) {
+						if(((IDenizensMonster)mob).canSummonedHaveOwner()) {
+							((IDenizensMonster)mob).setSummonedOwner(owner);
+						}
+					}
+
 					level.addFreshEntityWithPassengers(mob);
 					isSpawned = true;
 				}
@@ -92,5 +107,23 @@ public abstract class SummonGoal extends Goal {
 
 		}
 		return false;
+	}
+
+	public int getCooldownTime() {
+		return cooldownTime;
+	}
+
+	public SummonGoal setCooldownTime(int cooldownTime) {
+		this.cooldownTime = cooldownTime;
+		return this;
+	}
+
+	public int getCooldownCount() {
+		return cooldownCount;
+	}
+
+	public SummonGoal setCooldownCount(int cooldownCount) {
+		this.cooldownCount = cooldownCount;
+		return this;
 	}
 }

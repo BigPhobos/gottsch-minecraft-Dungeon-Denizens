@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -23,6 +23,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.client.model.ShadowModel;
+import com.someguyssoftware.ddenizens.client.renderer.entity.layer.BeholderEyeLayer;
+import com.someguyssoftware.ddenizens.client.renderer.entity.layer.ShadowEyeLayer;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.Shadow;
 
@@ -47,6 +49,7 @@ public class ShadowRenderer extends MobRenderer<Shadow, ShadowModel<Shadow>> {
 	 */
 	public ShadowRenderer(EntityRendererProvider.Context context) {
         super(context, new ShadowModel<>(context.bakeLayer(ShadowModel.LAYER_LOCATION)), 0F);
+		this.addLayer(new ShadowEyeLayer<>(this));
     }
 
 	@Override

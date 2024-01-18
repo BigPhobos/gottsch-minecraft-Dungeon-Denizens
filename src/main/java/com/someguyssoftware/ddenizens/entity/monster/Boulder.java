@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -60,7 +60,7 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
  * @author Mark Gottschling on Apr 6, 2022
  *
  */
-public class Boulder extends Monster {
+public class Boulder extends DenizensMonster implements IDenizensMonster {
 	private static final EntityDataAccessor<String> DATA_STATE = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.STRING);
 	private static final EntityDataAccessor<Integer> DATA_LOYAL_TICKS = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(Boulder.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -86,7 +86,8 @@ public class Boulder extends Monster {
 	private float bodyAmount;
 
 	public Boulder(EntityType<? extends Monster> entityType, Level level) {
-		super(entityType, level);
+
+		super(entityType, level, MonsterSize.SMALL);
 	}
 
 	/**
