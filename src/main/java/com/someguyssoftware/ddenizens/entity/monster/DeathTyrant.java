@@ -68,7 +68,7 @@ public class DeathTyrant extends Beholderkin {
 		mobs.add(20D, EntityType.ZOMBIE);
 		mobs.add(20D, EntityType.HUSK);
 		mobs.add(60D, EntityType.SKELETON);
-		mobs.add(20D, Registration.SKELETON_WARRIOR_TYPE.get());
+		mobs.add(60D, Registration.SKELETON_WARRIOR_TYPE.get());
 		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, 2000, 100, mobs, 2, 5));
 		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, 5000, 40, Registration.DAEMON_ENTITY_TYPE.get(), 1, 1));
 		// NOTE unaffected by Boulders

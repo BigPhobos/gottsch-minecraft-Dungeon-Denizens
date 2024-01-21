@@ -31,12 +31,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * @author Mark Gottschling on Jan 17, 2024
- *
+ * @author Mark Gottschling on Jan 18, 2024
  */
-public class GazerEggItem extends DDEggItem {
+public class DaemonEggItem extends DDEggItem {
 
-    public GazerEggItem(Supplier<? extends EntityType<? extends Mob>> type, int backgroundColor, int highlightColor, Properties props) {
+    public DaemonEggItem(Supplier<? extends EntityType<? extends Mob>> type, int backgroundColor, int highlightColor, Properties props) {
         super(type, backgroundColor, highlightColor, props);
     }
 
@@ -45,16 +44,24 @@ public class GazerEggItem extends DDEggItem {
         super.appendHoverText(stack, worldIn, tooltip, flag);
 
         LangUtil.appendAdvancedHoverText(tooltip, tt -> {
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.number_appearing"),1));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.level"), Component.translatable(LangUtil.tooltip("stats.level.mob"))));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.rarity"), Component.translatable(LangUtil.tooltip("stats.rarity.rare"))));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.health"), 18));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.damage"), 6));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.number_appearing"), 1));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.level"), Component.translatable(LangUtil.tooltip("stats.level.mini_boss"))));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.rarity"),
+                    Component.translatable(LangUtil.tooltip("stats.rarity.very_rare"))
+                    .append(" / ")
+                    .append(Component.translatable(LangUtil.tooltip("stats.rarity.rare")))
+            ));
+             tooltip.add(Component.translatable(LangUtil.tooltip("stats.health"), 80));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.damage"), 8));
             tooltip.add(Component.translatable(LangUtil.tooltip("stats.despawn"), Component.translatable(LangUtil.tooltip("boolean.yes"))));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.spawns"), "Underworld, Nether"));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.spawns"),
+                    Component.translatable(LangUtil.tooltip("stats.spawns.underworld"))
+                            .append(" / ")
+                            .append(Component.translatable(LangUtil.tooltip("stats.spawns.nether")))
+            ));
             tooltip.add(Component.translatable(LangUtil.tooltip("stats.specials")));
-            tooltip.add(Component.literal("- Randomly casts one of two spells: Paralysis, Harm."));
-            tooltip.add(Component.literal("- Can randomly summon one minion at a time: Headless, Orc, Zombie, or Vex."));
+            tooltip.add(Component.literal("- Can cast Paralysis spell."));
+            tooltip.add(Component.literal("- Charges at its target."));
         });
     }
 }

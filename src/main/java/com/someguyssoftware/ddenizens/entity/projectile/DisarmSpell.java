@@ -19,8 +19,6 @@
  */
 package com.someguyssoftware.ddenizens.entity.projectile;
 
-import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.damagesource.ModDamageTypes;
 import com.someguyssoftware.ddenizens.setup.Registration;
 import com.someguyssoftware.ddenizens.util.EquipmentUtil;
 import net.minecraft.Util;
@@ -38,7 +36,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -122,7 +119,7 @@ public class DisarmSpell extends AbstractDDHurtingProjectile implements ItemSupp
 
 				ServerPlayer player = (ServerPlayer) target;
 				if (level().getGameTime() % 4 == 0) {
-					EquipmentSlot slot = EquipmentUtil.EQUIPMENT_SLOTS.get(player.getRandom().nextInt(EquipmentUtil.EQUIPMENT_SLOTS.size()));
+					EquipmentSlot slot = EquipmentUtil.ARMOR_SLOTS[player.getRandom().nextInt(EquipmentUtil.ARMOR_SLOTS.length)];
 					ItemStack itemStack = player.getItemBySlot(slot);
 					if (itemStack != ItemStack.EMPTY) {
 						player.setItemSlot(slot, ItemStack.EMPTY);
@@ -165,7 +162,7 @@ public class DisarmSpell extends AbstractDDHurtingProjectile implements ItemSupp
 	// TODO something else than smoke
 	@Override
 	protected ParticleOptions getTrailParticle() {
-		return ParticleTypes.SMOKE;
+		return ParticleTypes.ENCHANT;
 	}
 
 	@Override

@@ -20,7 +20,6 @@
 package com.someguyssoftware.ddenizens.entity.ai.goal;
 
 import com.someguyssoftware.ddenizens.entity.projectile.DisintegrateSpell;
-import com.someguyssoftware.ddenizens.entity.projectile.SlowSpell;
 import com.someguyssoftware.ddenizens.setup.Registration;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

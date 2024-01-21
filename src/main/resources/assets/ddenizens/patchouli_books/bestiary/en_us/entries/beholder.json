@@ -3,7 +3,7 @@
   "icon": "ddenizens:beholder_egg",
   "category": "ddenizens:root",
   "pages": [
-      "A Beholder is a large aberration that spawns in the deep depths of the Underworld or in the Nether. They are powerful magic users and have a formidable bite.",
+      "A Beholder is a large aberration that spawns in the deep depths of the Underworld or in the Nether. They are powerful magic users and have a formidable bite. Beholders and their kin tend to stay away from their opponents, relying on their magic and minions to battle their foes.",
       {
         "type": "patchouli:image",
         "images": ["ddenizens:textures/gui/entries/beholder_patchouli.png"],

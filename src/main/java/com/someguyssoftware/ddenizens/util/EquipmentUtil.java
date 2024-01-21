@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EquipmentUtil {
-    public static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-    public static final List<EquipmentSlot> EQUIPMENT_SLOTS = Arrays.asList(SLOT_IDS);
+    public static final EquipmentSlot[] ARMOR_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+
+    // NOTE that this is is unmodifiable
+    public static final List<EquipmentSlot> ARMOR_LIST = Arrays.asList(ARMOR_SLOTS);
+
 }

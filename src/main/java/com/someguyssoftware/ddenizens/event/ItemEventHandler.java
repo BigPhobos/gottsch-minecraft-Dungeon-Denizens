@@ -46,6 +46,7 @@ import java.util.Objects;
 //@Mod.EventBusSubscriber(modid = DD.MODID)
 public class ItemEventHandler {
 
+	@Deprecated
 //	@SubscribeEvent
 	public static void onItemInfo(ItemTooltipEvent event) {
 		if (event.getItemStack().is(DDTags.Items.EGGS)) {

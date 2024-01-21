@@ -108,7 +108,6 @@ dependencies {
     //minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	implementation fg.deobf("gottsch:gottschcore:1.20.1-2.1.0")
-    implementation fg.deobf("curse.maven:guidebook-253874:4760385")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84-FORGE:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84-FORGE")
 }

@@ -4,13 +4,11 @@
 package com.someguyssoftware.ddenizens.entity.monster;
 
 import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.entity.ai.goal.CastParalysisGoal;
 import com.someguyssoftware.ddenizens.entity.ai.goal.WeightedCastProjectileGoal;
 import com.someguyssoftware.ddenizens.entity.ai.goal.WeightedChanceSummonGoal;
-import com.someguyssoftware.ddenizens.entity.ai.goal.CastHarmGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.AbstractDDHurtingProjectile;
 import com.someguyssoftware.ddenizens.entity.projectile.HarmSpell;
-import com.someguyssoftware.ddenizens.entity.projectile.SlowSpell;
+import com.someguyssoftware.ddenizens.entity.projectile.ParalysisSpell;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import mod.gottsch.forge.gottschcore.random.WeightedCollection;
@@ -49,7 +47,7 @@ public class Gazer extends Beholderkin {
 		this.goalSelector.addGoal(7, new BeholderkinLookGoal(this));
 
 		WeightedCollection<Integer, AbstractDDHurtingProjectile> spells = new WeightedCollection<>();
-		spells.add(3, new SlowSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level()));
+		spells.add(3, new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(1, new HarmSpell(Registration.HARM_SPELL_ENTITY_TYPE.get(), level()));
 		this.goalSelector.addGoal(6, new WeightedCastProjectileGoal(this, Config.Mobs.GAZER.castChargeTime.get(), spells));
 

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.someguyssoftware.ddenizens.DD;
+import com.someguyssoftware.ddenizens.entity.monster.SkeletonWarrior;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import mod.gottsch.forge.gottschcore.config.AbstractConfig;
@@ -273,6 +274,7 @@ public final class Config extends AbstractConfig {
 		public static SpectatorConfig SPECTATOR;
 		public static ShadowlordConfig SHADOWLORD;
 		public static DaemonConfig DAEMON;
+		public static SkeletonWarriorConfig SKELETON_WARRIOR;
 
 		public static Map<ResourceLocation, IMobConfig> MOBS = Maps.newHashMap();
 
@@ -288,6 +290,7 @@ public final class Config extends AbstractConfig {
 			SPECTATOR = new SpectatorConfig(builder);
 			SHADOWLORD = new ShadowlordConfig(builder);
 			DAEMON = new DaemonConfig(builder);
+			SKELETON_WARRIOR = new SkeletonWarriorConfig(builder);
 
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.HEADLESS), HEADLESS);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.ORC), ORC);
@@ -300,6 +303,7 @@ public final class Config extends AbstractConfig {
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.SPECTATOR), SPECTATOR);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.SHADOWLORD), SHADOWLORD);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.DAEMON), DAEMON);
+			MOBS.put(new ResourceLocation(DD.MODID, Registration.SKELETON_WARRIOR), SKELETON_WARRIOR);
 		}
 	}
 
@@ -662,7 +666,15 @@ public final class Config extends AbstractConfig {
 			builder.pop();
 		}
 	}
-	
+
+	public static class SkeletonWarriorConfig extends MobConfig {
+		public SkeletonWarriorConfig(ForgeConfigSpec.Builder builder) {
+			builder.comment(CATEGORY_DIV, " Skeleton Warrior properties.", CATEGORY_DIV).push(Registration.ORC);
+			spawnConfig = new CommonSpawnConfig(builder, true, 50, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
+			builder.pop();
+		}
+	}
+
 	@Override
 	public String getLogsFolder() {
 		return Config.LOGGING.folder.get();

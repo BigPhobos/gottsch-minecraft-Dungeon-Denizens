@@ -19,7 +19,6 @@
  */
 package com.someguyssoftware.ddenizens.entity.monster;
 
-import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.ai.goal.target.SummonedOwnerTargetGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.FireSpoutSpell;
@@ -45,10 +44,8 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
@@ -119,7 +116,7 @@ public class Daemon extends DenizensMonster {
 				.add(Attributes.ARMOR_TOUGHNESS, 5.0D)
 				.add(Attributes.KNOCKBACK_RESISTANCE, 0.6D)
 				.add(Attributes.ATTACK_KNOCKBACK, 2.0D)
-				.add(Attributes.MOVEMENT_SPEED, 0.16D)
+				.add(Attributes.MOVEMENT_SPEED, 0.2D)
 				.add(Attributes.FOLLOW_RANGE, 50D);
 	}
 

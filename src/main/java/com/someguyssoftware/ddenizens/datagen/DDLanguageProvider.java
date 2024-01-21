@@ -31,7 +31,8 @@ import net.minecraftforge.common.data.LanguageProvider;
  * @author Mark Gottschling on Apr 6, 2022
  *
  */
-public class DDLanguageProvider extends LanguageProvider {
+public class
+DDLanguageProvider extends LanguageProvider {
 
     public DDLanguageProvider(PackOutput pack, String locale) {
         super(pack, DD.MODID, locale);
@@ -70,7 +71,10 @@ public class DDLanguageProvider extends LanguageProvider {
         
         add(Registration.DAEMON_ENTITY_TYPE.get(), "Daemon");
         add(Registration.DAEMON_EGG.get(), "Daemon Spawn Egg");
-        
+
+        add(Registration.SKELETON_WARRIOR_TYPE.get(), "Skeleton Warrior");
+        add(Registration.SKELETON_WARRIOR_EGG.get(), "Skeleton Warrior Spawn Egg");
+
         add(Registration.SLOW_SPELL_ITEM.get(), "Slow Spell");
         add(Registration.HARM_SPELL_ITEM.get(), "Harm Spell");
         add(Registration.DISINTEGRATE_SPELL_ITEM.get(), "Disintegrate Spell");
@@ -80,6 +84,12 @@ public class DDLanguageProvider extends LanguageProvider {
         
         add(Registration.CLUB.get(), "Club");
         add(Registration.SPIKED_CLUB.get(), "Spiked Club");
+        add(Registration.RUSTY_IRON_AXE1.get(), "Rusty Iron Axe");
+        add(Registration.RUSTY_IRON_AXE2.get(), "Rusty Iron Axe");
+        add(Registration.RUSTY_IRON_SWORD1.get(), "Rusty Iron Sword");
+        add(Registration.RUSTY_IRON_SWORD2.get(), "Rusty Iron Sword");
+        add(Registration.RUSTY_IRON_SWORD3.get(), "Rusty Iron Sword");
+        add(Registration.RUSTY_IRON_SWORD4.get(), "Rusty Iron Sword");
 
         add(LangUtil.tooltip("boolean.yes"), "Yes");
         add(LangUtil.tooltip("boolean.no"), "No");
@@ -97,8 +107,10 @@ public class DDLanguageProvider extends LanguageProvider {
         add(LangUtil.tooltip("stats.rarity"), "Rarity: %s");
         add(LangUtil.tooltip("stats.rarity.scarce"), "Scarce");
         add(LangUtil.tooltip("stats.rarity.rare"), "Rare");
+        add(LangUtil.tooltip("stats.rarity.very_rare"), "Very Rare");
         add(LangUtil.tooltip("stats.movement"), "Movement: %s");
         add(LangUtil.tooltip("stats.movement.flies"), "Flies/Hovers");
+        add(LangUtil.tooltip("stats.movement.walks"), "Walks");
         add(LangUtil.tooltip("stats.speed"), "Speed: %s");
         add(LangUtil.tooltip("stats.speed.normal"), "Normal");
         add(LangUtil.tooltip("stats.health"), "Health: %s");
@@ -106,6 +118,9 @@ public class DDLanguageProvider extends LanguageProvider {
         add(LangUtil.tooltip("stats.daylight"), "Daylight: %s");
         add(LangUtil.tooltip("stats.despawn"), "Despawn: %s");
         add(LangUtil.tooltip("stats.spawns"), "Spawns: %s");
+        add(LangUtil.tooltip("stats.spawns.overworld"), "Overworld");
+        add(LangUtil.tooltip("stats.spawns.underworld"), "Underworld");
+        add(LangUtil.tooltip("stats.spawns.nether"), "Nether");
         add(LangUtil.tooltip("stats.specials"), "Weapons/Specials:");
     }
 }

@@ -144,6 +144,7 @@ public class Ghoul extends DenizensMonster {
 	/**
 	 * Wants to pick up meats
 	 */
+	// TODO use custom Tags to check against
 	@Override
 	public boolean wantsToPickUp(ItemStack stack) {
 		return stack.is(Items.ROTTEN_FLESH)
@@ -167,7 +168,8 @@ public class Ghoul extends DenizensMonster {
 		}
 		if (heldStack == null || heldStack.isEmpty()) {
 			this.setItemSlotAndDropWhenKilled(slot, stack);
-			this.equipItemIfPossible(stack);
+			// TODO this seems wrong
+//			this.equipItemIfPossible(stack);
 			return stack;
 		}
 		return ItemStack.EMPTY;

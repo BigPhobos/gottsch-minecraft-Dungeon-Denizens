@@ -60,6 +60,8 @@ public class ClientSetup {
 		event.registerLayerDefinition(ShadowModel.LAYER_LOCATION, ShadowModel::createBodyLayer);
 		event.registerLayerDefinition(ShadowlordModel.LAYER_LOCATION, ShadowlordModel::createBodyLayer);
 		event.registerLayerDefinition(DaemonModel.LAYER_LOCATION, DaemonModel::createBodyLayer);
+		event.registerLayerDefinition(SkeletonWarriorModel.LAYER_LOCATION, SkeletonWarriorModel::createBodyLayer);
+
 	}
 
 	/**
@@ -79,8 +81,9 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.SHADOW_ENTITY_TYPE.get(), ShadowRenderer::new);
         event.registerEntityRenderer(Registration.SHADOWLORD_ENTITY_TYPE.get(), ShadowlordRenderer::new);
         event.registerEntityRenderer(Registration.DAEMON_ENTITY_TYPE.get(), DaemonRenderer::new);
-        
-        event.registerEntityRenderer(Registration.SLOW_SPELL_ENTITY_TYPE.get(), (provider) -> {
+		event.registerEntityRenderer(Registration.SKELETON_WARRIOR_TYPE.get(), SkeletonWarriorRenderer::new);
+
+		event.registerEntityRenderer(Registration.SLOW_SPELL_ENTITY_TYPE.get(), (provider) -> {
             // 1.0 = scale, true = full bright
         	return new ThrownItemRenderer<>(provider, 1.0F, true);
          });

@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Beholder mob (beholderkin).
 - Death Tyrant mob (beholderkin).
 - Spectator mob (beholderkin).
+- Skeleton Warrior.
 - Disintegrate spell.
 - Disarm spell.
 - Daemon glowing eyes layer.

@@ -34,7 +34,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -46,16 +45,16 @@ import net.minecraft.world.phys.HitResult;
  * @author Mark Gottschling on Apr 14, 2022
  *
  */
-public class SlowSpell extends AbstractDDHurtingProjectile implements ItemSupplier {
-	private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(SlowSpell.class, EntityDataSerializers.ITEM_STACK);
+public class ParalysisSpell extends AbstractDDHurtingProjectile implements ItemSupplier {
+	private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(ParalysisSpell.class, EntityDataSerializers.ITEM_STACK);
 
 	/**
 	 *
 	 * @param level
 	 * @return
 	 */
-	public SlowSpell create(Level level) {
-		return new SlowSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level);
+	public ParalysisSpell create(Level level) {
+		return new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level);
 	}
 
 	/**
@@ -63,7 +62,7 @@ public class SlowSpell extends AbstractDDHurtingProjectile implements ItemSuppli
 	 * @param entityType
 	 * @param level
 	 */
-	public SlowSpell(EntityType<SlowSpell> entityType, Level level) {
+	public ParalysisSpell(EntityType<ParalysisSpell> entityType, Level level) {
 		super(entityType, level);
 	}
 

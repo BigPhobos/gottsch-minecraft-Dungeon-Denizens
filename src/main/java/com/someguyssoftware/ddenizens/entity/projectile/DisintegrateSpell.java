@@ -34,7 +34,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -45,6 +47,9 @@ import net.minecraft.world.phys.HitResult;
  */
 public class DisintegrateSpell extends AbstractDDHurtingProjectile implements ItemSupplier {
 	private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(DisintegrateSpell.class, EntityDataSerializers.ITEM_STACK);
+
+	private final ExplosionDamageCalculator damageCalculator = new ExplosionDamageCalculator();
+	private int disintegrateCount;
 
 	/**
 	 *
@@ -97,13 +102,21 @@ public class DisintegrateSpell extends AbstractDDHurtingProjectile implements It
 	}
 
 	@Override
+	protected void onHitBlock(BlockHitResult p_37258_) {
+		super.onHitBlock(p_37258_);
+		// TODO if a block, destroy it, increment count
+		// TODO if increment is met, then discard
+			this.discard();
+	}
+
+	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
-		if (!this.level().isClientSide) {
+//		if (!this.level().isClientSide) {
 			// TODO if a block, destroy it, increment count
 			// TODO if increment is met, then discard
-			this.discard();
-		}
+//			this.discard();
+//		}
 	}
 
 	@Override
@@ -115,6 +128,7 @@ public class DisintegrateSpell extends AbstractDDHurtingProjectile implements It
 			target.hurt(level().damageSources().source(ModDamageTypes.DISINTEGRATE_SPELL), Config.Spells.DISINTEGRATE.damage.get());
 			if (target instanceof LivingEntity) {
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);
+				discard();
 			}
 		}
 	}

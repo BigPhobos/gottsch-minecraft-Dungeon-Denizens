@@ -20,8 +20,6 @@
 package com.someguyssoftware.ddenizens.entity.monster;
 
 import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.entity.ai.goal.CastDisintegrateGoal;
-import com.someguyssoftware.ddenizens.entity.ai.goal.CastParalysisGoal;
 import com.someguyssoftware.ddenizens.entity.ai.goal.WeightedCastProjectileGoal;
 import com.someguyssoftware.ddenizens.entity.ai.goal.WeightedChanceSummonGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.*;
@@ -31,11 +29,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -65,7 +61,7 @@ public class Beholder extends Beholderkin {
 		this.goalSelector.addGoal(8, new BeholderkinLookGoal(this));
 
 		WeightedCollection<Integer, AbstractDDHurtingProjectile> spells = new WeightedCollection<>();
-		spells.add(3, new SlowSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level()));
+		spells.add(3, new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(2, new HarmSpell(Registration.HARM_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(1, new DisintegrateSpell(Registration.DISINTEGRATE_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(1, new DisarmSpell(Registration.DISARM_SPELL_ENTITY_TYPE.get(), level()));

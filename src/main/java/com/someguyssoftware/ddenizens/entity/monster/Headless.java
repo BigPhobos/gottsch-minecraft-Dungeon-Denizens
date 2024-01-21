@@ -82,12 +82,14 @@ public class Headless extends DenizensMonster {
 		
 		// target goals
 		/*
-		 * setAlertOthers() is opposite of what you would expect. if a value is passed in,
+		 * vanilla setAlertOthers() is opposite of what you would expect. if a value is passed in,
 		 * that is the exception list, as opposed to the included list.
-		 * setAlertOthers() will alert ALL mobs based on class hierarchry of instanceof Mob.
+		 * vanilla setAlertOthers() will alert ALL mobs based on class hierarchry of instanceof Mob.
+		 *
+		 * Headless setAlertOthers() alerts only those listed.
 		 */
 		// for the included list. ie this mob will alert the other specific listed mobs.
-		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class, Gazer.class));
+		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class, Gazer.class, Beholder.class));
 		
 		/*
 		 * determines who to target

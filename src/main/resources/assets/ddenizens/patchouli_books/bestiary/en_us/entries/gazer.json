@@ -3,7 +3,7 @@
   "icon": "ddenizens:gazer_egg",
   "category": "ddenizens:root",
   "pages": [
-    "A Gazer is a medium-sized aberration that spawns in the deep depths of the Underworld or in the Nether.",
+    "A Gazer is a medium-sized aberration that spawns in the deep depths of the Underworld or in the Nether. They are the smaller kin of the Beholder.",
     {
       "type": "patchouli:image",
       "images": ["ddenizens:textures/gui/entries/gazer_patchouli.png"],

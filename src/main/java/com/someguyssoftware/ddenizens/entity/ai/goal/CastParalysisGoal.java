@@ -19,7 +19,7 @@
  */
 package com.someguyssoftware.ddenizens.entity.ai.goal;
 
-import com.someguyssoftware.ddenizens.entity.projectile.SlowSpell;
+import com.someguyssoftware.ddenizens.entity.projectile.ParalysisSpell;
 import com.someguyssoftware.ddenizens.setup.Registration;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -79,10 +79,10 @@ public class CastParalysisGoal extends Goal {
                     double y = livingentity.getY(0.5D) - (this.mob.getY(0.5D));
                     double z = livingentity.getZ() - (this.mob.getZ() + vec3.z * 2.0D);
 
-                    SlowSpell slowSpell = new SlowSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level);
-                    slowSpell.init(this.mob, x, y, z);
-                    slowSpell.setPos(this.mob.getX() + vec3.x * 2.0D, this.mob.getY(0.5D), slowSpell.getZ() + vec3.z * 2.0);
-                    level.addFreshEntity(slowSpell);
+                    ParalysisSpell paralysisSpell = new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level);
+                    paralysisSpell.init(this.mob, x, y, z);
+                    paralysisSpell.setPos(this.mob.getX() + vec3.x * 2.0D, this.mob.getY(0.5D), paralysisSpell.getZ() + vec3.z * 2.0);
+                    level.addFreshEntity(paralysisSpell);
                     this.chargeTimeCount = 0;
                 }
             } else if (this.chargeTimeCount > 0) {
