@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Fixed Gazer LAYER_LOCATION
+- Refactored and rebalanced Gazer (lesser beholderkin now).
 - Fixed CommonSpawnConfig constructor. There was a mix-up with the weight and minSpawn, maxSpawn values.
 - Fixed some config label naming.
 - Refactored spawn rules classes for nether mobs.
@@ -23,18 +24,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Beholder mob (beholderkin).
-- Death Tyrant mob (beholderkin).
-- Spectator mob (beholderkin).
+- Beholder mob.
+  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/beholder-plaque.png" width="128px">
+
+- Death Tyrant mob.
+  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/death_tyrant-plaque.png" width="128px">
+
+- Spectator mob.
+  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/spectator-plaque.png" width="128px">
+
 - Skeleton Warrior.
 - Disintegrate spell.
 - Disarm spell.
 - Daemon glowing eyes layer.
 - Owner and lifespan properties to Daemon if summoned.
 - Shadow glowing eyes layer.
-- Enable mob config option.
-- Supports Patchouli - DD Bestiary book contains Beholder, Death Tyrant, Gazer and Spectator. 
-- Tooltips on mob eggs (see info as DD Bestiary book).
+- Mob "enable" config option.
+- Supports Patchouli - DD Bestiary book contains new mobs (older mobs not complete). 
+- Bare-bones tooltips on mob eggs (similar but reduced info as DD Bestiary book).
+- Add custom sounds to Daemon and the beholderkin mobs.
+
+### Next Update Preview (aka Shadowlord Update)
+
+- Complete overhaul of Shadowlord -> model, sounds, abilities
+- Refactor Shadow abilities
+- Add Xorn**
 
 ## [1.1.0] - 2023-10-18
 
