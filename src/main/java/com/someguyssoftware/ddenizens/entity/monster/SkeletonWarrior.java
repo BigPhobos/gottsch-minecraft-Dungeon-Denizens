@@ -20,8 +20,8 @@
 package com.someguyssoftware.ddenizens.entity.monster;
 
 import com.google.common.collect.Maps;
+import com.someguyssoftware.ddenizens.entity.ai.goal.target.SummonedOwnerTargetGoal;
 import com.someguyssoftware.ddenizens.setup.Registration;
-import com.someguyssoftware.ddenizens.tags.DDTags;
 import com.someguyssoftware.ddenizens.util.EquipmentUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -36,6 +36,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -58,6 +59,8 @@ import java.util.Map;
  */
 public class SkeletonWarrior extends DenizensMonster {
 
+    private LivingEntity owner;
+Evoker e;
     private static final Map<EquipmentSlot, List<Item>> EQUIPMENT_MAP = Maps.newHashMap();
 
     // TODO use custom tags instead and register on tags load
@@ -100,8 +103,9 @@ public class SkeletonWarrior extends DenizensMonster {
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(1, new SummonedOwnerTargetGoal(this));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, playerNotOwner));
     }
 
     public static AttributeSupplier.Builder createAttributes() {

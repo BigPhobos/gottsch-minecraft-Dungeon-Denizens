@@ -12,6 +12,6 @@
       "border": true
     },
     "$(l)Number$(): 1$(br)$(l)Size$(): Large$(br)$(l)Level$(): Mini Boss$(br)$(l)Rarity$(): Rare$(br)$(l)Movement$(): Flies/Hovers$(br)$(l)Speed$(): Normal$(br)$(l)Health$(): 36hp$(br)$(l)Damage/Strength$(): 8hp$(br)$(l)Daylight$(): Yes$(br)$(l)Despawn$(): Yes$(br)$(l)Spawns$(): Underworld, Nether",
-    "$(l)Weapons/Specials$():$(br)- Can cast Paralysis spell.$(br)- Can summon multiple minions at once including Zombies, Husks, Skeletons and Skeleton Warriors.$(br)- Every 4 minutes, has a 40% chance to summon a Daemon."
+    "$(l)Weapons/Specials$():$(br)- Can cast Paralysis spell.$(br)- Can summon multiple minions at once including Zombies, Husks, Skeletons and Skeleton Warriors.$(br)- Has a good chance to summon a Daemon."
   ]
 }

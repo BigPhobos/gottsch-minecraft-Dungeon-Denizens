@@ -31,7 +31,9 @@ import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -62,16 +64,18 @@ public class DeathTyrant extends Beholderkin {
 		this.goalSelector.addGoal(5, new BeholderkinRandomFloatAroundGoal(this, Config.Mobs.DEATH_TYRANT.maxFloatHeight.get()));
 		this.goalSelector.addGoal(7, new BeholderkinLookGoal(this));
 
-		this.goalSelector.addGoal(6, new CastParalysisGoal(this, Config.Mobs.DEATH_TYRANT.paralysisChargeTime.get()));
+		this.goalSelector.addGoal(6, new CastParalysisGoal(this, Config.Mobs.DEATH_TYRANT.spellChargeTime.get()));
 
 		WeightedCollection<Double, EntityType<? extends Mob>> mobs = new WeightedCollection<>();
 		mobs.add(20D, EntityType.ZOMBIE);
 		mobs.add(20D, EntityType.HUSK);
-		mobs.add(60D, EntityType.SKELETON);
+		mobs.add(20D, EntityType.SKELETON);
 		mobs.add(60D, Registration.SKELETON_WARRIOR_TYPE.get());
-		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, 2000, 100, mobs, 2, 5));
-		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, 5000, 40, Registration.DAEMON_ENTITY_TYPE.get(), 1, 1));
+		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, Config.Mobs.DEATH_TYRANT.summonCooldownTime.get(), 100, mobs, Config.Mobs.DEATH_TYRANT.minSummonSpawns.get(), Config.Mobs.DEATH_TYRANT.maxSummonSpawns.get()));
+		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, Config.Mobs.DEATH_TYRANT.summonDaemonCooldownTime.get(), 40, Registration.DAEMON_ENTITY_TYPE.get(), 1, 1));
 		// NOTE unaffected by Boulders
+		// TODO need custom hurtbyTarget like headless
+		// TODO headless hurtby needs to be become a stand alone class that any mob can use
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 	}
 
@@ -83,12 +87,17 @@ public class DeathTyrant extends Beholderkin {
 	public static AttributeSupplier.Builder prepareAttributes() {
 		return Mob.createMobAttributes()
 				.add(Attributes.ATTACK_DAMAGE, 8.0D)
-				.add(Attributes.ATTACK_KNOCKBACK, 2.0D)
+				.add(Attributes.ATTACK_KNOCKBACK, 1.5D)
 				.add(Attributes.ARMOR, 3.0D)
 				.add(Attributes.ARMOR_TOUGHNESS, 3.0D)
 				.add(Attributes.MAX_HEALTH, 36.0)
 				.add(Attributes.FOLLOW_RANGE, 100.0)
 				.add(Attributes.MOVEMENT_SPEED, 0.20F);
+	}
+
+	@Override
+	public int getAmbientSoundInterval() {
+		return 160;
 	}
 
 	@Nullable

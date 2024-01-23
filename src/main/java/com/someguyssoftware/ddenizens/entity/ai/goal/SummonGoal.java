@@ -24,17 +24,16 @@ import mod.gottsch.forge.gottschcore.spatial.Coords;
 import mod.gottsch.forge.gottschcore.spatial.ICoords;
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraftforge.event.ForgeEventFactory;
 
 /**
  * 
@@ -90,8 +89,11 @@ public abstract class SummonGoal extends Goal {
 						}
 					}
 
+					ForgeEventFactory.onFinalizeSpawn(mob, level, level.getCurrentDifficultyAt(spawnCoords.toPos()), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
 					level.addFreshEntityWithPassengers(mob);
-					isSpawned = true;
+					if (mob.isAddedToWorld()) {
+						isSpawned = true;
+					}
 				}
 				
 				if (isSpawned) {

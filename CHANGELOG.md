@@ -28,12 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/beholder-plaque.png" width="128px">
 
 - Death Tyrant mob.
-  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/death_tyrant-plaque.png" width="128px">
+  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/death-tyrant-plaque.png" width="128px">
 
 - Spectator mob.
   <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/spectator-plaque.png" width="128px">
 
-- Skeleton Warrior.
+- Skeleton Warrior mob.
 - Disintegrate spell.
 - Disarm spell.
 - Daemon glowing eyes layer.
@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Supports Patchouli - DD Bestiary book contains new mobs (older mobs not complete). 
 - Bare-bones tooltips on mob eggs (similar but reduced info as DD Bestiary book).
 - Add custom sounds to Daemon and the beholderkin mobs.
+- Supports Biomes O Plenty
 
 ### Next Update Preview (aka Shadowlord Update)
 

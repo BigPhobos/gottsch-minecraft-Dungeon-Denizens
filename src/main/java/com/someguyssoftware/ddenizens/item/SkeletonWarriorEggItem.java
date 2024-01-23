@@ -31,12 +31,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * @author Mark Gottschling on Jan 17, 2024
- *
+ * @author Mark Gottschling on Jan 22, 2024
  */
-public class DeathTyrantEggItem extends DDEggItem {
+public class SkeletonWarriorEggItem extends DDEggItem {
 
-    public DeathTyrantEggItem(Supplier<? extends EntityType<? extends Mob>> type, int backgroundColor, int highlightColor, Properties props) {
+    public SkeletonWarriorEggItem(Supplier<? extends EntityType<? extends Mob>> type, int backgroundColor, int highlightColor, Properties props) {
         super(type, backgroundColor, highlightColor, props);
     }
 
@@ -45,17 +44,21 @@ public class DeathTyrantEggItem extends DDEggItem {
         super.appendHoverText(stack, worldIn, tooltip, flag);
 
         LangUtil.appendAdvancedHoverText(tooltip, tt -> {
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.number_appearing"),1));
-             tooltip.add(Component.translatable(LangUtil.tooltip("stats.level"), Component.translatable(LangUtil.tooltip("stats.level.mini_boss"))));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.rarity"), Component.translatable(LangUtil.tooltip("stats.rarity.rare"))));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.health"), 36));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.damage"), 8));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.number_appearing"), "1-2"));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.level"), Component.translatable(LangUtil.tooltip("stats.level.mob"))));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.rarity"),
+                    Component.translatable(LangUtil.tooltip("stats.rarity.common")))
+            );
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.health"), 20));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.damage"), 2));
             tooltip.add(Component.translatable(LangUtil.tooltip("stats.despawn"), Component.translatable(LangUtil.tooltip("boolean.yes"))));
-            tooltip.add(Component.translatable(LangUtil.tooltip("stats.spawns"), "Underworld, Nether"));
+            tooltip.add(Component.translatable(LangUtil.tooltip("stats.spawns"),
+                    Component.translatable(LangUtil.tooltip("stats.spawns.overworld"))
+                            .append(", ")
+                            .append(Component.translatable(LangUtil.tooltip("stats.spawns.underworld")))
+            ));
             tooltip.add(Component.translatable(LangUtil.tooltip("stats.specials")));
-            tooltip.add(Component.literal("- Can cast Paralysis spell."));
-            tooltip.add(Component.literal("- Can summon multiple minions at once including Zombies, Husks and Skeletons."));
-            tooltip.add(Component.literal("- Has a good chance to summon a Daemon."));
+            tooltip.add(Component.literal("- Equipped with melee weapons and armor."));
         });
     }
 }

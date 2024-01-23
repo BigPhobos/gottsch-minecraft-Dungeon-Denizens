@@ -236,14 +236,14 @@ public final class Config extends AbstractConfig {
 	}
 
 	public static class DisintegrateSpellConfig {
-		public IntValue damage;
+		public DoubleValue damage;
 
 		public DisintegrateSpellConfig(ForgeConfigSpec.Builder builder) {
-			builder.comment(CATEGORY_DIV, " Disintegrate spell properties.", CATEGORY_DIV).push("disintegrateball");
+			builder.comment(CATEGORY_DIV, " Disintegrate spell properties.", CATEGORY_DIV).push("disintegrate_spell");
 
 			damage = builder
 					.comment(" The amount of damage the spell inflicts.")
-					.defineInRange("damage", 10, 1, Integer.MAX_VALUE);
+					.defineInRange("damage", 8.0, 1, Integer.MAX_VALUE);
 		}
 	}
 
@@ -429,41 +429,38 @@ public final class Config extends AbstractConfig {
 	 */
 	public static class BeholderConfig extends NetherMobConfig {
 		// beholder specific
+		public IntValue maxFloatHeight;
 		public IntValue biteCooldownTime;
-		public IntValue paralysisChargeTime;
-		public IntValue disintegrateChargeTime;
-		public IntValue disarmChargeTime;
-		// TODO rename all instance of summonCooldownTime to summonChargeTime
+		public IntValue spellChargeTime;
+
 		public IntValue summonCooldownTime;
 		public IntValue minSummonSpawns;
 		public IntValue maxSummonSpawns;
 
+		public IntValue summonDaemonCooldownTime;
+
 		public BeholderConfig(ForgeConfigSpec.Builder builder) {
-			builder.comment(CATEGORY_DIV, " Beholder properties.", CATEGORY_DIV).push(Registration.GAZER);
+			builder.comment(CATEGORY_DIV, " Beholder properties.", CATEGORY_DIV).push(Registration.BEHOLDER);
 
 			spawnConfig = new CommonSpawnConfig(builder, true, 15, 1, 1,  MIN_HEIGHT, UNDERGROUND_HEIGHT);//,
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, true, 10, 1, 1, MIN_HEIGHT, MAX_HEIGHT);
 
+			maxFloatHeight = builder
+					.comment("")
+					.defineInRange("maxFloatHeight", 7, 1, 25);
+
 			biteCooldownTime = builder
 					.comment(" The cooldown time of a bite attack (measured in ticks).")
-					.defineInRange("biteCooldownTime", 20, 1, Integer.MAX_VALUE);
+					.defineInRange("biteCooldownTime", 40, 1, Integer.MAX_VALUE);
 
-			paralysisChargeTime = builder
+			spellChargeTime = builder
 					.comment(" The charge time of a paralysis spell attack (measured in ticks).")
-					.defineInRange("paralysisChargeTime", 80, 1, Integer.MAX_VALUE);
-
-			disintegrateChargeTime = builder
-					.comment(" The charge time of a disintegrate spell attack (measured in ticks).")
-					.defineInRange("disintegrateChargeTime", 200, 1, Integer.MAX_VALUE);
-
-			disarmChargeTime = builder
-					.comment(" The charge time of a disarm spell attack (measured in ticks).")
-					.defineInRange("disarmChargeTime", 150, 1, Integer.MAX_VALUE);
+					.defineInRange("spellChargeTime", 80, 1, Integer.MAX_VALUE);
 
 			summonCooldownTime = builder
 					.comment(" The cooldown time of a summon spell (measured in ticks).")
-					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
+					.defineInRange("summonCooldownTime", 1200, 1, Integer.MAX_VALUE);
 
 			minSummonSpawns = builder
 					.comment(" Minimum spawn group size for summon spell.")
@@ -471,7 +468,11 @@ public final class Config extends AbstractConfig {
 
 			maxSummonSpawns = builder
 					.comment(" Maximum spawn group size for summon spell.")
-					.defineInRange("maxSummonSpawns", 3, 1, Integer.MAX_VALUE);
+					.defineInRange("maxSummonSpawns", 1, 1, Integer.MAX_VALUE);
+
+			summonDaemonCooldownTime = builder
+					.comment(" The cooldown time of a summon daemon spell (measured in ticks).")
+					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
 
 			builder.pop();
 		}
@@ -482,13 +483,14 @@ public final class Config extends AbstractConfig {
 		// beholder specific
 		public IntValue biteCooldownTime;
 		// TODO rename all instance of summonCooldownTime to summonChargeTime
-		public IntValue paralysisChargeTime;
+		public IntValue spellChargeTime;
 		public IntValue summonCooldownTime;
 		public IntValue minSummonSpawns;
 		public IntValue maxSummonSpawns;
+		public IntValue summonDaemonCooldownTime;
 
 		public DeathTyrantConfig(ForgeConfigSpec.Builder builder) {
-			builder.comment(CATEGORY_DIV, " Death Tyrant properties.", CATEGORY_DIV).push(Registration.GAZER);
+			builder.comment(CATEGORY_DIV, " Death Tyrant properties.", CATEGORY_DIV).push(Registration.DEATH_TYRANT);
 
 			spawnConfig = new CommonSpawnConfig(builder, true, 15, 1, 1,  MIN_HEIGHT, UNDERGROUND_HEIGHT);//,
 
@@ -500,37 +502,41 @@ public final class Config extends AbstractConfig {
 
 			biteCooldownTime = builder
 					.comment(" The cooldown time of a bite attack (measured in ticks).")
-					.defineInRange("biteCooldownTime", 20, 1, Integer.MAX_VALUE);
+					.defineInRange("biteCooldownTime", 40, 1, Integer.MAX_VALUE);
 
-			paralysisChargeTime = builder
-					.comment(" The charge time of a paralysis spell attack (measured in ticks).")
-					.defineInRange("paralysisChargeTime", 80, 1, Integer.MAX_VALUE);
+			spellChargeTime = builder
+					.comment(" The charge time of a general spell attack (measured in ticks).")
+					.defineInRange("spellChargeTime", 80, 1, Integer.MAX_VALUE);
 
 			summonCooldownTime = builder
-					.comment(" The cooldown time of a summon spell (measured in ticks).")
-					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
+					.comment(" The cooldown time of a general summon spell (measured in ticks).")
+					.defineInRange("summonCooldownTime", 1200, 1, Integer.MAX_VALUE);
 
 			minSummonSpawns = builder
 					.comment(" Minimum spawn group size for summon spell.")
-					.defineInRange("minSummonSpawns", 1, 0, Integer.MAX_VALUE);
+					.defineInRange("minSummonSpawns", 2, 0, Integer.MAX_VALUE);
 
 			maxSummonSpawns = builder
 					.comment(" Maximum spawn group size for summon spell.")
-					.defineInRange("maxSummonSpawns", 3, 1, Integer.MAX_VALUE);
+					.defineInRange("maxSummonSpawns", 5, 1, Integer.MAX_VALUE);
+
+			summonDaemonCooldownTime = builder
+					.comment(" The cooldown time of a summon daemon spell (measured in ticks).")
+					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
 
 			builder.pop();
 		}
 	}
 
+	// TODO most of these properties are common to Beholderkin - abstract out to class
 	/*
 	 * 
 	 */
 	public static class GazerConfig extends NetherMobConfig {
-		// gazer specific		
+		// gazer specific
+		public IntValue maxFloatHeight;
 		public IntValue biteCooldownTime;
-		@Deprecated
-		public IntValue paralysisChargeTime;
-		public IntValue castChargeTime;
+		public IntValue spellChargeTime;
 		public IntValue summonCooldownTime;
 		public IntValue minSummonSpawns;
 		public IntValue maxSummonSpawns;
@@ -543,17 +549,17 @@ public final class Config extends AbstractConfig {
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, true, 10, 1, 1, MIN_HEIGHT, MAX_HEIGHT);
 
+			maxFloatHeight = builder
+					.comment("")
+					.defineInRange("maxFloatHeight", 5, 1, 25);
+
 			biteCooldownTime = builder
 					.comment(" The cooldown time of a bite attack (measured in ticks).")
 					.defineInRange("biteCooldownTime", 20, 1, Integer.MAX_VALUE);
 
-			paralysisChargeTime = builder
-					.comment(" Deprecated. The charge time of a paraylsis spell attack (measured in ticks).")
-					.defineInRange("paralysisChargeTime", 80, 1, Integer.MAX_VALUE);
-
-			castChargeTime = builder
+			spellChargeTime = builder
 					.comment(" The charge time of a spell attack (measured in ticks).")
-					.defineInRange("castChargeTime", 80, 1, Integer.MAX_VALUE);
+					.defineInRange("spellChargeTime", 80, 1, Integer.MAX_VALUE);
 
 			summonCooldownTime = builder
 					.comment(" The cooldown time of a summon spell (measured in ticks).")
@@ -565,7 +571,7 @@ public final class Config extends AbstractConfig {
 
 			maxSummonSpawns = builder
 					.comment(" Maximum spawn group size for summon spell.")
-					.defineInRange("maxSummonSpawns", 3, 1, Integer.MAX_VALUE);
+					.defineInRange("maxSummonSpawns", 1, 1, Integer.MAX_VALUE);
 
 			builder.pop();
 		}
@@ -573,23 +579,28 @@ public final class Config extends AbstractConfig {
 
 	public static class SpectatorConfig extends NetherMobConfig {
 		// gazer specific
+		public IntValue maxFloatHeight;
 		public IntValue biteCooldownTime;
-		public IntValue paralysisChargeTime;
+		public IntValue spellChargeTime;
 
 		public SpectatorConfig(ForgeConfigSpec.Builder builder) {
-			builder.comment(CATEGORY_DIV, " Gazer properties.", CATEGORY_DIV).push(Registration.GAZER);
+			builder.comment(CATEGORY_DIV, " Spectator properties.", CATEGORY_DIV).push(Registration.SPECTATOR);
 
 			spawnConfig = new CommonSpawnConfig(builder, true, 25, 1, 1,  MIN_HEIGHT, UNDERGROUND_HEIGHT);//,
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, true, 10, 1, 1, MIN_HEIGHT, MAX_HEIGHT);
 
+			maxFloatHeight = builder
+					.comment("")
+					.defineInRange("maxFloatHeight", 3, 1, 25);
+
 			biteCooldownTime = builder
 					.comment(" The cooldown time of a bite attack (measured in ticks).")
 					.defineInRange("biteCooldownTime", 20, 1, Integer.MAX_VALUE);
 
-			paralysisChargeTime = builder
-					.comment(" The charge time of a paraylsis spell attack (measured in ticks).")
-					.defineInRange("paralysisChargeTime", 80, 1, Integer.MAX_VALUE);
+			spellChargeTime = builder
+					.comment(" The charge time of a spell attack (measured in ticks).")
+					.defineInRange("spellChargeTime", 80, 1, Integer.MAX_VALUE);
 
 			builder.pop();
 		}
@@ -669,7 +680,7 @@ public final class Config extends AbstractConfig {
 
 	public static class SkeletonWarriorConfig extends MobConfig {
 		public SkeletonWarriorConfig(ForgeConfigSpec.Builder builder) {
-			builder.comment(CATEGORY_DIV, " Skeleton Warrior properties.", CATEGORY_DIV).push(Registration.ORC);
+			builder.comment(CATEGORY_DIV, " Skeleton Warrior properties.", CATEGORY_DIV).push(Registration.SKELETON_WARRIOR);
 			spawnConfig = new CommonSpawnConfig(builder, true, 50, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
 			builder.pop();
 		}

@@ -74,9 +74,9 @@ public class Spectator extends Beholderkin {
 	protected void registerGoals() {
 		this.goalSelector.addGoal(0, new BeholderkinBiteGoal(this, Config.Mobs.SPECTATOR.biteCooldownTime.get()));
 		this.goalSelector.addGoal(1, new Spectator.SpectatorChargeAttackGoal( this, 2D));
-		this.goalSelector.addGoal(5, new BeholderkinRandomFloatAroundGoal(this, 3));
+		this.goalSelector.addGoal(5, new BeholderkinRandomFloatAroundGoal(this, Config.Mobs.SPECTATOR.maxFloatHeight.get()));
 		this.goalSelector.addGoal(7, new BeholderkinLookGoal(this));
-		this.goalSelector.addGoal(6, new CastParalysisGoal(this, Config.Mobs.SPECTATOR.paralysisChargeTime.get()));
+		this.goalSelector.addGoal(6, new CastParalysisGoal(this, Config.Mobs.SPECTATOR.spellChargeTime.get()));
 		// TODO in future if player can summon, then it should follow the player
 		//this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
 
@@ -90,12 +90,7 @@ public class Spectator extends Beholderkin {
 			}
 			return false;
 		}));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, (entity) -> {
-			if (entity instanceof Player) {
-                return getSummonedOwner() == null || !(getSummonedOwner() instanceof Player);
-			}
-			return true;
-		}));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, playerNonOwner));
 	}
 
 	/**
@@ -114,37 +109,6 @@ public class Spectator extends Beholderkin {
 				.add(Attributes.MOVEMENT_SPEED, 0.2F);
 	}
 
-	@Override
-	public void addAdditionalSaveData(CompoundTag tag) {
-		super.addAdditionalSaveData(tag);
-
-		if (this.getSummonedOwner() != null) {
-			if (this.getSummonedOwner() instanceof Player) {
-				tag.putBoolean("playerOwner", true);
-			} else {
-				tag.putBoolean("playerOwner", false);
-			}
-			tag.putUUID("summonedOwner", getSummonedOwner().getUUID());
-		}
-	}
-
-	@Override
-	public void readAdditionalSaveData(CompoundTag tag) {
-		super.readAdditionalSaveData(tag);
-
-		if (tag.hasUUID("summonedOwner")) {
-			UUID uuid = tag.getUUID("summonedOwner");
-
-			LivingEntity owner = null;
-			if (tag.contains("playerOwner") && tag.getBoolean("playerOwner")) {
-				owner = this.level().getPlayerByUUID(uuid);
-			} else {
-				owner = (LivingEntity)((ServerLevel)this.level()).getEntity(uuid);
-			}
-			this.setSummonedOwner(owner);
-		}
-	}
-
 	@Nullable
 	@Override
 	protected SoundEvent getAmbientSound() {
@@ -154,6 +118,11 @@ public class Spectator extends Beholderkin {
 	@Override
 	public boolean canSummonedHaveOwner() {
 		return true;
+	}
+
+	@Override
+	public LivingEntity getSummonedOwner() {
+		return owner;
 	}
 
 	@Override
@@ -224,15 +193,14 @@ public class Spectator extends Beholderkin {
 		public void tick() {
 			LivingEntity livingentity = Spectator.this.getTarget();
 			if (livingentity != null) {
-				// TODO inflate bounding box by 0.5
-				if (Spectator.this.getBoundingBox().intersects(livingentity.getBoundingBox())) {
+				if (Spectator.this.getBoundingBox().inflate(0.5f).intersects(livingentity.getBoundingBox())) {
 					Spectator.this.doHurtTarget(livingentity);
 					setIsCharging(false);
 				} else {
 					double d0 = Spectator.this.distanceToSqr(livingentity);
 					if (d0 < 9.0D) {
 						Vec3 vec3 = livingentity.getEyePosition();
-						Spectator.this.moveControl.setWantedPosition(vec3.x, vec3.y, vec3.z, 2D);
+						Spectator.this.moveControl.setWantedPosition(vec3.x, vec3.y, vec3.z, this.speedModifier);
 					}
 				}
 

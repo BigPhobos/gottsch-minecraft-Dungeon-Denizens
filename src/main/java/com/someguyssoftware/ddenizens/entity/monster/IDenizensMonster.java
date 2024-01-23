@@ -20,6 +20,9 @@
 package com.someguyssoftware.ddenizens.entity.monster;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.function.Predicate;
 
 /**
  *
@@ -27,6 +30,9 @@ import net.minecraft.world.entity.LivingEntity;
  *
  */
 public interface IDenizensMonster {
+    public static final String SUMMONED_OWNER = "summonedOwner";
+    public static final String PLAYER_OWNER = "playerOwner";
+
     public MonsterSize getMonsterSize();
     public void setMonsterSize(MonsterSize size);
 

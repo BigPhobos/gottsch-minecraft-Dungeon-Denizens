@@ -208,6 +208,11 @@ public class Daemon extends DenizensMonster {
 		}
 	}
 
+	@Override
+	public int getAmbientSoundInterval() {
+		return 160;
+	}
+
 	@Nullable
 	@Override
 	protected SoundEvent getAmbientSound() {

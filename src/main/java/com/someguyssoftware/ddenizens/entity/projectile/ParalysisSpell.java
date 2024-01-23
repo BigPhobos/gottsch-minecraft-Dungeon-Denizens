@@ -29,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -54,7 +55,7 @@ public class ParalysisSpell extends AbstractDDHurtingProjectile implements ItemS
 	 * @return
 	 */
 	public ParalysisSpell create(Level level) {
-		return new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level);
+		return new ParalysisSpell(Registration.PARALYSIS_SPELL_ENTITY_TYPE.get(), level);
 	}
 
 	/**
@@ -94,6 +95,8 @@ public class ParalysisSpell extends AbstractDDHurtingProjectile implements ItemS
 	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
+		this.playSound(SoundEvents.PLAYER_SPLASH_HIGH_SPEED, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+
 		if (!this.level().isClientSide) {
 			this.discard();
 		}
@@ -115,7 +118,7 @@ public class ParalysisSpell extends AbstractDDHurtingProjectile implements ItemS
 	}
 
 	public void setItem(ItemStack stack) {
-		if (!stack.is(Registration.SLOW_SPELL_ITEM.get()) || stack.hasTag()) {
+		if (!stack.is(Registration.PARALYSIS_SPELL_ITEM.get()) || stack.hasTag()) {
 			this.getEntityData().set(DATA_ITEM_STACK, Util.make(stack.copy(), (itemStack) -> {
 				itemStack.setCount(1);
 			}));
@@ -134,7 +137,7 @@ public class ParalysisSpell extends AbstractDDHurtingProjectile implements ItemS
 	@Override
 	public ItemStack getItem() {
 		ItemStack stack = this.getItemRaw();
-		return stack.isEmpty() ? new ItemStack(Registration.SLOW_SPELL_ITEM.get()) : stack;
+		return stack.isEmpty() ? new ItemStack(Registration.PARALYSIS_SPELL_ITEM.get()) : stack;
 	}
 
 	@Override

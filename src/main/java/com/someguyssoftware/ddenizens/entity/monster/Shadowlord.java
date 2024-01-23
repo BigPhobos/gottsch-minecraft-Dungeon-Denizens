@@ -201,9 +201,10 @@ public class Shadowlord extends DenizensMonster {
 		 * Create a ring of smoke particles to delineate the boundary of the Aura of Blindness 
 		 */
 		if (WorldInfo.isClientSide(this.level())) {
-			double x = 2D * Math.sin(auraOfBlindessTime);
-			double z = 2D * Math.cos(auraOfBlindessTime);
+			double x = Math.sin(auraOfBlindessTime);
+			double z = Math.cos(auraOfBlindessTime);
 			this.level().addParticle(ParticleTypes.SMOKE, this.position().x + x, position().y, position().z + z, 0, 0, 0);
+			this.level().addParticle(ParticleTypes.SMOKE, this.position().x + (x*2D), position().y, position().z + (z*2D), 0, 0, 0);
 			auraOfBlindessTime++;
 			auraOfBlindessTime = auraOfBlindessTime % 360;
 		}

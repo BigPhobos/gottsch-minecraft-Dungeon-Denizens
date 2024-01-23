@@ -31,7 +31,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
@@ -64,7 +63,7 @@ public class Registration {
 	public static final String SKELETON_WARRIOR = "skeleton_warrior";
 	
 	// projectile names
-	private static final String SLOW_SPELL = "slow";
+	private static final String PARALYSIS_SPELL = "slow";
 	private static final String HARM_SPELL = "harm";
 	private static final String DISINTEGRATE_SPELL = "disintegrate";
 	private static final String DISARM_SPELL = "disarm";
@@ -115,7 +114,7 @@ public class Registration {
 			.build(GHOUL));
 
 	public static final RegistryObject<EntityType<Beholder>> BEHOLDER_ENTITY_TYPE = Registration.ENTITIES.register(BEHOLDER, () -> EntityType.Builder.of(Beholder::new, MobCategory.MONSTER)
-			.sized(2.25F, 3.25F)
+			.sized(2.25F, 3.5F)
 			.clientTrackingRange(8)
 			.setShouldReceiveVelocityUpdates(false)
 			.setTrackingRange(20)
@@ -123,7 +122,7 @@ public class Registration {
 			.build(BEHOLDER));
 
 	public static final RegistryObject<EntityType<DeathTyrant>> DEATH_TYRANT_TYPE = Registration.ENTITIES.register(DEATH_TYRANT, () -> EntityType.Builder.of(DeathTyrant::new, MobCategory.MONSTER)
-			.sized(2.25F, 3.25F)
+			.sized(2.25F, 3.5F)
 			.clientTrackingRange(8)
 			.setShouldReceiveVelocityUpdates(false)
 			.setTrackingRange(20)
@@ -171,12 +170,12 @@ public class Registration {
 			.build(SKELETON_WARRIOR));
 	
 	// projectile entities
-	public static final RegistryObject<EntityType<ParalysisSpell>> SLOW_SPELL_ENTITY_TYPE =
-			Registration.ENTITIES.register(SLOW_SPELL, () -> EntityType.Builder.of(ParalysisSpell::new, MobCategory.MISC)
+	public static final RegistryObject<EntityType<ParalysisSpell>> PARALYSIS_SPELL_ENTITY_TYPE =
+			Registration.ENTITIES.register(PARALYSIS_SPELL, () -> EntityType.Builder.of(ParalysisSpell::new, MobCategory.MISC)
 			.sized(1F, 1F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
-			.build(SLOW_SPELL));
+			.build(PARALYSIS_SPELL));
 	
 	public static final RegistryObject<EntityType<HarmSpell>> HARM_SPELL_ENTITY_TYPE =
 			Registration.ENTITIES.register(HARM_SPELL, () -> EntityType.Builder.of(HarmSpell::new, MobCategory.MISC)
@@ -233,16 +232,16 @@ public class Registration {
 	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD + "_egg", () -> new ForgeSpawnEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x050831, new Item.Properties()));
 	public static final RegistryObject<Item> DAEMON_EGG = Registration.ITEMS.register(DAEMON + "_egg", () -> new DaemonEggItem(DAEMON_ENTITY_TYPE, 0xff0000, 0xfc0000, new Item.Properties()));
 
-	public static final RegistryObject<Item> SKELETON_WARRIOR_EGG = Registration.ITEMS.register(SKELETON_WARRIOR + "_egg", () -> new ForgeSpawnEggItem(SKELETON_WARRIOR_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
+	public static final RegistryObject<Item> SKELETON_WARRIOR_EGG = Registration.ITEMS.register(SKELETON_WARRIOR + "_egg", () -> new SkeletonWarriorEggItem(SKELETON_WARRIOR_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
 
 
 	// projectiles
-	public static final RegistryObject<Item> SLOW_SPELL_ITEM = Registration.ITEMS.register(SLOW_SPELL, () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> PARALYSIS_SPELL_ITEM = Registration.ITEMS.register(PARALYSIS_SPELL, () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> HARM_SPELL_ITEM = Registration.ITEMS.register(HARM_SPELL, () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> DISINTEGRATE_SPELL_ITEM = Registration.ITEMS.register(DISINTEGRATE_SPELL, () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> DISARM_SPELL_ITEM = Registration.ITEMS.register(DISARM_SPELL, () -> new Item(new Item.Properties()));
 
-	public static final RegistryObject<Item> FIRESPOUT_ITEM = Registration.ITEMS.register("firespout", () -> new Item(new Item.Properties()));
+//	public static final RegistryObject<Item> FIRESPOUT_ITEM = Registration.ITEMS.register("firespout", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> ROCK_ITEM = Registration.ITEMS.register(ROCK, () -> new Item(new Item.Properties()));
 	
 	/*

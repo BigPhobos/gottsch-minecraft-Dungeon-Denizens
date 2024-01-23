@@ -40,11 +40,14 @@ public class DDItemModelsProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
     	// projectiles
-        singleTexture(Registration.SLOW_SPELL_ITEM.getId().getPath(),
+        singleTexture(Registration.PARALYSIS_SPELL_ITEM.getId().getPath(),
                 mcLoc("item/generated"), "layer0", modLoc("item/slow"));
         
         singleTexture("harm",
                 mcLoc("item/generated"), "layer0", modLoc("item/harm"));
+
+        singleTexture("disarm",
+                mcLoc("item/generated"), "layer0", modLoc("item/disarm"));
 
         singleTexture("disintegrate",
                 mcLoc("item/generated"), "layer0", modLoc("item/disintegrate"));

@@ -30,6 +30,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -94,6 +95,7 @@ public class HarmSpell extends AbstractDDHurtingProjectile implements ItemSuppli
 	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
+		this.playSound(SoundEvents.PLAYER_SPLASH_HIGH_SPEED, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
 		if (!this.level().isClientSide) {
 			this.discard();
 		}
@@ -105,9 +107,7 @@ public class HarmSpell extends AbstractDDHurtingProjectile implements ItemSuppli
 		if (!this.level().isClientSide) {
 			Entity target = hitResult.getEntity();
 			Entity ownerEntity = this.getOwner();
-//			DamageSource damageSource = new IndirectEntityDamageSource("harmball", this, ownerEntity).setProjectile();
 			target.hurt(level().damageSources().source(ModDamageTypes.HARM_SPELL), Config.Spells.HARM.damage.get());
-//			target.hurt(damageSource, Config.Spells.HARMBALL.damage.get());
 			if (target instanceof LivingEntity) {
 				this.doEnchantDamageEffects((LivingEntity)ownerEntity, target);
 			}

@@ -21,6 +21,7 @@ package com.someguyssoftware.ddenizens.entity.ai.goal;
 
 import com.someguyssoftware.ddenizens.entity.projectile.AbstractDDHurtingProjectile;
 import mod.gottsch.forge.gottschcore.random.WeightedCollection;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -91,6 +92,9 @@ public class WeightedCastProjectileGoal extends Goal {
                     spell.setPos(this.mob.getX() + vec3.x * 2.0D, this.mob.getY(0.5D), mob.getZ() + vec3.z * 2.0);
                     level.addFreshEntity(spell);
                     this.chargeTimeCount = 0;
+                    // play sound
+                    this.mob.playSound(SoundEvents.SPLASH_POTION_THROW, 0.5F, 0.4F / (mob.getRandom().nextFloat() * 0.4F + 0.8F));
+
                 }
             } else if (this.chargeTimeCount > 0) {
                 --this.chargeTimeCount;

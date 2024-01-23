@@ -79,7 +79,7 @@ public class CastParalysisGoal extends Goal {
                     double y = livingentity.getY(0.5D) - (this.mob.getY(0.5D));
                     double z = livingentity.getZ() - (this.mob.getZ() + vec3.z * 2.0D);
 
-                    ParalysisSpell paralysisSpell = new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level);
+                    ParalysisSpell paralysisSpell = new ParalysisSpell(Registration.PARALYSIS_SPELL_ENTITY_TYPE.get(), level);
                     paralysisSpell.init(this.mob, x, y, z);
                     paralysisSpell.setPos(this.mob.getX() + vec3.x * 2.0D, this.mob.getY(0.5D), paralysisSpell.getZ() + vec3.z * 2.0);
                     level.addFreshEntity(paralysisSpell);

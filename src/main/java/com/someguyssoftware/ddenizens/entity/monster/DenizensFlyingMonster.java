@@ -19,9 +19,16 @@
  */
 package com.someguyssoftware.ddenizens.entity.monster;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  *
@@ -32,9 +39,47 @@ public abstract class DenizensFlyingMonster extends FlyingMob implements IDenize
 
     private MonsterSize size;
 
+    public final Predicate<LivingEntity> playerNonOwner = (entity) -> {
+        if (entity instanceof Player) {
+            return getSummonedOwner() == null || !(getSummonedOwner() instanceof Player);
+        }
+        return true;
+    };
+
     protected DenizensFlyingMonster(EntityType<? extends FlyingMob> type, Level level, MonsterSize size) {
         super(type, level);
         setMonsterSize(size);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+
+        if (this.getSummonedOwner() != null) {
+            if (this.getSummonedOwner() instanceof Player) {
+                tag.putBoolean(PLAYER_OWNER, true);
+            } else {
+                tag.putBoolean(PLAYER_OWNER, false);
+            }
+            tag.putUUID(SUMMONED_OWNER, getSummonedOwner().getUUID());
+        }
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+
+        if (tag.hasUUID(SUMMONED_OWNER)) {
+            UUID uuid = tag.getUUID(SUMMONED_OWNER);
+
+            LivingEntity owner = null;
+            if (tag.contains(PLAYER_OWNER) && tag.getBoolean(PLAYER_OWNER)) {
+                owner = this.level().getPlayerByUUID(uuid);
+            } else {
+                owner = (LivingEntity)((ServerLevel)this.level()).getEntity(uuid);
+            }
+            this.setSummonedOwner(owner);
+        }
     }
 
     public MonsterSize getMonsterSize() {

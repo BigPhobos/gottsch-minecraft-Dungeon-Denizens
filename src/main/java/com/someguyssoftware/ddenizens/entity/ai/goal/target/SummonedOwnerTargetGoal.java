@@ -47,8 +47,9 @@ public class SummonedOwnerTargetGoal extends TargetGoal {
 
     @Override
     public boolean canUse() {
-        LivingEntity livingentity = this.mob.getSummonedOwner();
-        if (livingentity == null || ((Mob)this.mob).getTarget() != null) {
+        LivingEntity owner = this.mob.getSummonedOwner();
+        LivingEntity target = ((Mob)this.mob).getTarget();
+        if (owner == null || (target != null && !target.equals(owner))) {
             return false;
         }
         return true;

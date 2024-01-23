@@ -40,8 +40,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Beholder extends Beholderkin {
 
-	private static final int MAX_FLOAT_HEIGHT = 7;
-
 	/**
 	 *
 	 * @param entityType
@@ -57,24 +55,23 @@ public class Beholder extends Beholderkin {
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(4, new BeholderkinBiteGoal(this, Config.Mobs.BEHOLDER.biteCooldownTime.get()));
-		this.goalSelector.addGoal(5, new BeholderkinRandomFloatAroundGoal(this, MAX_FLOAT_HEIGHT));
+		this.goalSelector.addGoal(5, new BeholderkinRandomFloatAroundGoal(this, Config.Mobs.BEHOLDER.maxFloatHeight.get()));
 		this.goalSelector.addGoal(8, new BeholderkinLookGoal(this));
 
 		WeightedCollection<Integer, AbstractDDHurtingProjectile> spells = new WeightedCollection<>();
-		spells.add(3, new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level()));
+		spells.add(3, new ParalysisSpell(Registration.PARALYSIS_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(2, new HarmSpell(Registration.HARM_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(1, new DisintegrateSpell(Registration.DISINTEGRATE_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(1, new DisarmSpell(Registration.DISARM_SPELL_ENTITY_TYPE.get(), level()));
-
-		this.goalSelector.addGoal(6, new WeightedCastProjectileGoal(this, Config.Mobs.GAZER.castChargeTime.get(), spells));
+		this.goalSelector.addGoal(6, new WeightedCastProjectileGoal(this, Config.Mobs.BEHOLDER.spellChargeTime.get(), spells));
 
 		WeightedCollection<Double, EntityType<? extends Mob>> mobs = new WeightedCollection<>();
 		mobs.add(60D, Registration.HEADLESS_ENTITY_TYPE.get());
 		mobs.add(40D, Registration.ORC_ENTITY_TYPE.get());
 		mobs.add(20D, Registration.SPECTATOR_TYPE.get());
 		mobs.add(20D, EntityType.BLAZE);
-		this.goalSelector.addGoal(7, new WeightedChanceSummonGoal(this, mobs));
-		this.goalSelector.addGoal(7, new WeightedChanceSummonGoal(this, 2500, 10, Registration.DAEMON_ENTITY_TYPE.get(), 1, 1));
+		this.goalSelector.addGoal(7, new WeightedChanceSummonGoal(this, Config.Mobs.BEHOLDER.summonCooldownTime.get(), 100, mobs, Config.Mobs.BEHOLDER.minSummonSpawns.get(), Config.Mobs.BEHOLDER.maxSummonSpawns.get()));
+		this.goalSelector.addGoal(7, new WeightedChanceSummonGoal(this, Config.Mobs.BEHOLDER.summonDaemonCooldownTime.get(), 10, Registration.DAEMON_ENTITY_TYPE.get(), 1, 1));
 
 		// NOTE unaffected by Boulders
 
@@ -89,12 +86,17 @@ public class Beholder extends Beholderkin {
 	public static AttributeSupplier.Builder prepareAttributes() {
 		return Mob.createMobAttributes()
 				.add(Attributes.ATTACK_DAMAGE, 8.0D)
-				.add(Attributes.ATTACK_KNOCKBACK, 2.0D)
+				.add(Attributes.ATTACK_KNOCKBACK, 1.5D)
 				.add(Attributes.ARMOR, 3.0D)
 				.add(Attributes.ARMOR_TOUGHNESS, 3.0D)
 				.add(Attributes.MAX_HEALTH, 36.0)
 				.add(Attributes.FOLLOW_RANGE, 100.0)
 				.add(Attributes.MOVEMENT_SPEED, 0.20F);
+	}
+
+	@Override
+	public int getAmbientSoundInterval() {
+		return 160;
 	}
 
 	@Nullable

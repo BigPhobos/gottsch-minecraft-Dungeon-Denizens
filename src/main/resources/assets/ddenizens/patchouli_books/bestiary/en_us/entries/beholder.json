@@ -12,6 +12,6 @@
         "border": true
       },
       "$(l)Number$(): 1$(br)$(l)Size$(): Large$(br)$(l)Level$(): Mini Boss$(br)$(l)Rarity$(): Rare$(br)$(l)Movement$(): Flies/Hovers$(br)$(l)Speed$(): Normal$(br)$(l)Health$(): 36hp$(br)$(l)Damage/Strength$(): 8hp$(br)$(l)Daylight$(): Yes$(br)$(l)Despawn$(): Yes$(br)$(l)Spawns$(): Underworld, Nether",
-      "$(l)Weapons/Specials$():$(br)- Randomly casts one of four spells: Paralysis, Harm, Disintegrate and Disarm.$(br)- Can summon one minion at a time: Headless, Orc, Spectator, or Blaze.$(br)- Every 2 minutes, has a 10% chance to summon a Daemon."
+      "$(l)Weapons/Specials$():$(br)- Randomly casts one of four spells: Paralysis, Harm, Disintegrate and Disarm.$(br)- Can summon one minion at a time: Headless, Orc, Spectator, or Blaze.$(br)- Has a small chance to summon a Daemon."
   ]
 }

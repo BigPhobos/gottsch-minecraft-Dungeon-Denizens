@@ -75,7 +75,7 @@ DDLanguageProvider extends LanguageProvider {
         add(Registration.SKELETON_WARRIOR_TYPE.get(), "Skeleton Warrior");
         add(Registration.SKELETON_WARRIOR_EGG.get(), "Skeleton Warrior Spawn Egg");
 
-        add(Registration.SLOW_SPELL_ITEM.get(), "Slow Spell");
+        add(Registration.PARALYSIS_SPELL_ITEM.get(), "Slow Spell");
         add(Registration.HARM_SPELL_ITEM.get(), "Harm Spell");
         add(Registration.DISINTEGRATE_SPELL_ITEM.get(), "Disintegrate Spell");
         //add(Registration.DISARM_SPELL_ITEM.get(), "Disarm Spell");
@@ -105,6 +105,8 @@ DDLanguageProvider extends LanguageProvider {
         add(LangUtil.tooltip("stats.level.mini_boss"), "Mini-Boss");
         add(LangUtil.tooltip("stats.level.boss"), "Boss");
         add(LangUtil.tooltip("stats.rarity"), "Rarity: %s");
+        add(LangUtil.tooltip("stats.rarity.common"), "Common");
+        add(LangUtil.tooltip("stats.rarity.uncommon"), "Uncommon");
         add(LangUtil.tooltip("stats.rarity.scarce"), "Scarce");
         add(LangUtil.tooltip("stats.rarity.rare"), "Rare");
         add(LangUtil.tooltip("stats.rarity.very_rare"), "Very Rare");

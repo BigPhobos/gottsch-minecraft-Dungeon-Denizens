@@ -37,7 +37,7 @@ public class BeholderEggItem extends DDEggItem {
             tooltip.add(Component.translatable(LangUtil.tooltip("stats.specials")));
             tooltip.add(Component.literal("- Randomly casts one of four spells: Paralysis, Harm, Disintegrate and Disarm."));
             tooltip.add(Component.literal("- Can summon one minion at a time: Headless, Orc, Spectator, or Blaze."));
-            tooltip.add(Component.literal("- Every 2 minutes, has a 10% chance to summon a Daemon."));
+            tooltip.add(Component.literal("- Has a small chance to summon a Daemon."));
         });
     }
 }

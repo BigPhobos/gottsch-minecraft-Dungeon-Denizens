@@ -19,7 +19,6 @@
  */
 package com.someguyssoftware.ddenizens.entity.monster;
 
-import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.config.Config.CommonSpawnConfig;
 import com.someguyssoftware.ddenizens.config.Config.IMobConfig;
@@ -27,16 +26,24 @@ import com.someguyssoftware.ddenizens.config.Config.INetherMobConfig;
 import com.someguyssoftware.ddenizens.config.Config.NetherSpawnConfig;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
+import java.util.UUID;
+import java.util.function.Predicate;
+
+// TODO could implement vanilla TraceableEntity for getOwner()
 /**
  * @author Mark Gottschling on Apr 13, 2022
  *
@@ -46,6 +53,13 @@ public abstract class DenizensMonster extends Monster implements IDenizensMonste
 	private static final int UNDERGROUND_HEIGHT = 60;
 
 	private MonsterSize size;
+
+	public final Predicate<LivingEntity> playerNotOwner = (entity) -> {
+		if (entity instanceof Player) {
+			return getSummonedOwner() == null || !(getSummonedOwner() instanceof Player);
+		}
+		return true;
+	};
 
 	protected DenizensMonster(EntityType<? extends Monster> mob, Level level, MonsterSize size) {
 		super(mob, level);
@@ -92,6 +106,37 @@ public abstract class DenizensMonster extends Monster implements IDenizensMonste
 		}
 		else {
 			return DenizensMonster.checkDDMonsterSpawnRules(mob, level, spawnType, pos, random);
+		}
+	}
+
+	@Override
+	public void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+
+		if (this.getSummonedOwner() != null) {
+			if (this.getSummonedOwner() instanceof Player) {
+				tag.putBoolean(PLAYER_OWNER, true);
+			} else {
+				tag.putBoolean(PLAYER_OWNER, false);
+			}
+			tag.putUUID(SUMMONED_OWNER, getSummonedOwner().getUUID());
+		}
+	}
+
+	@Override
+	public void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+
+		if (tag.hasUUID(SUMMONED_OWNER)) {
+			UUID uuid = tag.getUUID(SUMMONED_OWNER);
+
+			LivingEntity owner = null;
+			if (tag.contains(PLAYER_OWNER) && tag.getBoolean(PLAYER_OWNER)) {
+				owner = this.level().getPlayerByUUID(uuid);
+			} else {
+				owner = (LivingEntity)((ServerLevel)this.level()).getEntity(uuid);
+			}
+			this.setSummonedOwner(owner);
 		}
 	}
 

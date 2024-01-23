@@ -39,8 +39,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+
+import java.util.List;
 
 /**
  *
@@ -90,8 +93,6 @@ public class DisarmSpell extends AbstractDDHurtingProjectile implements ItemSupp
 
 	@Override
 	public void clientSideTick() {
-		// TODO add a particle that is emitted in a circular (sin()) fashion as the
-		// ball travels. See daemon for code of calculating circular positioning.
 		super.clientSideTick();
 	}
 
@@ -101,11 +102,17 @@ public class DisarmSpell extends AbstractDDHurtingProjectile implements ItemSupp
 	}
 
 	@Override
-	protected void onHit(HitResult hitResult) {
-		super.onHit(hitResult);
+	protected void onHitBlock(BlockHitResult p_37258_) {
+		super.onHitBlock(p_37258_);
 		if (!this.level().isClientSide) {
 			this.discard();
 		}
+	}
+
+	@Override
+	protected void onHit(HitResult hitResult) {
+		super.onHit(hitResult);
+		this.playSound(SoundEvents.PLAYER_SPLASH_HIGH_SPEED, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
 	}
 
 	@Override
@@ -118,32 +125,27 @@ public class DisarmSpell extends AbstractDDHurtingProjectile implements ItemSupp
 				this.playSound(SoundEvents.ALLAY_ITEM_TAKEN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
 
 				ServerPlayer player = (ServerPlayer) target;
+				ItemStack itemStack = ItemStack.EMPTY;
+				List<EquipmentSlot> equippedSlots;
+				EquipmentSlot slot = null;
 				if (level().getGameTime() % 4 == 0) {
-					EquipmentSlot slot = EquipmentUtil.ARMOR_SLOTS[player.getRandom().nextInt(EquipmentUtil.ARMOR_SLOTS.length)];
-					ItemStack itemStack = player.getItemBySlot(slot);
+					equippedSlots = EquipmentUtil.ARMOR_LIST.stream().filter(s -> player.getItemBySlot(s) != ItemStack.EMPTY).toList();
+				} else {
+					// disarm a held item
+					equippedSlots = EquipmentUtil.HANDHELD_LIST.stream().filter(s -> player.getItemBySlot(s) != ItemStack.EMPTY).toList();
+				}
+				if (equippedSlots != null && !equippedSlots.isEmpty()) {
+					slot = equippedSlots.get(player.getRandom().nextInt(equippedSlots.size()));
+					itemStack = player.getItemBySlot(slot);
 					if (itemStack != ItemStack.EMPTY) {
 						player.setItemSlot(slot, ItemStack.EMPTY);
 						Containers.dropItemStack(level(),
-								(double) player.blockPosition().getX(), (double) player.blockPosition().getY(), player.blockPosition().getZ(),
-								itemStack);
-					}
-				} else {
-					// disarm a held item
-					InteractionHand hand;
-					if (level().getGameTime() % 2 == 0) {
-						hand = InteractionHand.MAIN_HAND;
-					} else {
-						hand = InteractionHand.OFF_HAND;
-					}
-					ItemStack itemStack = player.getItemInHand(hand);
-					if (itemStack != ItemStack.EMPTY) {
-						player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-						Containers.dropItemStack(level(),
-								(double) player.blockPosition().getX(), (double) player.blockPosition().getY(), player.blockPosition().getZ(),
+								(double) player.position().x + 0.5, (double) player.position().y + 0.5, player.position().z + 0.5,
 								itemStack);
 					}
 				}
 			}
+			this.discard();
 		}
 	}
 
@@ -162,7 +164,7 @@ public class DisarmSpell extends AbstractDDHurtingProjectile implements ItemSupp
 	// TODO something else than smoke
 	@Override
 	protected ParticleOptions getTrailParticle() {
-		return ParticleTypes.ENCHANT;
+		return ParticleTypes.SPLASH;
 	}
 
 	@Override

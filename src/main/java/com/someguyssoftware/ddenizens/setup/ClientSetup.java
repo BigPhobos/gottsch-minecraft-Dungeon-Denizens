@@ -83,18 +83,18 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.DAEMON_ENTITY_TYPE.get(), DaemonRenderer::new);
 		event.registerEntityRenderer(Registration.SKELETON_WARRIOR_TYPE.get(), SkeletonWarriorRenderer::new);
 
-		event.registerEntityRenderer(Registration.SLOW_SPELL_ENTITY_TYPE.get(), (provider) -> {
+		event.registerEntityRenderer(Registration.PARALYSIS_SPELL_ENTITY_TYPE.get(), (provider) -> {
             // 1.0 = scale, true = full bright
-        	return new ThrownItemRenderer<>(provider, 1.0F, true);
+        	return new ThrownItemRenderer<>(provider, 1.25F, true);
          });
         event.registerEntityRenderer(Registration.HARM_SPELL_ENTITY_TYPE.get(), (provider) -> {
-        	return new ThrownItemRenderer<>(provider, 1.0F, true);
+        	return new ThrownItemRenderer<>(provider, 1.25F, true);
          });
 		event.registerEntityRenderer(Registration.DISINTEGRATE_SPELL_ENTITY_TYPE.get(), (provider) -> {
-			return new ThrownItemRenderer<>(provider, 1.5F, true);
+			return new ThrownItemRenderer<>(provider, 1.25F, true);
 		});
 		event.registerEntityRenderer(Registration.DISARM_SPELL_ENTITY_TYPE.get(), (provider) -> {
-			return new ThrownItemRenderer<>(provider, 1.5F, true);
+			return new ThrownItemRenderer<>(provider, 1.25F, true);
 		});
         event.registerEntityRenderer(Registration.FIRESPOUT_SPELL_ENTITY_TYPE.get(), (provider) -> {
         	return new ThrownItemRenderer<>(provider, 1.5F, true);

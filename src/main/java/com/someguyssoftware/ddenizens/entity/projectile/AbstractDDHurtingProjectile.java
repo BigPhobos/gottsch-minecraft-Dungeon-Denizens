@@ -164,7 +164,7 @@ public abstract class AbstractDDHurtingProjectile extends Projectile {
 		}
 
 		this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale((double)f));
-		this.level().addParticle(this.getTrailParticle(), d0, d1+ 0.5D, d2, 0.0D, 0.0D, 0.0D);
+		this.level().addParticle(this.getTrailParticle(), d0, d1, d2, 0.0D, 0.0D, 0.0D);
 		this.setPos(d0, d1, d2);
 	}
 

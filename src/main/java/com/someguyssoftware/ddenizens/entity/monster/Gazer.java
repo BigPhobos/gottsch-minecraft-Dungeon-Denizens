@@ -43,20 +43,20 @@ public class Gazer extends Beholderkin {
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(4, new BeholderkinBiteGoal(this, Config.Mobs.GAZER.biteCooldownTime.get()));
-		this.goalSelector.addGoal(5, new BeholderkinRandomFloatAroundGoal(this, 5));
+		this.goalSelector.addGoal(5, new BeholderkinRandomFloatAroundGoal(this, Config.Mobs.GAZER.maxFloatHeight.get()));
 		this.goalSelector.addGoal(7, new BeholderkinLookGoal(this));
 
 		WeightedCollection<Integer, AbstractDDHurtingProjectile> spells = new WeightedCollection<>();
-		spells.add(3, new ParalysisSpell(Registration.SLOW_SPELL_ENTITY_TYPE.get(), level()));
+		spells.add(3, new ParalysisSpell(Registration.PARALYSIS_SPELL_ENTITY_TYPE.get(), level()));
 		spells.add(1, new HarmSpell(Registration.HARM_SPELL_ENTITY_TYPE.get(), level()));
-		this.goalSelector.addGoal(6, new WeightedCastProjectileGoal(this, Config.Mobs.GAZER.castChargeTime.get(), spells));
+		this.goalSelector.addGoal(6, new WeightedCastProjectileGoal(this, Config.Mobs.GAZER.spellChargeTime.get(), spells));
 
 		WeightedCollection<Double, EntityType<? extends Mob>> mobs = new WeightedCollection<>();
 		mobs.add(33D, Registration.HEADLESS_ENTITY_TYPE.get());
 		mobs.add(33D, Registration.ORC_ENTITY_TYPE.get());
 		mobs.add(34D, EntityType.ZOMBIE);
 		mobs.add(20D, EntityType.VEX);
-		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, mobs));
+		this.goalSelector.addGoal(6, new WeightedChanceSummonGoal(this, Config.Mobs.GAZER.summonCooldownTime.get(), 100, mobs, Config.Mobs.GAZER.minSummonSpawns.get(), Config.Mobs.GAZER.maxSummonSpawns.get()));
 
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
 			if (entity instanceof Boulder) {
@@ -81,6 +81,11 @@ public class Gazer extends Beholderkin {
 				.add(Attributes.MAX_HEALTH, 18.0)
 				.add(Attributes.FOLLOW_RANGE, 100.0)
 				.add(Attributes.MOVEMENT_SPEED, 0.18F);
+	}
+
+	@Override
+	public int getAmbientSoundInterval() {
+		return 100;
 	}
 
 	@Nullable
