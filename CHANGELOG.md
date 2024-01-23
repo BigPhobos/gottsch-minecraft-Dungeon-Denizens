@@ -1,4 +1,5 @@
 # Changelog for Dungeon Denizens 1.20.1
+<img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/ddenizens_curseforge_logo.png" width="128px">
 
 All notable changes to this project will be documented in this file.
 
@@ -25,12 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Beholder mob.
+
   <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/beholder-plaque.png" width="128px">
 
 - Death Tyrant mob.
+
   <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/death-tyrant-plaque.png" width="128px">
 
 - Spectator mob.
+
   <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/spectator-plaque.png" width="128px">
 
 - Skeleton Warrior mob.
