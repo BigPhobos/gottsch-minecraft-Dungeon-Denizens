@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -46,6 +46,7 @@ import net.minecraft.world.entity.Entity;
 public class GhoulModel<T extends Entity> extends DDModel<T> {
 	public static final String MODEL_NAME = "ghoul_model";
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, MODEL_NAME), "main");
+
 	private final ModelPart torso;
 	private final ModelPart head;
 	private final ModelPart body;

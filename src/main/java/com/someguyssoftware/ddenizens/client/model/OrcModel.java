@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -114,6 +114,14 @@ public class OrcModel<T extends LivingEntity> extends HumanoidModel<T> implement
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		// TODO fix this - it is not needed - see SkeletonModel
+		// MeshDefinition meshdefinition = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
+		// the above creates the mesh from the humanoid.
+		// a problem arises that the parts are all based from the root, and not in bones/sub-parts
+		// should be able to work around this, as long as you set the Humanoid properties with the correct
+		// path to the named part. So you could Humanoid without any of the original parts
+		// (but the arms probably have to be in the same position for the item to place properly).
 
 		////// hackery: add humanoid parts here because the HumanoidModel.createMesh() is not called. ensure not to actually render them later
 		partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, CubeDeformation.NONE), PartPose.offset(0.0F, 0.0F, 0.0F));

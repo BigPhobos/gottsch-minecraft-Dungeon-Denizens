@@ -44,7 +44,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
  * @author Mark Gottschling on Apr 12, 2022
  *
  */
-public class Shadow extends DDMonster {
+public class Shadow extends DenizensMonster {
 
 	private static final int NORMAL_DIFFICULTY_SECONDS = 10;
 	private static final int HARD_DIFFICULTY_SECONDS = 20;
@@ -58,7 +58,8 @@ public class Shadow extends DDMonster {
 	 * @param level
 	 */
 	public Shadow(EntityType<? extends Monster> entityType, Level level) {
-		super(entityType, level);
+
+		super(entityType, level, MonsterSize.MEDIUM);
 	}
 
 	protected void registerGoals() {

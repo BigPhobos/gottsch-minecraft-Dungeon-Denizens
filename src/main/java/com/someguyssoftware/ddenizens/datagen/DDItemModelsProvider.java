@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -40,30 +40,58 @@ public class DDItemModelsProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
     	// projectiles
-        singleTexture("slowball",
-                mcLoc("item/generated"), "layer0", modLoc("item/slowball"));
+        singleTexture(Registration.PARALYSIS_SPELL_ITEM.getId().getPath(),
+                mcLoc("item/generated"), "layer0", modLoc("item/slow"));
         
-        singleTexture("harmball",
-                mcLoc("item/generated"), "layer0", modLoc("item/harmball"));
-        
+        singleTexture("harm",
+                mcLoc("item/generated"), "layer0", modLoc("item/harm"));
+
+        singleTexture("disarm",
+                mcLoc("item/generated"), "layer0", modLoc("item/disarm"));
+
+        singleTexture("disintegrate",
+                mcLoc("item/generated"), "layer0", modLoc("item/disintegrate"));
+
         singleTexture("rock",
                 mcLoc("item/generated"), "layer0", modLoc("item/rock"));
     	
         // weapons
         singleTexture("club",
-        		mcLoc("item/generated"), "layer0", modLoc("item/club"));
+        		mcLoc("item/handheld"), "layer0", modLoc("item/club"));
         
         singleTexture("spiked_club",
-        		mcLoc("item/generated"), "layer0", modLoc("item/spiked_club"));
-        
+        		mcLoc("item/handheld"), "layer0", modLoc("item/spiked_club"));
+
+        singleTexture(Registration.RUSTY_IRON_AXE1.getId().getPath(),
+                modLoc("item/single_edge_sword"), "layer0", modLoc("item/" + Registration.RUSTY_IRON_AXE1.getId().getPath()));
+        singleTexture(Registration.RUSTY_IRON_AXE2.getId().getPath(),
+                modLoc("item/single_edge_sword"), "layer0", modLoc("item/" + Registration.RUSTY_IRON_AXE2.getId().getPath()));
+        singleTexture(Registration.RUSTY_IRON_SWORD1.getId().getPath(),
+                mcLoc("item/handheld"), "layer0", modLoc("item/"
+                        + Registration.RUSTY_IRON_SWORD1.getId().getPath()));
+        singleTexture(Registration.RUSTY_IRON_SWORD2.getId().getPath(),
+                mcLoc("item/handheld"), "layer0", modLoc("item/"
+                        + Registration.RUSTY_IRON_SWORD2.getId().getPath()));
+        singleTexture(Registration.RUSTY_IRON_SWORD3.getId().getPath(),
+                mcLoc("item/handheld"), "layer0", modLoc("item/"
+                        + Registration.RUSTY_IRON_SWORD3.getId().getPath()));
+        singleTexture(Registration.RUSTY_IRON_SWORD4.getId().getPath(),
+                modLoc("item/single_edge_sword"), "layer0", modLoc("item/"
+                        + Registration.RUSTY_IRON_SWORD4.getId().getPath()));
+
         // eggs
-    	withExistingParent(Registration.HEADLESS, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.ORC, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.GHOUL, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.GAZER, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.BOULDER, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.SHADOW, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.SHADOWLORD, mcLoc("item/template_spawn_egg"));
-    	withExistingParent(Registration.DAEMON, mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.HEADLESS_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.ORC_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.GHOUL_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.BEHOLDER_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.DEATH_TYRANT_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.GAZER_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.SPECTATOR_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.BOULDER_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.SHADOW_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.SHADOWLORD_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    	withExistingParent(Registration.DAEMON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.SKELETON_WARRIOR_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+
     }
 }

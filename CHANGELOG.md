@@ -1,9 +1,59 @@
 # Changelog for Dungeon Denizens 1.20.1
+<img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/ddenizens_curseforge_logo.png" width="128px">
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.2.0] - 2024-01-09 - Beholderkin Update
+
+### Changed
+
+- Fixed Gazer LAYER_LOCATION
+- Refactored and rebalanced Gazer (lesser beholderkin now).
+- Fixed CommonSpawnConfig constructor. There was a mix-up with the weight and minSpawn, maxSpawn values.
+- Fixed some config label naming.
+- Refactored spawn rules classes for nether mobs.
+- Renamed spell classes and resources.
+- Updated Daemon's jaw and horns.
+- Updated Daemon's animation to include mouth bob.
+- Reduced Daemon's speed, knockback.
+- Daemon and Shadowlord will now despawn;
+- Nether spawnable mobs only spawn in the nether wastes
+- Reduced spawn weights for all nether spawning mobs
+
+### Added
+
+- Beholder mob.
+
+  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/beholder-plaque.png" width="128px">
+
+- Death Tyrant mob.
+
+  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/death-tyrant-plaque.png" width="128px">
+
+- Spectator mob.
+
+  <img src="https://github.com/gottsch/gottsch-minecraft-Dungeon-Denizens/wiki/images/spectator-plaque.png" width="128px">
+
+- Skeleton Warrior mob.
+- Disintegrate spell.
+- Disarm spell.
+- Daemon glowing eyes layer.
+- Owner and lifespan properties to Daemon if summoned.
+- Shadow glowing eyes layer.
+- Mob "enable" config option.
+- Supports Patchouli - DD Bestiary book contains new mobs (older mobs not complete). 
+- Bare-bones tooltips on mob eggs (similar but reduced info as DD Bestiary book).
+- Add custom sounds to Daemon and the beholderkin mobs.
+- Supports Biomes O Plenty
+
+### Next Update Preview (aka Shadowlord Update)
+
+- Complete overhaul of Shadowlord -> model, sounds, abilities
+- Refactor Shadow abilities
+- Add Xorn**
 
 ## [1.1.0] - 2023-10-18
 

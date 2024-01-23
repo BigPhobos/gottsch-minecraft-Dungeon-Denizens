@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -43,6 +43,15 @@ import net.minecraft.world.phys.HitResult;
  */
 public class Rock extends AbstractDDHurtingProjectile implements ItemSupplier {
 	private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(Rock.class, EntityDataSerializers.ITEM_STACK);
+
+	/**
+	 *
+	 * @param level
+	 * @return
+	 */
+	public Rock create(Level level) {
+		return new Rock(Registration.ROCK_ENTITY_TYPE.get(), level);
+	}
 
 	/**
 	 * 

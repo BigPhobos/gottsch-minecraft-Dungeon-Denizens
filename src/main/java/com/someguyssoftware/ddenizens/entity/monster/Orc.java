@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -63,7 +63,7 @@ import net.minecraft.world.phys.Vec3;
  * @author Mark Gottschling on Apr 27, 2022
  *
  */
-public class Orc extends Monster {
+public class Orc extends DenizensMonster {
 	private static final EntityDataAccessor<Byte> DATA = SynchedEntityData.defineId(Orc.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Boolean> IS_RANGED = SynchedEntityData.defineId(Orc.class, EntityDataSerializers.BOOLEAN);
 	private static final String DATA_TAG = "data";
@@ -86,7 +86,7 @@ public class Orc extends Monster {
 	 * @param level
 	 */
 	public Orc(EntityType<? extends Monster> entityType, Level level) {
-		super(entityType, level);
+		super(entityType, level, MonsterSize.MEDIUM);
 		Arrays.fill(this.handDropChances, 0.25F);
 //		this.reassessWeaponGoal();
 	}
@@ -371,7 +371,7 @@ public class Orc extends Monster {
 					double y = target.getY(0.5D) - (this.orc.getY(0.5D));
 					double z = target.getZ() - (this.orc.getZ() + vec3.z * 1.0D);
 					Rock rock = new Rock(Registration.ROCK_ENTITY_TYPE.get(), orc.level());
-					rock.init(this.orc, orc.getX(), orc.getY(), orc.getZ(), x, y, z);
+					rock.init(this.orc, x, y, z);
 					rock.setPos(this.orc.getX() + vec3.x * 1.0D, this.orc.getY(0.5D), rock.getZ() + vec3.z * 1.0);
 					orc.level().addFreshEntity(rock);					
 					chargeTime = 0;

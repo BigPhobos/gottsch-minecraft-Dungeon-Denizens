@@ -1,6 +1,6 @@
 /*
  * This file is part of  Dungeon Denizens.
- * Copyright (c) 2021, Mark Gottschling (gottsch)
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
  * 
  * All rights reserved.
  *
@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.entity.ai.goal.target.HeadlessHurtByTargetGoal;
 
 import net.minecraft.server.level.ServerPlayer;
@@ -53,7 +52,7 @@ import net.minecraft.world.phys.AABB;
  * @author Mark Gottschling on Apr 1, 2022
  *
  */
-public class Headless extends Monster {
+public class Headless extends DenizensMonster {
 
 	/**
 	 * 
@@ -61,7 +60,8 @@ public class Headless extends Monster {
 	 * @param level
 	 */
 	public Headless(EntityType<? extends Monster> entityType, Level level) {
-		super(entityType, level);
+
+		super(entityType, level, MonsterSize.MEDIUM);
 	}
 
 	@Override
@@ -82,12 +82,14 @@ public class Headless extends Monster {
 		
 		// target goals
 		/*
-		 * setAlertOthers() is opposite of what you would expect. if a value is passed in,
+		 * vanilla setAlertOthers() is opposite of what you would expect. if a value is passed in,
 		 * that is the exception list, as opposed to the included list.
-		 * setAlertOthers() will alert ALL mobs based on class hierarchry of instanceof Mob.
+		 * vanilla setAlertOthers() will alert ALL mobs based on class hierarchry of instanceof Mob.
+		 *
+		 * Headless setAlertOthers() alerts only those listed.
 		 */
 		// for the included list. ie this mob will alert the other specific listed mobs.
-		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class, Gazer.class));
+		this.targetSelector.addGoal(1, (new HeadlessHurtByTargetGoal(this)).setAlertOthers(Headless.class, Gazer.class, Beholder.class));
 		
 		/*
 		 * determines who to target

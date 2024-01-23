@@ -1,0 +1,140 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "biomesoplenty:aspen_glade",
+    "biomesoplenty:auroral_garden",
+    "biomesoplenty:fir_clearing",
+    "biomesoplenty:bayou",
+    "biomesoplenty:bod",
+    "biomesoplenty:clover_patch",
+    "biomesoplenty:cold_desert",
+    "biomesoplenty:coniferous_forest",
+    "biomesoplenty:crag",
+    "biomesoplenty:crystalline_chasm",
+    "biomesoplenty:dead_forest",
+    "biomesoplenty:dryland",
+    "biomesoplenty:dune_beach",
+    "biomesoplenty:erupting_inferno",
+    "biomesoplenty:field",
+    "biomesoplenty:fir_clearing",
+    "biomesoplenty:loodplain",
+    "biomesoplenty:forested_field",
+    "biomesoplenty:fungal_jungle",
+    "biomesoplenty:glowing_grotto",
+    "biomesoplenty:grassland",
+    "biomesoplenty:gravel_beach",
+    "biomesoplenty:highland",
+    "biomesoplenty:hot_springs",
+    "biomesoplenty:jacaranda_glade",
+    "biomesoplenty:jade_cliffs",
+    "biomesoplenty:lavender_field",
+    "biomesoplenty:lush_desert",
+    "biomesoplenty:lush_savanna",
+    "biomesoplenty:maple_woods",
+    "biomesoplenty:marsh",
+    "biomesoplenty:mediterranean_forest",
+    "biomesoplenty:moor",
+    "biomesoplenty:muskeg",
+    "biomesoplenty:mystic_grove",
+    "biomesoplenty:old_growth_dead_forest",
+    "biomesoplenty:old_growth_woodland",
+    "biomesoplenty:ominous_woods",
+    "biomesoplenty:orchard",
+    "biomesoplenty:origin_valley",
+    "biomesoplenty:pasture",
+    "biomesoplenty:prairie",
+    "biomesoplenty:pumpkin_patch",
+    "biomesoplenty:rainforest",
+    "biomesoplenty:redwood_forest",
+    "biomesoplenty:rocky_rainforest",
+    "biomesoplenty:rocky_shrubland",
+    "biomesoplenty:scrubland",
+    "biomesoplenty:seasonal_forest",
+    "biomesoplenty:shrubland",
+    "biomesoplenty:snowblossom_grove",
+    "biomesoplenty:snowy_coniferous_forest",
+    "biomesoplenty:snowy_fir_clearing",
+    "biomesoplenty:snowy_maple_woods",
+    "biomesoplenty:spider_nest",
+    "biomesoplenty:tropics",
+    "biomesoplenty:tundra",
+    "biomesoplenty:undergrowth",
+    "biomesoplenty:visceral_heap",
+    "biomesoplenty:volcano",
+    "biomesoplenty:volcanic_plains",
+    "biomesoplenty:wasteland",
+    "biomesoplenty:wasteland_steppe",
+    "biomesoplenty:wetland",
+    "biomesoplenty:wintry_origin_valley",
+    "biomesoplenty:withered_abyss",
+    "biomesoplenty:woodland"
+  ],
+  "spawners": [
+    {
+      "type": "ddenizens:beholder",
+      "weight": 10,
+      "minCount": 1,
+      "maxCount":1
+    },
+    {
+      "type": "ddenizens:daemon",
+      "weight": 1,
+      "minCount": 1,
+      "maxCount":1
+    },
+    {
+      "type": "ddenizens:death_tyrant",
+      "weight": 10,
+      "minCount": 1,
+      "maxCount":1
+    },
+    {
+      "type": "ddenizens:gazer",
+      "weight": 25,
+      "minCount": 1,
+      "maxCount":1
+    },
+    {
+      "type": "ddenizens:headless",
+      "weight": 40,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "ddenizens:ghoul",
+      "weight": 25,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "ddenizens:orc",
+      "weight": 35,
+      "minCount": 1,
+      "maxCount":1
+    },
+    {
+      "type": "ddenizens:shadow",
+      "weight": 30,
+      "minCount": 1,
+      "maxCount":1
+    },
+    {
+      "type": "ddenizens:shadowlord",
+      "weight": 15,
+      "minCount": 1,
+      "maxCount":1
+    },
+    {
+      "type": "ddenizens:skeleton_warrior",
+      "weight": 50,
+      "minCount": 1,
+      "maxCount":2
+    },
+    {
+      "type": "ddenizens:spectator",
+      "weight": 25,
+      "minCount": 1,
+      "maxCount":1
+    }
+  ]
+}

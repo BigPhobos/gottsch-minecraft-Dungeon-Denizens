@@ -1,15 +1,34 @@
-/**
- * 
+/*
+ * This file is part of  Dungeon Denizens.
+ * Copyright (c) 2022 Mark Gottschling (gottsch)
+ *
+ * All rights reserved.
+ *
+ * Dungeon Denizens is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Dungeon Denizens is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Dungeon Denizens.  If not, see <http://www.gnu.org/licenses/lgpl>.
  */
 package com.someguyssoftware.ddenizens.entity.monster;
 
 import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.entity.projectile.FireSpout;
+import com.someguyssoftware.ddenizens.entity.ai.goal.target.SummonedOwnerTargetGoal;
+import com.someguyssoftware.ddenizens.entity.projectile.FireSpoutSpell;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
@@ -32,16 +51,21 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 /**
  * @author Mark Gottschling on Apr 6, 2022
  *
  */
-public class Daemon extends DDMonster {
+public class Daemon extends DenizensMonster {
 	public static final double MELEE_DISTANCE_SQUARED = 25D;
 
 	private double flameParticlesTime;
 	private int particlesReset = 4;
+	// TODO needs to be saved
+	private int lifespanCount = 0;
 	
 	/**
 	 * 
@@ -49,8 +73,8 @@ public class Daemon extends DDMonster {
 	 * @param level
 	 */
 	public Daemon(EntityType<? extends Monster> entityType, Level level) {
-		super(entityType, level);
-		isPersistenceRequired();
+		super(entityType, level, MonsterSize.LARGE);
+		setPersistenceRequired();
 		this.xpReward = 10;
 	}
 
@@ -62,13 +86,22 @@ public class Daemon extends DDMonster {
 		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 10.0F, 0.2F));
 		this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
+		this.targetSelector.addGoal(2, new SummonedOwnerTargetGoal(this));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
 			if (entity instanceof Boulder) {
+				if (getSummonedOwner() != null && getSummonedOwner() instanceof Player) {
+					return false;
+				}
 				return ((Boulder)entity).isActive();
 			}
 			return false;
 		}));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, (entity) -> {
+			if (entity instanceof Player) {
+				return getSummonedOwner() == null || !(getSummonedOwner() instanceof Player);
+			}
+			return true;
+		}));
 	}
 
 	/**
@@ -82,8 +115,8 @@ public class Daemon extends DDMonster {
 				.add(Attributes.ARMOR, 20.0D)
 				.add(Attributes.ARMOR_TOUGHNESS, 5.0D)
 				.add(Attributes.KNOCKBACK_RESISTANCE, 0.6D)
-				.add(Attributes.ATTACK_KNOCKBACK, 4.5D)
-				.add(Attributes.MOVEMENT_SPEED, 0.25D)
+				.add(Attributes.ATTACK_KNOCKBACK, 2.0D)
+				.add(Attributes.MOVEMENT_SPEED, 0.2D)
 				.add(Attributes.FOLLOW_RANGE, 50D);
 	}
 
@@ -125,8 +158,70 @@ public class Daemon extends DDMonster {
 			}
 			flameParticlesTime++;
 			flameParticlesTime = flameParticlesTime % 360;
+		} else if (!this.level().isClientSide) {
+			// if daemon has a owner
+			if (getSummonedOwner() != null) {
+				lifespanCount++;
+			}
+			if (lifespanCount >= getSummonedLifespan()) {
+				this.discard();
+			}
 		}
 		super.aiStep();
+	}
+
+	@Override
+	public void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+
+		if (this.getSummonedOwner() != null) {
+			if (this.getSummonedOwner() instanceof Player) {
+				tag.putBoolean("playerOwner", true);
+			} else {
+				tag.putBoolean("playerOwner", false);
+			}
+			tag.putUUID("summonedOwner", getSummonedOwner().getUUID());
+		}
+
+		tag.putInt("lifespanCount", this.lifespanCount);
+	}
+
+	@Override
+	public void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+
+		if (tag.hasUUID("summonedOwner")) {
+			UUID uuid = tag.getUUID("summonedOwner");
+
+			LivingEntity owner = null;
+			if (tag.contains("playerOwner") && tag.getBoolean("playerOwner")) {
+				owner = this.level().getPlayerByUUID(uuid);
+			} else {
+				owner = (LivingEntity)((ServerLevel)this.level()).getEntity(uuid);
+			}
+			this.setSummonedOwner(owner);
+		}
+
+		if (tag.contains("lifespanCount")) {
+			this.lifespanCount = tag.getInt("lifespanCount");
+
+		}
+	}
+
+	@Override
+	public int getAmbientSoundInterval() {
+		return 160;
+	}
+
+	@Nullable
+	@Override
+	protected SoundEvent getAmbientSound() {
+		return Registration.AMBIENT_DAEMON.get();
+	}
+
+	@Override
+	public int getSummonedLifespan() {
+		return Config.Mobs.DAEMON.summonedLifespan.get();
 	}
 
 	/**
@@ -272,7 +367,7 @@ public class Daemon extends DDMonster {
 					double z2 = z;
 
 					// create the firespout and initialize
-					FireSpout spell = new FireSpout(Registration.FIRESPOUT_ENTITY_TYPE.get(), daemon.level());
+					FireSpoutSpell spell = new FireSpoutSpell(Registration.FIRESPOUT_SPELL_ENTITY_TYPE.get(), daemon.level());
 					spell.init(daemon, x, y, z, x2, y2, z2);
 
 					// add the entity to the level
