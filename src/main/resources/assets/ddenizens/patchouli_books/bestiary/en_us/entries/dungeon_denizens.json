@@ -1,0 +1,14 @@
+{
+  "name": "Dungeon Denizens",
+  "icon": "minecraft:book",
+  "category": "ddenizens:about",
+  "pages": [
+      {
+        "type": "patchouli:link",
+        "url": "https://legacy.curseforge.com/minecraft/mc-mods/dungeon-denizens",
+        "link_text": "Visit",
+        "title": "",
+        "text": "Click the button to visit Dungeon Denizen's project page."
+      }
+  ]
+}

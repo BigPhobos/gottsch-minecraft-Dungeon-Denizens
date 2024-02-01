@@ -38,6 +38,9 @@ import net.minecraft.world.level.levelgen.Heightmap;
  */
 public class WeightedChanceSummonGoal extends ChanceSummonGoal {
     private static final int DEFAULT_COOLDOWN_TIME = 1200;
+    private static final double SUMMON_DISTANCE = 32;
+    private static final double SUMMON_DISTSNCE_SQ = SUMMON_DISTANCE * SUMMON_DISTANCE;
+
     private final Mob mob;
     private final WeightedCollection<Double, EntityType<? extends Mob>> mobs;
     private int minMobs;
@@ -79,7 +82,7 @@ public class WeightedChanceSummonGoal extends ChanceSummonGoal {
         if (target != null) {
             // increase cooldown count regardless is the beholderkin can see the target or not.
             ++this.cooldownCount;
-            if (target.distanceToSqr(this.mob) < 1024.0D && this.mob.hasLineOfSight(target)) {
+            if (target.distanceToSqr(this.mob) < SUMMON_DISTSNCE_SQ && this.mob.hasLineOfSight(target)) {
                 Level level = this.mob.level();
                 if (this.getCooldownCount() >= getCooldownTime()) {
                     if (RandomHelper.checkProbability(mob.getRandom(), getProbability())) {
@@ -106,7 +109,7 @@ public class WeightedChanceSummonGoal extends ChanceSummonGoal {
 
                             boolean spawnSuccess = super.spawn((ServerLevel) level, level.random, this.mob, mob, new Coords(this.mob.blockPosition().getX(), y + 1, this.mob.blockPosition().getZ()), target);
                             if (!level.isClientSide() && spawnSuccess) {
-                                DD.LOGGER.info("debug! -> {}", this.mob.blockPosition());
+//                                DD.LOGGER.debug("debug! -> {}", this.mob.blockPosition());
                                 for (int p = 0; p < 20; p++) {
                                     double xSpeed = this.mob.getRandom().nextGaussian() * 0.02D;
                                     double ySpeed = this.mob.getRandom().nextGaussian() * 0.02D;

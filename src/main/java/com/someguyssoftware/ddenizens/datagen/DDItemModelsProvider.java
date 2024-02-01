@@ -78,6 +78,12 @@ public class DDItemModelsProvider extends ItemModelProvider {
         singleTexture(Registration.RUSTY_IRON_SWORD4.getId().getPath(),
                 modLoc("item/single_edge_sword"), "layer0", modLoc("item/"
                         + Registration.RUSTY_IRON_SWORD4.getId().getPath()));
+        singleTexture(Registration.SHADOW_BLADE.getId().getPath(),
+                modLoc("item/single_edge_sword"), "layer0", modLoc("item/" + Registration.SHADOW_BLADE.getId().getPath()));
+        singleTexture(Registration.SHADOW_FALCHION.getId().getPath(),
+                modLoc("item/single_edge_sword"), "layer0", modLoc("item/" + Registration.SHADOW_FALCHION.getId().getPath()));
+
+
 
         // eggs
     	withExistingParent(Registration.HEADLESS_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));

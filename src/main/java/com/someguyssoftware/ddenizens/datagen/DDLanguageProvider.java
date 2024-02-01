@@ -90,6 +90,8 @@ DDLanguageProvider extends LanguageProvider {
         add(Registration.RUSTY_IRON_SWORD2.get(), "Rusty Iron Sword");
         add(Registration.RUSTY_IRON_SWORD3.get(), "Rusty Iron Sword");
         add(Registration.RUSTY_IRON_SWORD4.get(), "Rusty Iron Sword");
+        add(Registration.SHADOW_BLADE.get(), "Shadow Blade");
+        add(Registration.SHADOW_FALCHION.get(), "Shadow Falchion");
 
         add(LangUtil.tooltip("boolean.yes"), "Yes");
         add(LangUtil.tooltip("boolean.no"), "No");
@@ -124,5 +126,9 @@ DDLanguageProvider extends LanguageProvider {
         add(LangUtil.tooltip("stats.spawns.underworld"), "Underworld");
         add(LangUtil.tooltip("stats.spawns.nether"), "Nether");
         add(LangUtil.tooltip("stats.specials"), "Weapons/Specials:");
+        add(LangUtil.tooltip("stats.weakness"), "Weakness:");
+        add(LangUtil.tooltip("shadow_falchion.bonus_damage"), "+1 Attack Damage vs. Shadowspawn.");
+        add(LangUtil.tooltip("shadow_blade.bonus_damage"), "+2 Attack Damage vs. Shadowspawn.");
+
     }
 }

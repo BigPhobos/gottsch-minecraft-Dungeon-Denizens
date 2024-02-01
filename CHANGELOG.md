@@ -6,6 +6,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2024-02 - Shadowlord Update
+
+### Changed
+
+- New Shadowlord model.
+- Refactored Shadow model.
+- Shadowlords now carry a Shadow Blade.
+- Shadows now carry a Shadow Falchion.
+- Shadowlords and Shadows have a high chance of dropping a Shadow Blade/Falchion.
+- Reduced Aura of Blindness effect to 2 seconds duration by default.
+- Reduced duration of Poison effect
+- Refactored Shadowlord's and Shadow's weakness to gold weapons.
+- Refactored Shadowlord's and Shadow's immunity to all other weapons.
+- A Shadow Blade is now a weakness of a Shadowlord and Shadow - it does the same damage as Netherite Sword would normally do.
+- Fixed spamming logs when Shadowlord summons mobs.
+- Reduced Blindness duration for Shadow.
+- Reduced probability for Blindness for Shadow.
+- Reduced Knockback resistence for Shadow.
+- Updated Bestiary book with mobs.
+
+### Added
+
+- Shadowlord walking and ambient sounds.
+- Shadow ambient sound.
+- Shadow Blade.
+- Shadow Falchion.
+- Config options for existing and new Shadowlord abilities.
+- Config options for existing Shadow abilities.
+- A cooldown time for Drain spell.
+
+
 ## [1.2.0] - 2024-01-09 - Beholderkin Update
 
 ### Changed
@@ -48,12 +79,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bare-bones tooltips on mob eggs (similar but reduced info as DD Bestiary book).
 - Add custom sounds to Daemon and the beholderkin mobs.
 - Supports Biomes O Plenty
-
-### Next Update Preview (aka Shadowlord Update)
-
-- Complete overhaul of Shadowlord -> model, sounds, abilities
-- Refactor Shadow abilities
-- Add Xorn**
 
 ## [1.1.0] - 2023-10-18
 

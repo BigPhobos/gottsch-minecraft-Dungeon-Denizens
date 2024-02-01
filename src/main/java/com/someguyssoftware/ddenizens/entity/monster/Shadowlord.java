@@ -21,25 +21,24 @@ package com.someguyssoftware.ddenizens.entity.monster;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
-import com.someguyssoftware.ddenizens.entity.ai.goal.SummonGoal;
 import com.someguyssoftware.ddenizens.entity.ai.goal.CastHarmGoal;
+import com.someguyssoftware.ddenizens.entity.ai.goal.WeightedChanceSummonGoal;
 import com.someguyssoftware.ddenizens.entity.projectile.HarmSpell;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import mod.gottsch.forge.gottschcore.random.RandomHelper;
-import mod.gottsch.forge.gottschcore.spatial.Coords;
+import mod.gottsch.forge.gottschcore.random.WeightedCollection;
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -68,12 +67,13 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 
@@ -88,6 +88,8 @@ public class Shadowlord extends DenizensMonster {
 	protected static final int SUMMON_CHARGE_TIME = 2400;
 
 	private double auraOfBlindessTime;
+	private int drainCooldownTime;
+	@Deprecated
 	private int numSummonDaemons;
 
 
@@ -111,7 +113,18 @@ public class Shadowlord extends DenizensMonster {
 				
 //		this.goalSelector.addGoal(4, new ShadowlordShootHarmGoal(this, Config.Mobs.SHADOWLORD.harmChargeTime.get()));
 		this.goalSelector.addGoal(4, new CastHarmGoal(this, Config.Mobs.SHADOWLORD.harmChargeTime.get(), SHOOT_DISTANCE_SQUARED, MELEE_DISTANCE_SQUARED));
-		this.goalSelector.addGoal(4, new ShadowlordSummonGoal(this, Config.Mobs.SHADOWLORD.summonCooldownTime.get(), true));
+
+		// TODO change to the new WeightedSummonGoal
+		WeightedCollection<Double, EntityType<? extends Mob>> mobs = new WeightedCollection<>();
+		mobs.add(70D, Registration.SHADOW_ENTITY_TYPE.get());
+		mobs.add(30D, Registration.GHOUL_ENTITY_TYPE.get());
+		this.goalSelector.addGoal(7, new WeightedChanceSummonGoal(this, Config.Mobs.SHADOWLORD.summonCooldownTime.get(), 100, mobs, Config.Mobs.SHADOWLORD.minSummonSpawns.get(), Config.Mobs.SHADOWLORD.maxSummonSpawns.get()));
+
+		this.goalSelector.addGoal(7, new WeightedChanceSummonGoal(this,
+				Config.Mobs.SHADOWLORD.summonDaemonCooldownTime.get(),
+				Config.Mobs.SHADOWLORD.summonDaemonProbability.get(),
+				Registration.DAEMON_ENTITY_TYPE.get(), 1, 1));
+
 		// TODO update with strafing movement - see RangedBowAttackGoal
 		//		this.goalSelector.addGoal(5, new ShadowlordMeleeAttackGoal(this, 1.0D, false));
 		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.1D, false));
@@ -122,12 +135,7 @@ public class Shadowlord extends DenizensMonster {
 
 
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, (entity) -> {
-			if (entity instanceof Boulder) {
-				return ((Boulder)entity).isActive();
-			}
-			return false;
-		}));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Boulder.class, true, avoidBoulder));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 	}
 
@@ -155,16 +163,17 @@ public class Shadowlord extends DenizensMonster {
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
 			MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag tag) {
 
-		if (difficulty.getDifficulty() == Difficulty.NORMAL) {
-			numSummonDaemons = 1;
-		}
-		else if (difficulty.getDifficulty() == Difficulty.HARD) {
-			numSummonDaemons = 2;
-		}
-		else {
-			numSummonDaemons = 0;
-		}
-		return super.finalizeSpawn(level, difficulty, spawnType, groupData, tag);		
+		groupData = super.finalizeSpawn(level, difficulty, spawnType, groupData, tag);
+
+		RandomSource randomSource = level.getRandom();
+		this.populateDefaultEquipmentSlots(randomSource, difficulty);
+
+		return groupData;
+	}
+
+	protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
+		this.handDropChances[EquipmentSlot.MAINHAND.getIndex()] = 0.75F;
+		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Registration.SHADOW_BLADE.get()));
 	}
 
 	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
@@ -182,15 +191,22 @@ public class Shadowlord extends DenizensMonster {
 	 * @param amount
 	 */
 	public void drain(LivingEntity entity, float amount) {
+		if (drainCooldownTime > 0) {
+			return;
+		}
+		drainCooldownTime = Config.Mobs.SHADOWLORD.drainCooldownTime.get();
+
 		// add damage to Shadowlord's health
 		DD.LOGGER.debug("draining {} hp from player", amount);
 		setHealth(Math.min(getMaxHealth(), getHealth() + amount));
 		if (!WorldInfo.isClientSide(this.level())) {
-			for (int p = 0; p < 20; p++) {
+			for (int p = 0; p < 40; p++) {
 				double xSpeed = random.nextGaussian() * 0.02D;
 				double ySpeed = random.nextGaussian() * 0.02D;
 				double zSpeed = random.nextGaussian() * 0.02D;
 				((ServerLevel)level()).sendParticles(ParticleTypes.SOUL, blockPosition().getX() + 0.5D, blockPosition().getY(), blockPosition().getZ() + 0.5D, 1, xSpeed, ySpeed, zSpeed, (double)0.15F);
+				// TODO set this up better so particles are on the client side
+				//				level().addParticle(ParticleTypes.SOUL,blockPosition().getX() + 0.5D, blockPosition().getY(), blockPosition().getZ() + 0.5D, xSpeed, ySpeed, zSpeed);
 			}
 		}
 	}
@@ -201,6 +217,11 @@ public class Shadowlord extends DenizensMonster {
 		 * Create a ring of smoke particles to delineate the boundary of the Aura of Blindness 
 		 */
 		if (WorldInfo.isClientSide(this.level())) {
+			// general particles around body
+			for(int i = 0; i < 2; ++i) {
+				this.level().addParticle(ParticleTypes.SMOKE, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
+			}
+
 			double x = Math.sin(auraOfBlindessTime);
 			double z = Math.cos(auraOfBlindessTime);
 			this.level().addParticle(ParticleTypes.SMOKE, this.position().x + x, position().y, position().z + z, 0, 0, 0);
@@ -222,10 +243,13 @@ public class Shadowlord extends DenizensMonster {
 			// test if player is wearing golden helmet
 			ItemStack helmetStack = target.getItemBySlot(EquipmentSlot.HEAD);
 			if (helmetStack.isEmpty() || helmetStack.getItem() != Items.GOLDEN_HELMET) {
-				// inflict blindness
-				target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 10 * 20, 0), this);
+				// inflict blindness for 1 second
+				target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Config.Mobs.SHADOWLORD.blindnessDuration.get(), 0), this);
 			}
 		}
+
+		// decrement the drainCooldownTime
+		drainCooldownTime = Math.max(--drainCooldownTime, 0);
 
 		// set on fire if in sun
 		if (this.isSunBurnTick()) {
@@ -241,9 +265,10 @@ public class Shadowlord extends DenizensMonster {
 	public boolean doHurtTarget(Entity target) {
 		if (super.doHurtTarget(target)) {
 			if (target instanceof Player) {
-				int seconds = 10;
 				// inflict poison
-				((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.POISON, seconds * 20, 0), this);
+				if (RandomHelper.checkProbability(this.random, Config.Mobs.SHADOWLORD.poisonProbability.get())) {
+					((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.POISON, Config.Mobs.SHADOWLORD.poisonDuration.get(), 0), this);
+				}
 			}
 			return true;
 		} 
@@ -259,25 +284,47 @@ public class Shadowlord extends DenizensMonster {
 			return false;
 		}
 
-		if (damageSource.getEntity() != null && damageSource.getEntity() instanceof Player) {
-			Player player = (Player)damageSource.getEntity();
-			ItemStack heldStack = ((Player)damageSource.getEntity()).getItemInHand(InteractionHand.MAIN_HAND);
+		if (damageSource.getEntity() != null && damageSource.getEntity() instanceof Player player) {
+			ItemStack heldStack = player.getItemInHand(InteractionHand.MAIN_HAND);
 
-			if (!heldStack.isEmpty() && heldStack.getItem() == Items.GOLDEN_SWORD) {
-				// increase damage to that of iron sword
-				amount += 2.0F;
-				// negate the weakness from the strike power of the sword
-				if (player.hasEffect(MobEffects.WEAKNESS)) {
-					amount += MobEffects.WEAKNESS.getAttributeModifierValue(0, null);
+			if (!heldStack.isEmpty()) {
+				if (heldStack.getItem() == Items.GOLDEN_SWORD) {
+					// increase damage to that of iron tier
+					amount += 2.0F;
+					// negate the weakness from the strike power of the sword
+					// gold does full damage
+					if (player.hasEffect(MobEffects.WEAKNESS)) {
+						amount += MobEffects.WEAKNESS.getAttributeModifierValue(0, null);
+					}
+				} else if (heldStack.getItem() == Registration.SHADOW_BLADE.get()) {
+					// increase damage to that of a netherite tier
+					amount += 2.0F;
+					if (player.hasEffect(MobEffects.WEAKNESS)) {
+						amount += MobEffects.WEAKNESS.getAttributeModifierValue(0, null);
+					}
 				}
+				else {
+					if (heldStack.getItem() instanceof TieredItem tieredItem) {
+						int penalty = 0;
+						Tier tier = tieredItem.getTier();
+						if (tier == Tiers.NETHERITE) {
+							penalty = -3;
+						} else if (tier == Tiers.DIAMOND) {
+							penalty = -2;
+						} else if (tier == Tiers.IRON) {
+							penalty = -1;
+						} else if (tier == Tiers.STONE || tier == Tiers.WOOD) {
+							// don't incur a penalty
+						}
+						amount += penalty;
+					} else {
+						// all other items
+						amount = Math.max(amount, 4.0f); // same as stone sword
+					}
+				}
+				DD.LOGGER.debug("new strike amount -> {}", amount);
 			}
-			// TODO add shadow sword condition
-			else {
-				amount = 1.0F;
-			}
-			DD.LOGGER.debug("new gold sword strike amount -> {}", amount);
 		}
-
 		return super.hurt(damageSource, amount);
 	}
 
@@ -354,91 +401,107 @@ public class Shadowlord extends DenizensMonster {
 		}
 	}
 
-	/**
-	 * 
-	 * @author Mark Gottschling on Apr 19, 2022
-	 *
-	 */
-	static class ShadowlordSummonGoal extends SummonGoal {
-		private final Shadowlord shadowlord;
-		private Random random;
-
-		public ShadowlordSummonGoal(Shadowlord shadowlord) {
-			this(shadowlord, SUMMON_CHARGE_TIME, true);
-		}
-
-		/**
-		 * 
-		 * @param mob
-		 * @param summonCooldownTime
-		 * @param canSummonDaemon
-		 */
-		public ShadowlordSummonGoal(Shadowlord mob, int summonCooldownTime, boolean canSummonDaemon) {
-			super(summonCooldownTime);
-			this.shadowlord = mob;			
-			this.random = new Random();
-		}
-
-		@Override
-		public void start() {
-			this.cooldownCount = cooldownTime / 2;
-		}
-
-		@Override
-		public void stop() {
-		}
-
-		@Override
-		public void tick() {
-			LivingEntity target = this.shadowlord.getTarget();
-			if (target != null) {
-				if (target.distanceToSqr(this.shadowlord) < SUMMON_DISTANCE_SQUARED && this.shadowlord.hasLineOfSight(target)) {
-					Level level = this.shadowlord.level();
-					++this.cooldownCount;
-
-					if (this.cooldownCount >= cooldownTime) {
-
-						int y = shadowlord.blockPosition().getY();
-						boolean spawnSuccess = false;
-						// summon daemon is health < max/3
-						if (shadowlord.getHealth() < shadowlord.getMaxHealth() / 3 && shadowlord.numSummonDaemons > 0) {
-							spawnSuccess |=spawn((ServerLevel)level, level.getRandom(), shadowlord, Registration.DAEMON_ENTITY_TYPE.get(), new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
-							if (spawnSuccess) {
-								shadowlord.numSummonDaemons--;
-							}
-						}
-						else {
-							int numSpawns = random.nextInt(Config.Mobs.SHADOWLORD.minSummonSpawns.get(), Config.Mobs.SHADOWLORD.maxSummonSpawns.get() + 1);
-							for (int i = 0; i < numSpawns; i++) {
-								EntityType<? extends Mob> mob; 
-								if (RandomHelper.checkProbability(random, 50)) {
-									mob = Registration.SHADOW_ENTITY_TYPE.get();
-								}
-								else {
-									mob = Registration.GHOUL_ENTITY_TYPE.get();
-								}
-								spawnSuccess |=spawn((ServerLevel)level, level.getRandom(), shadowlord, mob, new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
-							}
-						}
-						if (!WorldInfo.isClientSide(level) && spawnSuccess) {
-							for (int p = 0; p < 20; p++) {
-								double xSpeed = random.nextGaussian() * 0.02D;
-								double ySpeed = random.nextGaussian() * 0.02D;
-								double zSpeed = random.nextGaussian() * 0.02D;
-								((ServerLevel)level).sendParticles(ParticleTypes.POOF, shadowlord.blockPosition().getX() + 0.5D, shadowlord.blockPosition().getY(), shadowlord.blockPosition().getZ() + 0.5D, 1, xSpeed, ySpeed, zSpeed, (double)0.15F);
-							}
-						}
-						this.cooldownCount = 0;
-					}
-				}
-			}
-		}
-
-		@Override
-		public boolean canUse() {
-			return true;
-		}
+	@Nullable
+	@Override
+	protected SoundEvent getAmbientSound() {
+		return Registration.AMBIENT_SHADOWLORD.get();
 	}
+
+	@Override
+	protected void playStepSound(BlockPos pos, BlockState state) {
+		this.playSound(this.getStepSound(), 0.15F, 1.0F);
+	}
+
+	@Nullable
+	protected SoundEvent getStepSound() {
+		return Registration.SHADOWLORD_STEP.get();
+	}
+
+//	/**
+//	 *
+//	 * @author Mark Gottschling on Apr 19, 2022
+//	 *
+//	 */
+//	static class ShadowlordSummonGoal extends SummonGoal {
+//		private final Shadowlord shadowlord;
+//		private Random random;
+//
+//		public ShadowlordSummonGoal(Shadowlord shadowlord) {
+//			this(shadowlord, SUMMON_CHARGE_TIME, true);
+//		}
+//
+//		/**
+//		 *
+//		 * @param mob
+//		 * @param summonCooldownTime
+//		 * @param canSummonDaemon
+//		 */
+//		public ShadowlordSummonGoal(Shadowlord mob, int summonCooldownTime, boolean canSummonDaemon) {
+//			super(summonCooldownTime);
+//			this.shadowlord = mob;
+//			this.random = new Random();
+//		}
+//
+//		@Override
+//		public void start() {
+//			this.cooldownCount = cooldownTime / 2;
+//		}
+//
+//		@Override
+//		public void stop() {
+//		}
+//
+//		@Override
+//		public void tick() {
+//			LivingEntity target = this.shadowlord.getTarget();
+//			if (target != null) {
+//				if (target.distanceToSqr(this.shadowlord) < SUMMON_DISTANCE_SQUARED && this.shadowlord.hasLineOfSight(target)) {
+//					Level level = this.shadowlord.level();
+//					++this.cooldownCount;
+//
+//					if (this.cooldownCount >= cooldownTime) {
+//
+//						int y = shadowlord.blockPosition().getY();
+//						boolean spawnSuccess = false;
+//						// summon daemon is health < max/3
+//						if (shadowlord.getHealth() < shadowlord.getMaxHealth() / 3 && shadowlord.numSummonDaemons > 0) {
+//							spawnSuccess |=spawn((ServerLevel)level, level.getRandom(), shadowlord, Registration.DAEMON_ENTITY_TYPE.get(), new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
+//							if (spawnSuccess) {
+//								shadowlord.numSummonDaemons--;
+//							}
+//						}
+//						else {
+//							int numSpawns = random.nextInt(Config.Mobs.SHADOWLORD.minSummonSpawns.get(), Config.Mobs.SHADOWLORD.maxSummonSpawns.get() + 1);
+//							for (int i = 0; i < numSpawns; i++) {
+//								EntityType<? extends Mob> mob;
+//								if (RandomHelper.checkProbability(random, 50)) {
+//									mob = Registration.SHADOW_ENTITY_TYPE.get();
+//								}
+//								else {
+//									mob = Registration.GHOUL_ENTITY_TYPE.get();
+//								}
+//								spawnSuccess |=spawn((ServerLevel)level, level.getRandom(), shadowlord, mob, new Coords(shadowlord.blockPosition().getX(), y + 1, shadowlord.blockPosition().getZ()), target);
+//							}
+//						}
+//						if (!WorldInfo.isClientSide(level) && spawnSuccess) {
+//							for (int p = 0; p < 20; p++) {
+//								double xSpeed = random.nextGaussian() * 0.02D;
+//								double ySpeed = random.nextGaussian() * 0.02D;
+//								double zSpeed = random.nextGaussian() * 0.02D;
+//								((ServerLevel)level).sendParticles(ParticleTypes.POOF, shadowlord.blockPosition().getX() + 0.5D, shadowlord.blockPosition().getY(), shadowlord.blockPosition().getZ() + 0.5D, 1, xSpeed, ySpeed, zSpeed, (double)0.15F);
+//							}
+//						}
+//						this.cooldownCount = 0;
+//					}
+//				}
+//			}
+//		}
+//
+//		@Override
+//		public boolean canUse() {
+//			return true;
+//		}
+//	}
 
 	/**
 	 * 

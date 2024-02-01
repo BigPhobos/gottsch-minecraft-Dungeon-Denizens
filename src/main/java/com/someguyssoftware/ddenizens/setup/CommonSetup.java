@@ -25,6 +25,8 @@ import com.someguyssoftware.ddenizens.entity.monster.*;
 
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -47,6 +49,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+
+import java.util.function.Predicate;
 
 /**
  * Common event bus subscriber.
@@ -136,28 +140,13 @@ public class CommonSetup {
 		@SubscribeEvent
 		public static void addGoals(final EntityJoinLevelEvent event) {
 			if (event.getEntity() instanceof Zombie) {
-				((Zombie)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Zombie)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
-					if (entity instanceof Boulder) {
-						 return ((Boulder)entity).isActive();
-					}
-					return false;
-				}));
+				((Zombie)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Zombie)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, IDenizensMonster.avoidBoulder));
 			}
 			else if (event.getEntity() instanceof Skeleton) {
-				((Skeleton)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Skeleton)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
-					if (entity instanceof Boulder) {
-						 return ((Boulder)entity).isActive();
-					}
-					return false;
-				}));
+				((Skeleton)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((Skeleton)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, IDenizensMonster.avoidBoulder));
 			}
 			else if (event.getEntity() instanceof ZombieVillager) {
-				((ZombieVillager)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((ZombieVillager)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
-					if (entity instanceof Boulder) {
-						 return ((Boulder)entity).isActive();
-					}
-					return false;
-				}));
+				((ZombieVillager)event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>(((ZombieVillager)event.getEntity()), Boulder.class, 6.0F, 1.0D, 1.2D, IDenizensMonster.avoidBoulder));
 			}
 		}
 
@@ -189,7 +178,7 @@ public class CommonSetup {
 				((Shadowlord)event.getSource().getEntity()).drain(player, event.getAmount());
 			}
 			else if (event.getEntity() instanceof Shadowlord && event.getSource().getEntity() instanceof Player) {
-
+				// this condition is player hitting shadowlord
 			}
 		}
 

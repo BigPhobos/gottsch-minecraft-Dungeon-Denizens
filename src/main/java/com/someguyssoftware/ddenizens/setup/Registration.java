@@ -17,6 +17,7 @@
  */
 package com.someguyssoftware.ddenizens.setup;
 
+import java.awt.*;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -26,15 +27,15 @@ import com.someguyssoftware.ddenizens.entity.monster.*;
 import com.someguyssoftware.ddenizens.entity.projectile.*;
 
 import com.someguyssoftware.ddenizens.item.*;
+import com.someguyssoftware.ddenizens.util.LangUtil;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -42,6 +43,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Setup deferred registries. Original developer defined all block, items, entities etc here.
@@ -145,13 +147,13 @@ public class Registration {
 			.build(SPECTATOR));
 	
 	public static final RegistryObject<EntityType<Shadow>> SHADOW_ENTITY_TYPE = Registration.ENTITIES.register(SHADOW, () -> EntityType.Builder.of(Shadow::new, MobCategory.MONSTER)
-			.sized(0.6F, 1.95F)
+			.sized(0.75F, 1.95F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
 			.build(SHADOW));
 	
 	public static final RegistryObject<EntityType<Shadowlord>> SHADOWLORD_ENTITY_TYPE = Registration.ENTITIES.register(SHADOWLORD, () -> EntityType.Builder.of(Shadowlord::new, MobCategory.MONSTER)
-			.sized(0.625F, 2.95F)
+			.sized(1.25F, 2.8125F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
 			.build(SHADOWLORD));
@@ -228,8 +230,8 @@ public class Registration {
 	public static final RegistryObject<Item> SPECTATOR_EGG = Registration.ITEMS.register(SPECTATOR + "_egg", () -> new SpectatorEggItem(SPECTATOR_TYPE, 0x344133, 0xabb685, new Item.Properties()));
 
 	public static final RegistryObject<Item> BOULDER_EGG = Registration.ITEMS.register(BOULDER + "_egg", () -> new ForgeSpawnEggItem(BOULDER_ENTITY_TYPE, 0x747474, 0x8f8f8f, new Item.Properties()));
-	public static final RegistryObject<Item> SHADOW_EGG = Registration.ITEMS.register(SHADOW + "_egg", () -> new ForgeSpawnEggItem(SHADOW_ENTITY_TYPE, 0x000000, 0x2b2b2b, new Item.Properties()));
-	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD + "_egg", () -> new ForgeSpawnEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x050831, new Item.Properties()));
+	public static final RegistryObject<Item> SHADOW_EGG = Registration.ITEMS.register(SHADOW + "_egg", () -> new ShadowEggItem(SHADOW_ENTITY_TYPE, 0x000000, 0x2b2b2b, new Item.Properties()));
+	public static final RegistryObject<Item> SHADOWLORD_EGG = Registration.ITEMS.register(SHADOWLORD + "_egg", () -> new ShadowlordEggItem(SHADOWLORD_ENTITY_TYPE, 0x000000, 0x6c6c6c, new Item.Properties()));
 	public static final RegistryObject<Item> DAEMON_EGG = Registration.ITEMS.register(DAEMON + "_egg", () -> new DaemonEggItem(DAEMON_ENTITY_TYPE, 0xff0000, 0xfc0000, new Item.Properties()));
 
 	public static final RegistryObject<Item> SKELETON_WARRIOR_EGG = Registration.ITEMS.register(SKELETON_WARRIOR + "_egg", () -> new SkeletonWarriorEggItem(SKELETON_WARRIOR_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
@@ -258,12 +260,33 @@ public class Registration {
 	public static final RegistryObject<Item> RUSTY_IRON_SWORD4 = Registration.ITEMS.register("rusty_iron_sword_4", () -> new SwordItem(Tiers.IRON, 3, -2.4F, new Item.Properties()));
 	public static final RegistryObject<Item> RUSTY_IRON_AXE1 = Registration.ITEMS.register("rusty_iron_axe", () -> new AxeItem(Tiers.IRON, 6F, -3F, new Item.Properties()));
 	public static final RegistryObject<Item> RUSTY_IRON_AXE2 = Registration.ITEMS.register("rusty_iron_axe_2", () -> new AxeItem(Tiers.IRON, 6F, -3F, new Item.Properties()));
+	public static final RegistryObject<Item> SHADOW_BLADE = Registration.ITEMS.register("shadow_blade", () -> new SwordItem(Tiers.IRON, 3, -2F, new Item.Properties()) {
+		@Override
+		public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+			super.appendHoverText(stack, level, tooltip, flag);
+			tooltip.add(Component.literal(""));
+			tooltip.add(Component.translatable(LangUtil.tooltip("shadow_blade.bonus_damage")));
+		}
+	});
+	public static final RegistryObject<Item> SHADOW_FALCHION = Registration.ITEMS.register("shadow_falchion", () -> new SwordItem(Tiers.IRON, 3, -2F, new Item.Properties()) {
+		@Override
+		public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+			super.appendHoverText(stack, level, tooltip, flag);
+			tooltip.add(Component.literal(""));
+			tooltip.add(Component.translatable(LangUtil.tooltip("shadow_falchion.bonus_damage")));
+
+
+		}
+	});
 
 	public static final RegistryObject<SoundEvent> AMBIENT_DAEMON = registerSoundEvent("ambient_daemon");
 	public static final RegistryObject<SoundEvent> AMBIENT_BEHOLDER = registerSoundEvent("ambient_beholder");
 	public static final RegistryObject<SoundEvent> AMBIENT_DEATH_TYRANT = registerSoundEvent("ambient_death_tyrant");
 	public static final RegistryObject<SoundEvent> AMBIENT_GAZER = registerSoundEvent("ambient_gazer");
 	public static final RegistryObject<SoundEvent> AMBIENT_SPECTATOR = registerSoundEvent("ambient_spectator");
+	public static final RegistryObject<SoundEvent> AMBIENT_SHADOWLORD = registerSoundEvent("ambient_shadowlord");
+	public static final RegistryObject<SoundEvent> AMBIENT_SHADOW = registerSoundEvent("ambient_shadow");
+	public static final RegistryObject<SoundEvent> SHADOWLORD_STEP = registerSoundEvent("shadowlord_step");
 
 	// NOTE must add mob to ALL_MOBS collection in order to register them to the biomes - see CommonSetup.onBiomeLoading
 	static {

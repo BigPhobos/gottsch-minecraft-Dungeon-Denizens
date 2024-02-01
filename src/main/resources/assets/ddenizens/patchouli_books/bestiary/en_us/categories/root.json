@@ -1,5 +1,5 @@
 {
-  "name": "Root Category",
-  "description": "This is a pamphlet category",
-  "icon": "minecraft:writable_book"
+  "name": "Mobs",
+  "description": "A listing of all Dungeon Denizens mobs.",
+  "icon": "ddenizens:daemon_egg"
 }
