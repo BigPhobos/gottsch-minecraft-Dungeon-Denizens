@@ -29,7 +29,9 @@
   "item.ddenizens.rusty_iron_sword_2": "Rusty Iron Sword",
   "item.ddenizens.rusty_iron_sword_3": "Rusty Iron Sword",
   "item.ddenizens.rusty_iron_sword_4": "Rusty Iron Sword",
+  "item.ddenizens.shadow_blade": "Shadow Blade",
   "item.ddenizens.shadow_egg": "Shadow Spawn Egg",
+  "item.ddenizens.shadow_falchion": "Shadow Falchion",
   "item.ddenizens.shadowlord_egg": "Shadowlord Spawn Egg",
   "item.ddenizens.skeleton_warrior_egg": "Skeleton Warrior Spawn Egg",
   "item.ddenizens.slow": "Slow Spell",
@@ -38,6 +40,8 @@
   "tooltip.ddenizens.boolean.no": "No",
   "tooltip.ddenizens.boolean.yes": "Yes",
   "tooltip.ddenizens.hold_shift": "Hold [SHIFT] to expand",
+  "tooltip.ddenizens.shadow_blade.bonus_damage": "+2 Attack Damage vs. Shadowspawn.",
+  "tooltip.ddenizens.shadow_falchion.bonus_damage": "+1 Attack Damage vs. Shadowspawn.",
   "tooltip.ddenizens.stats.damage": "Damage: %s",
   "tooltip.ddenizens.stats.daylight": "Daylight: %s",
   "tooltip.ddenizens.stats.despawn": "Despawn: %s",
@@ -67,5 +71,6 @@
   "tooltip.ddenizens.stats.spawns.underworld": "Underworld",
   "tooltip.ddenizens.stats.specials": "Weapons/Specials:",
   "tooltip.ddenizens.stats.speed": "Speed: %s",
-  "tooltip.ddenizens.stats.speed.normal": "Normal"
+  "tooltip.ddenizens.stats.speed.normal": "Normal",
+  "tooltip.ddenizens.stats.weakness": "Weakness:"
 }

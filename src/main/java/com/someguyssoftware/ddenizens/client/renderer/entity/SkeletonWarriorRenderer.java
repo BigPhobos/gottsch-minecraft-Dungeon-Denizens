@@ -38,7 +38,8 @@ import net.minecraft.resources.ResourceLocation;
  *
  * @param <T>
  */
-public class SkeletonWarriorRenderer<T extends SkeletonWarrior> extends HumanoidMobRenderer<T, SkeletonWarriorModel<T>> {
+public class
+SkeletonWarriorRenderer<T extends SkeletonWarrior> extends HumanoidMobRenderer<T, SkeletonWarriorModel<T>> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(DD.MODID, "textures/entity/skeleton_warrior.png");
 
 	/**

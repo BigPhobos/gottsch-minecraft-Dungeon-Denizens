@@ -51,7 +51,7 @@ public class BeholderRenderer<T extends Beholder> extends MobRenderer<T, Beholde
 	}
 
 	@Override
-	protected void scale(Beholder Beholder, PoseStack pose, float scale) {
+	protected void scale(Beholder beholder, PoseStack pose, float scale) {
 		pose.scale(this.scale, this.scale, this.scale);
 	}
 

@@ -23,14 +23,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.client.model.ShadowModel;
+import com.someguyssoftware.ddenizens.client.model.ShadowlordModel;
 import com.someguyssoftware.ddenizens.client.renderer.entity.layer.BeholderEyeLayer;
 import com.someguyssoftware.ddenizens.client.renderer.entity.layer.ShadowEyeLayer;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.Shadow;
 
+import com.someguyssoftware.ddenizens.entity.monster.Shadowlord;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -38,11 +41,11 @@ import net.minecraft.resources.ResourceLocation;
  * 
  * @author Mark Gottschling on Apr 12, 2022
  *
- * @param <T>
  */
-public class ShadowRenderer extends MobRenderer<Shadow, ShadowModel<Shadow>> {
+public class ShadowRenderer<T extends Shadow> extends HumanoidMobRenderer<T, ShadowModel<T>> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(DD.MODID, "textures/entity/shadow.png");
-	
+
+
 	/**
 	 * 
 	 * @param context
@@ -52,8 +55,8 @@ public class ShadowRenderer extends MobRenderer<Shadow, ShadowModel<Shadow>> {
 		this.addLayer(new ShadowEyeLayer<>(this));
     }
 
-	@Override
-	public void render(Shadow shadow, float p_116532_, float p_116533_, PoseStack matrixStack, MultiBufferSource bufferSource, int p_116536_) {
+//	@Override
+//	public void render(Shadow shadow, float p_116532_, float p_116533_, PoseStack matrixStack, MultiBufferSource bufferSource, int p_116536_) {
 //        GlStateManager.pushMatrix();
 //
 //        GlStateManager.enableNormalize();
@@ -70,11 +73,11 @@ public class ShadowRenderer extends MobRenderer<Shadow, ShadowModel<Shadow>> {
 //        matrixStack.pushPose();
 //        VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityTranslucentCull(TEXTURE));
 //        vertexConsumer.color(1.0F, 1.0F, 1.0F, 0.8F);
-		super.render(shadow, p_116532_, p_116533_, matrixStack, bufferSource, p_116536_);
+//		super.render(shadow, p_116532_, p_116533_, matrixStack, bufferSource, p_116536_);
 		
 //		matrixStack.popPose();
 		
-	}
+//	}
 	
      @Override
     public ResourceLocation getTextureLocation(Shadow entity) {

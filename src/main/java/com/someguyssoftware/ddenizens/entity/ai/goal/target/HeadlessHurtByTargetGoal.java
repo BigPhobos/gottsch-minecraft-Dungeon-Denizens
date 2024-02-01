@@ -119,7 +119,7 @@ public class HeadlessHurtByTargetGoal extends TargetGoal {
 //			DD.LOGGER.debug("process mob alert -> {}", otherMob.getName().getString());
 			if (this.mob != otherMob && otherMob.getTarget() == null) {
 				if (this.othersToAlert.contains(otherMob.getClass())) {
-					DD.LOGGER.debug("alerting mob of targer -> {}", otherMob.getName().getString());
+					DD.LOGGER.debug("alerting mob of target -> {}", otherMob.getName().getString());
 					alertOther(otherMob, this.mob.getLastHurtByMob());
 				}
 			}

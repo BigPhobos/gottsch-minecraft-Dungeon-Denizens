@@ -36,7 +36,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -60,7 +59,7 @@ import java.util.Map;
 public class SkeletonWarrior extends DenizensMonster {
 
     private LivingEntity owner;
-Evoker e;
+
     private static final Map<EquipmentSlot, List<Item>> EQUIPMENT_MAP = Maps.newHashMap();
 
     // TODO use custom tags instead and register on tags load

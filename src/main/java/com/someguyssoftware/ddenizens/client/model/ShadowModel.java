@@ -23,7 +23,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.someguyssoftware.ddenizens.DD;
 
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 
 /**
  * 
@@ -43,50 +44,55 @@ import net.minecraft.world.entity.Entity;
  *
  * @param <T>
  */
-public class ShadowModel<T extends Entity> extends DDModel<T> {
+public class ShadowModel<T extends Mob> extends HumanoidModel<T> {
 
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DD.MODID, "shadow_model"), "main");
-	
-	private final ModelPart head;
-	private final ModelPart body_legs;
-	private final ModelPart body;
-	private final ModelPart leftArm;
-	private final ModelPart rightArm;
-	private final ModelPart leftLeg;
-	private final ModelPart rightLeg;
 
-	private float leftArmX;
-	private float rightArmX;
+	public ModelPart leftHip;
+	public ModelPart rightHip;
+	protected Rotations rightArmRots;
+	protected Rotations leftArmRots;
+
+	protected Rotations rightHipRots;
+	protected Rotations leftHipRots;
 	
 	/**
 	 * 
 	 * @param root
 	 */
 	public ShadowModel(ModelPart root) {
-		super(RenderType::entityTranslucentCull);
-		this.head = root.getChild("head");
-		this.body_legs = root.getChild("body_legs");
-		this.body = body_legs.getChild("body");
-		this.leftArm = root.getChild("left_arm");
-		this.rightArm = root.getChild("right_arm");
-		this.leftLeg = body_legs.getChild("left_leg");
-		this.rightLeg = body_legs.getChild("right_leg");
-		
-		rightArmX = rightArm.x;
-		leftArmX = leftArm.x;
+		super(root, RenderType::entityTranslucentCull);
+
+		this.leftHip = leftLeg.getChild("leftHip");
+		this.rightHip = rightLeg.getChild("rightHip");
+
+		rightArmRots = new Rotations(this.rightArm);
+		leftArmRots = new Rotations(this.leftArm);
+		rightHipRots = new Rotations(this.rightHip);
+		leftHipRots = new Rotations(this.leftHip);
 	}
 
 	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
+		MeshDefinition meshdefinition = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
+
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 17).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-		PartDefinition body_legs = partdefinition.addOrReplaceChild("body_legs", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3927F, 0.0F, 0.0F));
-		PartDefinition right_leg = body_legs.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(33, 0).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 12.0F, 0.0F));
-		PartDefinition left_leg = body_legs.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 34).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 12.0F, 0.0F));
-		PartDefinition body = body_legs.addOrReplaceChild("body", CubeListBuilder.create().texOffs(29, 30).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-		PartDefinition right_arm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(46, 13).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, 2.0F, 0.0F, -0.9599F, 0.0F, 0.0F));
-		PartDefinition left_arm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(13, 47).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(5.0F, 2.0F, 0.0F, -0.8727F, 0.0F, 0.0F));
+		// overwrite base body parts
+		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 17).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3927F, 0.0F, 0.0F));
+
+		PartDefinition right_arm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(0, 34).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, 2.0F, 0.0F, -0.9599F, 0.0F, 0.0F));
+
+		PartDefinition left_arm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(17, 34).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(5.0F, 2.0F, 0.0F, -0.8727F, 0.0F, 0.0F));
+
+		PartDefinition right_leg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create(), PartPose.offsetAndRotation(-2.0F, 0.0F, 0.0F, 0.3927F, 0.0F, 0.0F));
+
+		PartDefinition rightHip = right_leg.addOrReplaceChild("rightHip", CubeListBuilder.create().texOffs(25, 17).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 12.0F, 0.0F));
+
+		PartDefinition left_leg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create(), PartPose.offsetAndRotation(2.0F, 0.0F, 0.0F, 0.3927F, 0.0F, 0.0F));
+
+		PartDefinition leftHip = left_leg.addOrReplaceChild("leftHip", CubeListBuilder.create().texOffs(33, 0).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 12.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
@@ -96,26 +102,27 @@ public class ShadowModel<T extends Entity> extends DDModel<T> {
 		// head
 		this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
 		this.head.xRot = headPitch * ((float)Math.PI / 180F);
-		
-		// legs
-		float f = 1.0F;
-		float radians = 0.3490659F; // 20 degrees
-		float walkSpeed = 0.5F; // half speed = 0.5
-		this.rightLeg.xRot = Mth.cos(limbSwing * walkSpeed) * radians * 1.4F * limbSwingAmount / f;
-		this.leftLeg.xRot = Mth.cos(limbSwing  * walkSpeed + (float)Math.PI) * radians * 1.4F * limbSwingAmount / f;
-		
-		setupAttackAnimation(entity, ageInTicks);
-		
-		// reset arm rotations before bobbing, because bobbing is an addition to current rotation
-		this.leftArm.zRot = 0F;
-		this.leftArm.xRot = -0.8726646F; // 50 degrees
 
-		this.rightArm.zRot = 0F;
-		this.rightArm.xRot = -0.9599311F; // 55 dgrees
+		// reset arm rotations before bobbing, because bobbing is an addition to current rotation
+		resetArm(rightArm, rightArmRots);
+		resetArm(leftArm, leftArmRots);
+
+		this.leftHip.xRot = leftHipRots.x();
+		this.rightHip.xRot = rightHipRots.x();
 
 		// bob the arms
 		bobModelPart(this.rightArm, ageInTicks, 1.0F);
 		bobModelPart(this.leftArm, ageInTicks, -1.0F);
+		bobModelPart(this.rightHip, ageInTicks, 1.0F);
+		bobModelPart(this.leftHip, ageInTicks, -1.0F);
+
+		setupAttackAnimation(entity, ageInTicks);
+	}
+
+	public void resetArm(ModelPart part, Rotations rotations) {
+		part.xRot = rotations.x();
+		part.yRot = rotations.y();
+		part.zRot = rotations.z();
 	}
 
 	/**
@@ -127,49 +134,16 @@ public class ShadowModel<T extends Entity> extends DDModel<T> {
 	public static void bobModelPart(ModelPart part, float age, float direction) {
 		part.xRot += direction * (Mth.cos(age * /*0.09F*/ 0.15F) * 0.15F + 0.05F);
 	}
-	
-	@Override
-	public void resetSwing(T entity, ModelPart body, ModelPart rightArm, ModelPart leftArm) {
-		body.yRot = 0;
-		rightArm.x = rightArmX;
-		rightArm.xRot = -0.9599311F;
-		rightArm.zRot = 0;
-		rightArm.yRot = 0;
-		leftArm.x = leftArmX;
-		leftArm.xRot = -0.8726646F;
-		leftArm.yRot = 0;
-		leftArm.zRot = 0;
-	}
-	
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		head.render(poseStack, buffer, packedLight, packedOverlay);
-//		headwear.render(poseStack, buffer, packedLight, packedOverlay);
-//		body.render(poseStack, buffer, packedLight, packedOverlay);
-		body_legs.render(poseStack, buffer, packedLight, packedOverlay);
-		leftArm.render(poseStack, buffer, packedLight, packedOverlay);
-		rightArm.render(poseStack, buffer, packedLight, packedOverlay);
-//		left_leg.render(poseStack, buffer, packedLight, packedOverlay);
-//		right_leg.render(poseStack, buffer, packedLight, packedOverlay);
-	}
-	
-	@Override
-	public ModelPart getHead() {
-		return this.head;
-	}
 
 	@Override
-	public ModelPart getBody() {
-		return body;
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		head.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		leftArm.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		rightArm.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		rightLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		leftLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		// NOTE do not render hat
 	}
 
-	@Override
-	public ModelPart getRightArm() {
-		return rightArm;
-	}
-
-	@Override
-	public ModelPart getLeftArm() {
-		return leftArm;
-	}
 }

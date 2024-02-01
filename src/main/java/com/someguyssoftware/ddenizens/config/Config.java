@@ -409,6 +409,10 @@ public final class Config extends AbstractConfig {
 	 */
 	public static class ShadowConfig extends NetherMobConfig {
 		// shadow specific		
+		public DoubleValue blindnessProbability;
+		public IntValue blindnessDuration;
+		public DoubleValue weaknessProbability;
+		public IntValue weaknessDuration;
 
 		public ShadowConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadow properties.", CATEGORY_DIV).push(Registration.SHADOW);				
@@ -417,6 +421,22 @@ public final class Config extends AbstractConfig {
 //					new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), Arrays.asList(BiomeCategory.THEEND.getName()));
 
 			netherSpawnConfig = new NetherSpawnConfig(builder, true, 5, 1, 2, MIN_HEIGHT, MAX_HEIGHT);
+
+			blindnessProbability = builder
+					.comment(" The probability that a Shadow will inflict blindness when striking a target. (if not wearing a golden helmet)")
+					.defineInRange("blindnessProbability", 75.0, 0.0, 100.0);
+
+			blindnessDuration = builder
+					.comment(" The length of time blindness spell lasts (measured in ticks).")
+					.defineInRange("blindnessDuration", 60, 1, Integer.MAX_VALUE);
+
+			weaknessProbability = builder
+					.comment(" The probability that a Shadow will inflict weakness when striking a target.")
+					.defineInRange("weaknessProbability", 20.0, 0.0, 100.0);
+
+			weaknessDuration = builder
+					.comment(" The length of time weakness spell lasts (measured in ticks).")
+					.defineInRange("weaknessDuration", 100, 1, Integer.MAX_VALUE);
 
 			builder.pop();
 		}
@@ -612,9 +632,15 @@ public final class Config extends AbstractConfig {
 	public static class ShadowlordConfig extends NetherMobConfig {		
 		// shadowlord specific		
 		public IntValue harmChargeTime;
+		public IntValue drainCooldownTime;
 		public IntValue summonCooldownTime;
 		public IntValue minSummonSpawns;
 		public IntValue maxSummonSpawns;
+		public IntValue summonDaemonCooldownTime;
+		public DoubleValue summonDaemonProbability;
+		public DoubleValue poisonProbability;
+		public IntValue poisonDuration;
+		public IntValue blindnessDuration;
 
 		public ShadowlordConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Shadowlord properties.", CATEGORY_DIV).push(Registration.SHADOWLORD);				
@@ -628,9 +654,13 @@ public final class Config extends AbstractConfig {
 					.comment(" The charge time of a harm spell attack (measured in ticks).")
 					.defineInRange("harmChargeTime", 50, 1, Integer.MAX_VALUE);
 
+			drainCooldownTime = builder
+					.comment(" The cooldown time of a drain spell (measured in ticks).")
+					.defineInRange("drainCooldownTime", 400, 1, Integer.MAX_VALUE);
+
 			summonCooldownTime = builder
 					.comment(" The cooldown time of a summon spell (measured in ticks).")
-					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
+					.defineInRange("summonCooldownTime", 1200, 1, Integer.MAX_VALUE);
 
 			minSummonSpawns = builder
 					.comment(" Minimum spawn group size for summon spell.")
@@ -639,6 +669,27 @@ public final class Config extends AbstractConfig {
 			maxSummonSpawns = builder
 					.comment(" Maximum spawn group size for summon spell.")
 					.defineInRange("maxSummonSpawns", 2, 1, Integer.MAX_VALUE);
+
+			summonDaemonCooldownTime = builder
+					.comment(" The cooldown time of a summon daemon spell (measured in ticks).")
+					.defineInRange("summonCooldownTime", 2400, 1, Integer.MAX_VALUE);
+
+			summonDaemonProbability = builder
+					.comment(" The probability that a Shadowlord will be able to summon a daemon.")
+					.defineInRange("summonDaemonProbability", 25.0, 0.0, 100.0);
+
+			poisonProbability = builder
+					.comment(" The probability that a Shadowlord will inflict poison when striking a target.")
+					.defineInRange("poisonProbability", 25.0, 0.0, 100.0);
+
+			poisonDuration = builder
+					.comment(" The length of time poisoning lasts (measured in ticks).")
+					.defineInRange("poisonDuration", 200, 1, Integer.MAX_VALUE);
+
+			blindnessDuration = builder
+					.comment(" The length of time blindness from Aura of Blindess lasts (measured in ticks).")
+					.defineInRange("blindnessDuration", 40, 1, Integer.MAX_VALUE);
+
 
 			builder.pop();
 		}

@@ -33,6 +33,13 @@ public interface IDenizensMonster {
     public static final String SUMMONED_OWNER = "summonedOwner";
     public static final String PLAYER_OWNER = "playerOwner";
 
+    public static Predicate<LivingEntity> avoidBoulder = (entity) -> {
+        if (entity instanceof Boulder) {
+            return ((Boulder)entity).isActive();
+        }
+        return false;
+    };
+
     public MonsterSize getMonsterSize();
     public void setMonsterSize(MonsterSize size);
 
