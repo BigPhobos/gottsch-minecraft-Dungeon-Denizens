@@ -75,6 +75,15 @@ DDLanguageProvider extends LanguageProvider {
         add(Registration.SKELETON_WARRIOR_TYPE.get(), "Skeleton Warrior");
         add(Registration.SKELETON_WARRIOR_EGG.get(), "Skeleton Warrior Spawn Egg");
 
+        add(Registration.WINGED_SKELETON_TYPE.get(), "Winged Skeleton");
+        add(Registration.WINGED_SKELETON_EGG.get(), "Winged Skeleton Spawn Egg");
+
+        add(Registration.FOSSILIZED_SKELETON_TYPE.get(), "Fossilized Skeleton");
+        add(Registration.FOSSILIZED_SKELETON_EGG.get(), "Fossilized Skeleton Spawn Egg");
+
+        add(Registration.IRON_SKELETON_TYPE.get(), "Iron Skeleton");
+        add(Registration.IRON_SKELETON_EGG.get(), "Iron Skeleton Spawn Egg");
+
         add(Registration.PARALYSIS_SPELL_ITEM.get(), "Slow Spell");
         add(Registration.HARM_SPELL_ITEM.get(), "Harm Spell");
         add(Registration.DISINTEGRATE_SPELL_ITEM.get(), "Disintegrate Spell");

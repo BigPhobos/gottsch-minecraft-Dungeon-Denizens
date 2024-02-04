@@ -1,0 +1,13 @@
+{
+  "name": "Disintegrate Spell",
+  "icon": "minecraft:potion",
+  "category": "ddenizens:spells",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Disintegrate",
+      "anchor": "disintegrate",
+      "text": "$(l)Disintegrate$() is a spell that ..."
+    }
+  ]
+}

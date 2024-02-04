@@ -72,18 +72,14 @@ public class Ghoul extends DenizensMonster {
 	}
 
 	protected void registerGoals() {
+		// RestrictSunGoal is a pathfinding goal that avoids the sun.
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
 		if (this.canOpenDoors()) {
 			this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
 		}
-		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
+		// FleeSunGoal is a pathfinding goal that seeks to get out of the sun.
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
-		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Boulder.class, 6.0F, 1.0D, 1.2D, (entity) -> {
-			if (entity instanceof Boulder) {
-				return ((Boulder)entity).isActive();
-			}
-			return false;
-		}));
+		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Boulder.class, 6.0F, 1.0D, 1.2D, IDenizensMonster.avoidBoulder));
 		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
 		this.goalSelector.addGoal(4, new GhoulHealGoal(this));
 		this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 1.0D, true, 4, () -> true));

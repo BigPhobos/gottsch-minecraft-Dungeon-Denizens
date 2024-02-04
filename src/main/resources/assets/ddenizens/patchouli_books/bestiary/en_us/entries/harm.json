@@ -1,0 +1,13 @@
+{
+  "name": "Harm Spell",
+  "icon": "minecraft:potion{Potion:strong_harming}",
+  "category": "ddenizens:spells",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Harm",
+      "anchor": "harm",
+      "text": "$(l)Harm$() is a spell that ..."
+    }
+  ]
+}

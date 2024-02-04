@@ -61,7 +61,9 @@ public class ClientSetup {
 		event.registerLayerDefinition(ShadowlordModel.LAYER_LOCATION, ShadowlordModel::createBodyLayer);
 		event.registerLayerDefinition(DaemonModel.LAYER_LOCATION, DaemonModel::createBodyLayer);
 		event.registerLayerDefinition(SkeletonWarriorModel.LAYER_LOCATION, SkeletonWarriorModel::createBodyLayer);
-
+		event.registerLayerDefinition(WingedSkeletonModel.LAYER_LOCATION, WingedSkeletonModel::createBodyLayer);
+		event.registerLayerDefinition(FossilizedSkeletonModel.LAYER_LOCATION, FossilizedSkeletonModel::createBodyLayer);
+		event.registerLayerDefinition(IronSkeletonModel.LAYER_LOCATION, IronSkeletonModel::createBodyLayer);
 	}
 
 	/**
@@ -82,6 +84,9 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.SHADOWLORD_ENTITY_TYPE.get(), ShadowlordRenderer::new);
         event.registerEntityRenderer(Registration.DAEMON_ENTITY_TYPE.get(), DaemonRenderer::new);
 		event.registerEntityRenderer(Registration.SKELETON_WARRIOR_TYPE.get(), SkeletonWarriorRenderer::new);
+		event.registerEntityRenderer(Registration.WINGED_SKELETON_TYPE.get(), WingedSkeletonRenderer::new);
+		event.registerEntityRenderer(Registration.FOSSILIZED_SKELETON_TYPE.get(), FossilizedSkeletonRenderer::new);
+		event.registerEntityRenderer(Registration.IRON_SKELETON_TYPE.get(), IronSkeletonRenderer::new);
 
 		event.registerEntityRenderer(Registration.PARALYSIS_SPELL_ENTITY_TYPE.get(), (provider) -> {
             // 1.0 = scale, true = full bright

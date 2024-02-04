@@ -66,7 +66,6 @@ public class Spectator extends Beholderkin {
 	public Spectator(EntityType<? extends FlyingMob> entityType, Level level) {
 		super(entityType, level, MonsterSize.SMALL);
 		this.moveControl = new BeholderkinMoveControl(this);
-		Spider s;
 		this.xpReward = 8;
 	}
 

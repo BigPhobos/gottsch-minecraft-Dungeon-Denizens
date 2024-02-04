@@ -23,6 +23,8 @@ import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.config.Config;
 import com.someguyssoftware.ddenizens.entity.monster.*;
 
+import com.someguyssoftware.ddenizens.entity.monster.skeleton.FossilizedSkeleton;
+import com.someguyssoftware.ddenizens.entity.monster.skeleton.IronSkeleton;
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -82,6 +84,9 @@ public class CommonSetup {
 		event.put(Registration.SHADOWLORD_ENTITY_TYPE.get(), Shadowlord.createAttributes().build());
 		event.put(Registration.DAEMON_ENTITY_TYPE.get(), Daemon.createAttributes().build());
 		event.put(Registration.SKELETON_WARRIOR_TYPE.get(), SkeletonWarrior.createAttributes().build());
+		event.put(Registration.WINGED_SKELETON_TYPE.get(), WingedSkeleton.createAttributes().build());
+		event.put(Registration.FOSSILIZED_SKELETON_TYPE.get(), FossilizedSkeleton.createAttributes().build());
+		event.put(Registration.IRON_SKELETON_TYPE.get(), IronSkeleton.createAttributes().build());
 
 	}
 
@@ -100,6 +105,9 @@ public class CommonSetup {
 		event.register(Registration.SPECTATOR_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkIsNetherSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 		event.register(Registration.DAEMON_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkIsNetherSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 		event.register(Registration.SKELETON_WARRIOR_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.WINGED_SKELETON_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.FOSSILIZED_SKELETON_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.IRON_SKELETON_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 
 	}
 
@@ -119,6 +127,9 @@ public class CommonSetup {
 			event.accept(Registration.SPECTATOR_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.DAEMON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.SKELETON_WARRIOR_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.WINGED_SKELETON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.FOSSILIZED_SKELETON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.IRON_SKELETON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 
 		}
 		else if (event.getTabKey() == CreativeModeTabs.COMBAT) {
@@ -166,6 +177,7 @@ public class CommonSetup {
 			}
 		}
 
+		// TODO this needs to move to Shadowlord - onHurtTarget
 		@SubscribeEvent
 		public static void hitFromShadowlord(LivingDamageEvent event) {
 			if (WorldInfo.isClientSide(event.getEntity().level())) {
@@ -181,18 +193,5 @@ public class CommonSetup {
 				// this condition is player hitting shadowlord
 			}
 		}
-
-		//		@SubscribeEvent
-		public static void hitFromShadowlord(LivingHurtEvent event) {
-			if (WorldInfo.isClientSide(event.getEntity().level())) {
-				return;
-			}
-
-			// do something to player every update tick:
-			if (event.getEntity() instanceof Player && event.getSource().getEntity() instanceof Shadowlord) {
-				DD.LOGGER.debug("event: hurting player from shadowlord -> {}", event.getAmount());
-			}
-		}
-
 	}
 }

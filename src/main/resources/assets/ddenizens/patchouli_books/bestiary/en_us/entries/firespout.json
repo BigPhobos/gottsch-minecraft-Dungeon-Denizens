@@ -1,0 +1,13 @@
+{
+  "name": "Firespout Spell",
+  "icon": "minecraft:fire",
+  "category": "ddenizens:spells",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Firespout",
+      "anchor": "firespout",
+      "text": "$(l)Firespout$() is a spell that ..."
+    }
+  ]
+}

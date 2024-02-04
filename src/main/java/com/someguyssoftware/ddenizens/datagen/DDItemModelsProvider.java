@@ -98,6 +98,9 @@ public class DDItemModelsProvider extends ItemModelProvider {
     	withExistingParent(Registration.SHADOWLORD_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
     	withExistingParent(Registration.DAEMON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
         withExistingParent(Registration.SKELETON_WARRIOR_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.WINGED_SKELETON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.FOSSILIZED_SKELETON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.IRON_SKELETON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
 
     }
 }

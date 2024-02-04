@@ -25,6 +25,7 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.entity.monster.SkeletonWarrior;
+import com.someguyssoftware.ddenizens.entity.monster.skeleton.FossilizedSkeleton;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import mod.gottsch.forge.gottschcore.config.AbstractConfig;
@@ -275,7 +276,10 @@ public final class Config extends AbstractConfig {
 		public static ShadowlordConfig SHADOWLORD;
 		public static DaemonConfig DAEMON;
 		public static SkeletonWarriorConfig SKELETON_WARRIOR;
-
+		public static WingedSkeletonConfig WINGED_SKELETON;
+		public static FossilizedSkeletonConfig FOSSILIZED_SKELETON;
+		public static IronSkeletonConfig IRON_SKELETON;
+		// TODO create a General Config is specific isn't found, use it. For things like spawn height
 		public static Map<ResourceLocation, IMobConfig> MOBS = Maps.newHashMap();
 
 		public static void register(ForgeConfigSpec.Builder builder) {
@@ -291,6 +295,9 @@ public final class Config extends AbstractConfig {
 			SHADOWLORD = new ShadowlordConfig(builder);
 			DAEMON = new DaemonConfig(builder);
 			SKELETON_WARRIOR = new SkeletonWarriorConfig(builder);
+			WINGED_SKELETON = new WingedSkeletonConfig(builder);
+			FOSSILIZED_SKELETON = new FossilizedSkeletonConfig(builder);
+			IRON_SKELETON = new IronSkeletonConfig(builder);
 
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.HEADLESS), HEADLESS);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.ORC), ORC);
@@ -304,6 +311,10 @@ public final class Config extends AbstractConfig {
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.SHADOWLORD), SHADOWLORD);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.DAEMON), DAEMON);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.SKELETON_WARRIOR), SKELETON_WARRIOR);
+			MOBS.put(new ResourceLocation(DD.MODID, Registration.WINGED_SKELETON), WINGED_SKELETON);
+			MOBS.put(new ResourceLocation(DD.MODID, Registration.FOSSILIZED_SKELETON), FOSSILIZED_SKELETON);
+			MOBS.put(new ResourceLocation(DD.MODID, Registration.IRON_SKELETON), IRON_SKELETON);
+
 		}
 	}
 
@@ -733,6 +744,30 @@ public final class Config extends AbstractConfig {
 		public SkeletonWarriorConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Skeleton Warrior properties.", CATEGORY_DIV).push(Registration.SKELETON_WARRIOR);
 			spawnConfig = new CommonSpawnConfig(builder, true, 50, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
+			builder.pop();
+		}
+	}
+
+	public static class WingedSkeletonConfig extends MobConfig {
+		public WingedSkeletonConfig(ForgeConfigSpec.Builder builder) {
+			builder.comment(CATEGORY_DIV, " Winged Skeleton properties.", CATEGORY_DIV).push(Registration.WINGED_SKELETON);
+			spawnConfig = new CommonSpawnConfig(builder, true, 50, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
+			builder.pop();
+		}
+	}
+
+	public static class FossilizedSkeletonConfig extends MobConfig {
+		public FossilizedSkeletonConfig(ForgeConfigSpec.Builder builder) {
+			builder.comment(CATEGORY_DIV, " Fossilized Skeleton properties.", CATEGORY_DIV).push(Registration.FOSSILIZED_SKELETON);
+			spawnConfig = new CommonSpawnConfig(builder, true, 30, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
+			builder.pop();
+		}
+	}
+
+	public static class IronSkeletonConfig extends MobConfig {
+		public IronSkeletonConfig(ForgeConfigSpec.Builder builder) {
+			builder.comment(CATEGORY_DIV, " Iron Skeleton properties.", CATEGORY_DIV).push(Registration.IRON_SKELETON);
+			spawnConfig = new CommonSpawnConfig(builder, true, 30, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
 			builder.pop();
 		}
 	}
