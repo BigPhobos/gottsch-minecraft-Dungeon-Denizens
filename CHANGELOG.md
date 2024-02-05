@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.1] - 2023-10-18
 
 ### Changed
-
+	
 - Fixed the 'enabled' config option for each mob - it wasn't being checked.
 - Reduced the occurence of Gazer, Shadowlord, and Daemon.
 
