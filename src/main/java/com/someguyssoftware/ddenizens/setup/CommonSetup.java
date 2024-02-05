@@ -124,7 +124,7 @@ public class CommonSetup {
 			Registration.ALL_MOBS.forEach(entityType -> {				
 				IMobConfig config = Config.Mobs.MOBS.get(((EntityType<?>)entityType.get()).getRegistryName());
 
-				if (config.getSpawnConfig().enable.get()) {
+				if (config.getSpawnConfig().enabled.get()) {
 					Result result = isBiomeAllowed(biome, event.getCategory(), config.getSpawnConfig());
 					if (result == Result.OK || result == Result.WHITE_LISTED) {
 						DD.LOGGER.debug("registering spawner data -> {}", ((EntityType<?>)entityType.get()).getRegistryName());
