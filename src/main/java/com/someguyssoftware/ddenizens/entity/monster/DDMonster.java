@@ -63,7 +63,11 @@ public abstract class DDMonster extends Monster {
 	public static boolean checkDDMonsterSpawnRules(EntityType<? extends Mob> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));		
 		CommonSpawnConfig config = mobConfig.getSpawnConfig();
-		return level.getDifficulty() != Difficulty.PEACEFUL && isValidHeight(pos, config) && isDarkEnoughToSpawn(level, pos, random) && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		return config.enabled.get()
+				&& level.getDifficulty() != Difficulty.PEACEFUL 
+				&& isValidHeight(pos, config) 
+				&& isDarkEnoughToSpawn(level, pos, random) 
+				&& checkMobSpawnRules(mob, level, spawnType, pos, random);
 	}
 	
 	public static boolean isValidHeight(BlockPos pos, CommonSpawnConfig config) {
@@ -74,6 +78,10 @@ public abstract class DDMonster extends Monster {
 		DD.LOGGER.info("checking nether spawn rules at -> {}", pos);
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));
 		NetherSpawnConfig config = ((INetherMobConfig)mobConfig).getNetherSpawn();
-		return level.getDifficulty() != Difficulty.PEACEFUL && isValidHeight(pos, config) && isDarkEnoughToSpawn(level, pos, random) && checkMobSpawnRules(mob, level, spawnType, pos, random);
+		return config.enabled.get()
+				&& level.getDifficulty() != Difficulty.PEACEFUL 
+				&& isValidHeight(pos, config) 
+				&& isDarkEnoughToSpawn(level, pos, random) 
+				&& checkMobSpawnRules(mob, level, spawnType, pos, random);
 	}
 }

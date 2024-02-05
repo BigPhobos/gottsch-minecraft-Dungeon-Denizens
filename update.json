@@ -1,11 +1,12 @@
 {
     "homepage": "https://minecraft.curseforge.com/projects/dungeon-denizens",
     "promos": {
-    "1.19.2-latest": "1.1.0",
-    "1.19.2-recommended": "1.1.0"
+    "1.19.2-latest": "1.1.1",
+    "1.19.2-recommended": "1.1.1"
   },
     "1.19.2": {
         "1.0.0": "Initial release",
-        "1.1.0": "See https://raw.githubusercontent.com/gottsch/gottsch-minecraft-Dungeon-Denizens/1.19.2-main/CHANGELOG.md"
+        "1.1.0": "See https://raw.githubusercontent.com/gottsch/gottsch-minecraft-Dungeon-Denizens/1.19.2-main/CHANGELOG.md",
+        "1.1.1": "See https://raw.githubusercontent.com/gottsch/gottsch-minecraft-Dungeon-Denizens/1.19.2-main/CHANGELOG.md"
 	}
 }

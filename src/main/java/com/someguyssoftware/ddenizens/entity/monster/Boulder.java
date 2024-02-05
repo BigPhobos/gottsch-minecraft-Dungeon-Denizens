@@ -102,7 +102,8 @@ public class Boulder extends Monster {
 		//		return (level.getHeight() < 60 || level.getBiome(pos).getBiomeCategory() == BiomeCategory.MOUNTAIN) && checkMobSpawnRules(mob, level, spawnType, pos, random);
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));	
 		CommonSpawnConfig config = mobConfig.getSpawnConfig();
-		return ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).is(BiomeTags.IS_MOUNTAIN) )
+		return config.enabled.get()
+				&& ((pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get()) || level.getBiome(pos).is(BiomeTags.IS_MOUNTAIN) )
 				&& checkAnyLightMonsterSpawnRules(mob, level, spawnType, pos, random);
 	}
 

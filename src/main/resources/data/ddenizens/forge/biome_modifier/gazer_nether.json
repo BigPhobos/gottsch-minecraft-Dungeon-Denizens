@@ -3,7 +3,7 @@
 	"biomes": "#minecraft:is_nether",
 	"spawners": {
 		"type": "ddenizens:gazer",
-		"weight": 10,
+		"weight": 3,
 		"minCount": 1,
 		"maxCount":1
 	}

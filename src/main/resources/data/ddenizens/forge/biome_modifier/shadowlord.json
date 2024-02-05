@@ -3,7 +3,7 @@
 	"biomes": "#minecraft:is_overworld",
 	"spawners": {
 		"type": "ddenizens:shadowlord",
-		"weight": 15,
+		"weight": 5,
 		"minCount": 1,
 		"maxCount":1
 	}
