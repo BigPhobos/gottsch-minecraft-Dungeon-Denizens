@@ -26,6 +26,7 @@ import com.someguyssoftware.ddenizens.capability.GhoulCapability;
 import com.someguyssoftware.ddenizens.entity.monster.*;
 import com.someguyssoftware.ddenizens.entity.monster.skeleton.FossilizedSkeleton;
 import com.someguyssoftware.ddenizens.entity.monster.skeleton.IronSkeleton;
+import com.someguyssoftware.ddenizens.entity.monster.skeleton.MagmaSkeleton;
 import com.someguyssoftware.ddenizens.entity.projectile.*;
 
 import com.someguyssoftware.ddenizens.item.*;
@@ -68,6 +69,7 @@ public class Registration {
 	public static final String WINGED_SKELETON = "winged_skeleton";
 	public static final String FOSSILIZED_SKELETON = "fossilized_skeleton";
 	public static final String IRON_SKELETON = "iron_skeleton";
+	public static final String MAGMA_SKELETON = "magma_skeleton";
 	public static final String SKELETON_CHAMPION = "skeleton_champion";
 	public static final String DEATH_KNIGHT = "death_knight";
 
@@ -177,7 +179,7 @@ public class Registration {
 			.build(SKELETON_WARRIOR));
 
 	public static final RegistryObject<EntityType<WingedSkeleton>> WINGED_SKELETON_TYPE = Registration.ENTITIES.register(WINGED_SKELETON, () -> EntityType.Builder.of(WingedSkeleton::new, MobCategory.MONSTER)
-			.sized(0.75F, 1.85F)
+			.sized(0.75F, 1.95F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
 			.build(WINGED_SKELETON));
@@ -193,6 +195,13 @@ public class Registration {
 			.clientTrackingRange(15)
 			.setShouldReceiveVelocityUpdates(false)
 			.build(IRON_SKELETON));
+
+	public static final RegistryObject<EntityType<MagmaSkeleton>> MAGMA_SKELETON_TYPE = Registration.ENTITIES.register(MAGMA_SKELETON, () -> EntityType.Builder.of(MagmaSkeleton::new, MobCategory.MONSTER)
+			.sized(0.63F, 2.1F)
+			.clientTrackingRange(15)
+			.setShouldReceiveVelocityUpdates(false)
+			.fireImmune()
+			.build(MAGMA_SKELETON));
 	
 	// projectile entities
 	public static final RegistryObject<EntityType<ParalysisSpell>> PARALYSIS_SPELL_ENTITY_TYPE =
@@ -260,8 +269,9 @@ public class Registration {
 	public static final RegistryObject<Item> SKELETON_WARRIOR_EGG = Registration.ITEMS.register(SKELETON_WARRIOR + "_egg", () -> new SkeletonWarriorEggItem(SKELETON_WARRIOR_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
 	public static final RegistryObject<Item> WINGED_SKELETON_EGG = Registration.ITEMS.register(WINGED_SKELETON + "_egg", () -> new WingedSkeletonEggItem(WINGED_SKELETON_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
 
-	public static final RegistryObject<Item> FOSSILIZED_SKELETON_EGG = Registration.ITEMS.register(FOSSILIZED_SKELETON + "_egg", () -> new ForgeSpawnEggItem(FOSSILIZED_SKELETON_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
-	public static final RegistryObject<Item> IRON_SKELETON_EGG = Registration.ITEMS.register(IRON_SKELETON + "_egg", () -> new ForgeSpawnEggItem(IRON_SKELETON_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
+	public static final RegistryObject<Item> FOSSILIZED_SKELETON_EGG = Registration.ITEMS.register(FOSSILIZED_SKELETON + "_egg", () -> new FossilizedSkeletonEggItem(FOSSILIZED_SKELETON_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
+	public static final RegistryObject<Item> IRON_SKELETON_EGG = Registration.ITEMS.register(IRON_SKELETON + "_egg", () -> new IronSkeletonEggItem(IRON_SKELETON_TYPE, 0xf5f6d2, 0xcdc3bb, new Item.Properties()));
+	public static final RegistryObject<Item> MAGMA_SKELETON_EGG = Registration.ITEMS.register(MAGMA_SKELETON + "_egg", () -> new MagmaSkeletonEggItem(MAGMA_SKELETON_TYPE, 0x4b0000, 0xff7900, new Item.Properties()));
 
 	// projectiles
 	public static final RegistryObject<Item> PARALYSIS_SPELL_ITEM = Registration.ITEMS.register(PARALYSIS_SPELL, () -> new Item(new Item.Properties()));

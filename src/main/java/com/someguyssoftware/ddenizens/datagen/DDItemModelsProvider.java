@@ -101,6 +101,7 @@ public class DDItemModelsProvider extends ItemModelProvider {
         withExistingParent(Registration.WINGED_SKELETON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
         withExistingParent(Registration.FOSSILIZED_SKELETON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
         withExistingParent(Registration.IRON_SKELETON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(Registration.MAGMA_SKELETON_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
 
     }
 }

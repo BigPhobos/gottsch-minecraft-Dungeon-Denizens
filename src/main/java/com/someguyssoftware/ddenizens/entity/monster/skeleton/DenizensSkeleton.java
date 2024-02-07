@@ -1,5 +1,6 @@
 package com.someguyssoftware.ddenizens.entity.monster.skeleton;
 
+import com.someguyssoftware.ddenizens.entity.ai.goal.VariantPowerRangedBowAttackGoal;
 import com.someguyssoftware.ddenizens.entity.ai.goal.target.SummonedOwnerTargetGoal;
 import com.someguyssoftware.ddenizens.entity.monster.Boulder;
 import com.someguyssoftware.ddenizens.entity.monster.DenizensMonster;
@@ -41,8 +42,8 @@ import java.time.temporal.ChronoField;
 
 public abstract class DenizensSkeleton extends DenizensMonster implements RangedAttackMob {
 
-    private final RangedBowAttackGoal<AbstractSkeleton> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
-    private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.2D, false) {
+    protected final VariantPowerRangedBowAttackGoal<AbstractSkeleton> bowGoal = new VariantPowerRangedBowAttackGoal<>(this, 1.0D, 20, 15.0F, 1.0F);
+    protected Goal meleeGoal = new MeleeAttackGoal(this, 1.2D, false) {
         public void stop() {
             super.stop();
             DenizensSkeleton.this.setAggressive(false);
@@ -53,7 +54,7 @@ public abstract class DenizensSkeleton extends DenizensMonster implements Ranged
             DenizensSkeleton.this.setAggressive(true);
         }
     };
-    private final FleeSunGoal fleeSunGoal = new FleeSunGoal(this, 1.0D);
+    protected final FleeSunGoal fleeSunGoal = new FleeSunGoal(this, 1.0D);
 
     protected DenizensSkeleton(EntityType<? extends DenizensSkeleton> entityType, Level level) {
         super(entityType, level, MonsterSize.MEDIUM);
@@ -170,22 +171,22 @@ public abstract class DenizensSkeleton extends DenizensMonster implements Ranged
         }
     }
 
-    public void performRangedAttack(LivingEntity p_32141_, float p_32142_) {
-        ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
-        AbstractArrow abstractarrow = this.getArrow(itemstack, p_32142_);
+    public void performRangedAttack(LivingEntity entity, float power) {
+        ItemStack itemStack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
+        AbstractArrow abstractarrow = this.getArrow(itemStack, power);
         if (this.getMainHandItem().getItem() instanceof net.minecraft.world.item.BowItem)
             abstractarrow = ((net.minecraft.world.item.BowItem)this.getMainHandItem().getItem()).customArrow(abstractarrow);
-        double d0 = p_32141_.getX() - this.getX();
-        double d1 = p_32141_.getY(0.3333333333333333D) - abstractarrow.getY();
-        double d2 = p_32141_.getZ() - this.getZ();
+        double d0 = entity.getX() - this.getX();
+        double d1 = entity.getY(0.3333333333333333D) - abstractarrow.getY();
+        double d2 = entity.getZ() - this.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         abstractarrow.shoot(d0, d1 + d3 * (double)0.2F, d2, 1.6F, (float)(14 - this.level().getDifficulty().getId() * 4));
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level().addFreshEntity(abstractarrow);
     }
 
-    protected AbstractArrow getArrow(ItemStack p_32156_, float p_32157_) {
-        return ProjectileUtil.getMobArrow(this, p_32156_, p_32157_);
+    protected AbstractArrow getArrow(ItemStack itemStack, float power) {
+        return ProjectileUtil.getMobArrow(this, itemStack, power);
     }
 
     public boolean canFireProjectileWeapon(ProjectileWeaponItem p_32144_) {
@@ -219,6 +220,14 @@ public abstract class DenizensSkeleton extends DenizensMonster implements Ranged
 
     public boolean sunDamagesHat() {
         return true;
+    }
+
+    public Goal getMeleeAttackGoal() {
+        return this.meleeGoal;
+    }
+
+    public void setMeleeAttackGoal(Goal goal) {
+        this.meleeGoal = goal;
     }
 
     public FleeSunGoal getFleeSunGoal() {

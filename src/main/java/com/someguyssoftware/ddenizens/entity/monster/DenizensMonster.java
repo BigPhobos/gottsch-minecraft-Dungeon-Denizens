@@ -75,7 +75,17 @@ public abstract class DenizensMonster extends Monster implements IDenizensMonste
 				&& isDarkEnoughToSpawn(level, pos, random)
 				&& checkMobSpawnRules(mob, level, spawnType, pos, random);
 	}
-	
+
+	public static boolean checkDDMonsterCanSeeSkySpawnRules(EntityType<? extends Mob> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+		Config.IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));
+		Config.CommonSpawnConfig config = mobConfig.getSpawnConfig();
+		return config.enabled.get()
+				&& level.getDifficulty() != Difficulty.PEACEFUL
+				&& isValidHeight(pos, config)
+				&& level.canSeeSky(pos)
+				&& checkMobSpawnRules(mob, level, spawnType, pos, random);
+	}
+
 	public static boolean isValidHeight(BlockPos pos, CommonSpawnConfig config) {
 		return pos.getY() > config.minHeight.get() && pos.getY() < config.maxHeight.get();
 	}

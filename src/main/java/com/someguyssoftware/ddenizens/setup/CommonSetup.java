@@ -25,6 +25,7 @@ import com.someguyssoftware.ddenizens.entity.monster.*;
 
 import com.someguyssoftware.ddenizens.entity.monster.skeleton.FossilizedSkeleton;
 import com.someguyssoftware.ddenizens.entity.monster.skeleton.IronSkeleton;
+import com.someguyssoftware.ddenizens.entity.monster.skeleton.MagmaSkeleton;
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -87,13 +88,14 @@ public class CommonSetup {
 		event.put(Registration.WINGED_SKELETON_TYPE.get(), WingedSkeleton.createAttributes().build());
 		event.put(Registration.FOSSILIZED_SKELETON_TYPE.get(), FossilizedSkeleton.createAttributes().build());
 		event.put(Registration.IRON_SKELETON_TYPE.get(), IronSkeleton.createAttributes().build());
+		event.put(Registration.MAGMA_SKELETON_TYPE.get(), MagmaSkeleton.createAttributes().build());
 
 	}
 
 	@SubscribeEvent
 	public static void registerEntitySpawn(SpawnPlacementRegisterEvent event) {
-		event.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-		event.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.HEADLESS_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterCanSeeSkySpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.ORC_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterCanSeeSkySpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 		event.register(Registration.GHOUL_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 		event.register(Registration.BOULDER_ENTITY_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, Boulder::checkSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 
@@ -108,6 +110,7 @@ public class CommonSetup {
 		event.register(Registration.WINGED_SKELETON_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 		event.register(Registration.FOSSILIZED_SKELETON_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 		event.register(Registration.IRON_SKELETON_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DenizensMonster::checkDDMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+		event.register(Registration.MAGMA_SKELETON_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, MagmaSkeleton::checkMagmaSkeletonSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
 
 	}
 
@@ -130,6 +133,7 @@ public class CommonSetup {
 			event.accept(Registration.WINGED_SKELETON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.FOSSILIZED_SKELETON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.accept(Registration.IRON_SKELETON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.accept(Registration.MAGMA_SKELETON_EGG.get(), TabVisibility.PARENT_AND_SEARCH_TABS);
 
 		}
 		else if (event.getTabKey() == CreativeModeTabs.COMBAT) {

@@ -125,57 +125,6 @@ public final class Config extends AbstractConfig {
 		}
 	}
 
-	/**
-	 * 
-	 * @author Mark Gottschling on Apr 26, 2022
-	 *
-	 */
-//	@Deprecated
-//	public static class SpawnConfig extends CommonSpawnConfig {
-//		@Deprecated
-//		public static final int IGNORE_HEIGHT = -65;
-//
-//		public final BooleanValue  enable;
-//
-//		public ConfigValue<List<? extends String>> biomeWhitelist;
-//		public ConfigValue<List<? extends String>> biomeBlacklist;
-//
-//		public ConfigValue<List<? extends String>> biomeCategoryWhitelist;
-//		public ConfigValue<List<? extends String>> biomeCategoryBlacklist;
-//
-//		private static final Predicate<Object> STRING_PREDICATE = s -> s instanceof String;
-//
-//		public SpawnConfig(ForgeConfigSpec.Builder builder, int weight, int minSpawn, int maxSpawn, 
-//				int minHeight, int maxHeight,
-//				List<String> biomeWhitelist, List<String> biomeBlacklist,
-//				List<String> categoryWhitelist, List<String> categoryBlacklist) {
-//
-//			builder.push("spawning");
-//
-//			this.enable = builder
-//					.comment(" Enable / disable spawning.")
-//					.define("enable", true);
-//
-//			// configure the common properties
-//			configure(builder, weight, minSpawn, maxSpawn, minHeight, maxHeight);
-//
-//			this.biomeWhitelist = builder.comment(" Allowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains", " Supercedes blacklist.",
-//					" Biome white/black lists superced biome category white/black lists.")
-//					.defineList("biomeWhitelist", biomeWhitelist, STRING_PREDICATE);
-//
-//			this.biomeBlacklist = builder.comment(" Disallowed biomes for spawning. Must match the Biome Registry Name(s). ex. minecraft:plains")
-//					.defineList("biomeBlacklist", biomeBlacklist, STRING_PREDICATE);
-//
-//			this.biomeCategoryWhitelist = builder.comment(" Allowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether", " Supercedes blacklist.")
-//					.defineList("biomeCategoryWhitelist", categoryWhitelist, STRING_PREDICATE);
-//
-//			this.biomeCategoryBlacklist = builder.comment(" Disallowed biome categories for spawning. Must match the Biome Category names. ex. underground, nether")
-//					.defineList("biomeCategoryBlacklist", categoryBlacklist, STRING_PREDICATE);
-//
-//			builder.pop();
-//		}
-//	}
-
 	/*
 	 * 
 	 */
@@ -279,6 +228,8 @@ public final class Config extends AbstractConfig {
 		public static WingedSkeletonConfig WINGED_SKELETON;
 		public static FossilizedSkeletonConfig FOSSILIZED_SKELETON;
 		public static IronSkeletonConfig IRON_SKELETON;
+		public static MagmaSkeletonConfig MAGMA_SKELETON;
+
 		// TODO create a General Config is specific isn't found, use it. For things like spawn height
 		public static Map<ResourceLocation, IMobConfig> MOBS = Maps.newHashMap();
 
@@ -298,6 +249,7 @@ public final class Config extends AbstractConfig {
 			WINGED_SKELETON = new WingedSkeletonConfig(builder);
 			FOSSILIZED_SKELETON = new FossilizedSkeletonConfig(builder);
 			IRON_SKELETON = new IronSkeletonConfig(builder);
+			MAGMA_SKELETON = new MagmaSkeletonConfig(builder);
 
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.HEADLESS), HEADLESS);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.ORC), ORC);
@@ -314,6 +266,7 @@ public final class Config extends AbstractConfig {
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.WINGED_SKELETON), WINGED_SKELETON);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.FOSSILIZED_SKELETON), FOSSILIZED_SKELETON);
 			MOBS.put(new ResourceLocation(DD.MODID, Registration.IRON_SKELETON), IRON_SKELETON);
+			MOBS.put(new ResourceLocation(DD.MODID, Registration.MAGMA_SKELETON), MAGMA_SKELETON);
 
 		}
 	}
@@ -767,7 +720,17 @@ public final class Config extends AbstractConfig {
 	public static class IronSkeletonConfig extends MobConfig {
 		public IronSkeletonConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment(CATEGORY_DIV, " Iron Skeleton properties.", CATEGORY_DIV).push(Registration.IRON_SKELETON);
-			spawnConfig = new CommonSpawnConfig(builder, true, 30, 1, 2, MIN_HEIGHT, MAX_HEIGHT);//,
+			spawnConfig = new CommonSpawnConfig(builder, true, 30, 1, 1, MIN_HEIGHT, MAX_HEIGHT);//,
+			builder.pop();
+		}
+	}
+
+	public static class MagmaSkeletonConfig extends NetherMobConfig {
+		public MagmaSkeletonConfig(ForgeConfigSpec.Builder builder) {
+			builder.comment(CATEGORY_DIV, " Magma Skeleton properties.", CATEGORY_DIV).push(Registration.IRON_SKELETON);
+			spawnConfig = new CommonSpawnConfig(builder, true, 30, 1, 1, MIN_HEIGHT, MAX_HEIGHT);//,
+			netherSpawnConfig = new NetherSpawnConfig(builder, true, 10, 1, 1,  MIN_HEIGHT, MAX_HEIGHT);
+
 			builder.pop();
 		}
 	}

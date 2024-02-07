@@ -64,6 +64,8 @@ public class ClientSetup {
 		event.registerLayerDefinition(WingedSkeletonModel.LAYER_LOCATION, WingedSkeletonModel::createBodyLayer);
 		event.registerLayerDefinition(FossilizedSkeletonModel.LAYER_LOCATION, FossilizedSkeletonModel::createBodyLayer);
 		event.registerLayerDefinition(IronSkeletonModel.LAYER_LOCATION, IronSkeletonModel::createBodyLayer);
+		event.registerLayerDefinition(MagmaSkeletonModel.LAYER_LOCATION, MagmaSkeletonModel::createBodyLayer);
+
 	}
 
 	/**
@@ -87,6 +89,7 @@ public class ClientSetup {
 		event.registerEntityRenderer(Registration.WINGED_SKELETON_TYPE.get(), WingedSkeletonRenderer::new);
 		event.registerEntityRenderer(Registration.FOSSILIZED_SKELETON_TYPE.get(), FossilizedSkeletonRenderer::new);
 		event.registerEntityRenderer(Registration.IRON_SKELETON_TYPE.get(), IronSkeletonRenderer::new);
+		event.registerEntityRenderer(Registration.MAGMA_SKELETON_TYPE.get(), MagmaSkeletonRenderer::new);
 
 		event.registerEntityRenderer(Registration.PARALYSIS_SPELL_ENTITY_TYPE.get(), (provider) -> {
             // 1.0 = scale, true = full bright
