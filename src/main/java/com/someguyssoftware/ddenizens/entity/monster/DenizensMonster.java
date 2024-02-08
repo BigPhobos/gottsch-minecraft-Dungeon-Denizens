@@ -91,7 +91,6 @@ public abstract class DenizensMonster extends Monster implements IDenizensMonste
 	}
 	
 	public static boolean checkDDMonsterNetherSpawnRules(EntityType<? extends Mob> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
-//		DD.LOGGER.info("checking nether spawn rules at -> {}", pos);
 		IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));
 		NetherSpawnConfig config = ((INetherMobConfig)mobConfig).getNetherSpawn();
 		return config.enabled.get()

@@ -7,7 +7,7 @@
       "type": "patchouli:text",
       "title": "Paralysis",
       "anchor": "paralysis",
-      "text": "$(l)Paralysis$() is a spell that ..."
+      "text": "$(l)Paralysis$() is a projectile spell that will slow the target down for a short period of time."
     }
   ]
 }

@@ -11,9 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Ghoul had RestrictSunGoal twice - removed duplicate.
-
+- Increased the hit box on the Orc to match body size better.
+- Updates to DD Bestiary.
 
 ### Added
+
+- Winged Skeleton.
+- Fossilized Skeleton.
+- Iron Skeleton.
+- Magma Skeleton.
+- PassiveMeleeAttackGoal.
+- VariantPoweredRangedBowAttackGoal.
 
 
 ## [1.3.0] - 2024-01-31 - Shadowlord Update

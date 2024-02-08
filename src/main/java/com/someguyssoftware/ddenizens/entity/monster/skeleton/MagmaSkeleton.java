@@ -25,6 +25,7 @@ import com.someguyssoftware.ddenizens.entity.ai.goal.PassiveMeleeAttackGoal;
 import com.someguyssoftware.ddenizens.entity.monster.DenizensMonster;
 import mod.gottsch.forge.gottschcore.random.RandomHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -148,12 +149,16 @@ public class MagmaSkeleton extends DenizensSkeleton {
     }
 
     public static boolean checkMagmaSkeletonSpawnRules(EntityType<? extends Mob> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
-        boolean isLavaNear = !level.getBlockStates(mob.getAABB(pos.getX(), pos.getY(), pos.getZ()).inflate(5D, 1D, 5D))
+        boolean isLavaNear = !level.getBlockStates(mob.getAABB(pos.getX(), pos.getY(), pos.getZ()).inflate(10D, 2D, 10D))
                 .filter(bs -> bs.is(Blocks.LAVA)).toList().isEmpty();
 
         if (level.getBiome(pos).is(BiomeTags.IS_NETHER) ) {
-            return DenizensMonster.checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random)
-                    && isLavaNear;
+            Config.IMobConfig mobConfig = Config.Mobs.MOBS.get(EntityType.getKey(mob));
+            Config.NetherSpawnConfig config = ((Config.INetherMobConfig)mobConfig).getNetherSpawn();
+            return config.enabled.get()
+                    && level.getDifficulty() != Difficulty.PEACEFUL
+                    && isValidHeight(pos, config);
+//                    && isLavaNear;
 
         }
         else {

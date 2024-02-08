@@ -3,7 +3,7 @@
   "icon": "ddenizens:magma_skeleton_egg",
   "category": "ddenizens:root",
   "pages": [
-    "Magma Skeletons are 4-armed monstrosities.",
+    "In the heart of a smoldering volcano or in the depths of the nether, where molten rock writhes and roars, dwells a creature of bone and fire: the Magma Skeleton, a four-armed monstrosity of immense power.",
     {
       "type": "patchouli:entity",
       "entity": "ddenizens:magma_skeleton",

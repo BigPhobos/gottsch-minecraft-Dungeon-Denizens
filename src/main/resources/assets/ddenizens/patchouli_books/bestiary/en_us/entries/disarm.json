@@ -7,7 +7,7 @@
       "type": "patchouli:text",
       "title": "Disarm",
       "anchor": "disarm",
-      "text": "$(l)Disarm$() is a spell that will randomly remove one equipped item from the target and cast it to the ground."
+      "text": "$(l)Disarm$() will randomly remove one equipped item from the target and cast it to the ground."
     }
   ]
 }

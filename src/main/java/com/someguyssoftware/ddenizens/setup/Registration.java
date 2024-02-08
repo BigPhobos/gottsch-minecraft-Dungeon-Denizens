@@ -103,14 +103,14 @@ public class Registration {
 			.build(BOULDER));
 	
 	public static final RegistryObject<EntityType<Headless>> HEADLESS_ENTITY_TYPE = Registration.ENTITIES.register(HEADLESS, () -> EntityType.Builder.of(Headless::new, MobCategory.MONSTER)
-			.sized(0.6F, 1.5F)
+			.sized(0.65F, 1.5F)
 			.clientTrackingRange(8)
 			.setShouldReceiveVelocityUpdates(false)
 			.setTrackingRange(50)
 			.build(HEADLESS));
 	
 	public static final RegistryObject<EntityType<Orc>> ORC_ENTITY_TYPE = Registration.ENTITIES.register(ORC, () -> EntityType.Builder.of(Orc::new, MobCategory.MONSTER)
-			.sized(0.6F, 1.95F)
+			.sized(1F, 1.99F)
 			.clientTrackingRange(12)
 			.setShouldReceiveVelocityUpdates(false)
 			.build(ORC));
