@@ -1,7 +1,7 @@
 {
   "name": "DD Bestiary",
   "landing_text": "Welcome to Dungeon Denizens Bestiary",
-  "version": 2,
+  "version": 3,
 
   "creative_tab": "minecraft:tools_and_utilities",
   "use_resource_pack": true,

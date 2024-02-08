@@ -9,9 +9,10 @@
       "images": ["ddenizens:textures/gui/entries/spectator_patchouli.png"],
       "title": "",
       "text": "",
+      "anchor": "spectator",
       "border": true
     },
     "$(l)Number$(): 1$(br)$(l)Size$(): Small$(br)$(l)Level$(): Mob$(br)$(l)Rarity$(): Scarce$(br)$(l)Movement$(): Flies/Hovers$(br)$(l)Speed$(): Normal$(br)$(l)Health$(): 16hp$(br)$(l)Damage/Strength$(): 4hp$(br)$(l)Daylight$(): Yes$(br)$(l)Despawn$(): Yes$(br)$(l)Spawns$(): Underworld, Nether",
-    "$(l)Weapons/Specials$():$(br)- Can cast Paralysis spell.$(br)- Charges at its target."
+    "$(l)Weapons/Specials$():$(br)- Can cast $(l:paralysis)Paralysis$() spell.$(br)- Charges at its target."
   ]
 }

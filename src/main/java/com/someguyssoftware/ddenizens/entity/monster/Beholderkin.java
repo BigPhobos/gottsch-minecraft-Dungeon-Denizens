@@ -40,7 +40,7 @@ import java.util.Random;
  * @author Mark Gottschling on Jan 9, 2024
  *
  */
-public abstract class Beholderkin extends DenizensFlyingMonster implements IDenizensMonster {
+public abstract class Beholderkin extends DenizensFlyingMonster {
     private MonsterSize size;
 
     public Beholderkin(EntityType<? extends FlyingMob> entityType, Level level, MonsterSize size) {

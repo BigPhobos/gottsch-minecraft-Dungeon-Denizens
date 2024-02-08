@@ -8,16 +8,12 @@
       "type": "patchouli:image",
       "images": ["ddenizens:textures/gui/entries/shadowlord_patchouli.png"],
       "title": "",
+      "anchor": "shadowlord",
       "text": "",
       "border": true
     },
     "$(l)Number$(): 1$(br)$(l)Size$(): Large$(br)$(l)Level$(): Mini Boss$(br)$(l)Rarity$(): Rare$(br)$(l)Movement$(): Levitates$(br)$(l)Speed$(): Normal/Slow$(br)$(l)Health$(): 50hp$(br)$(l)Damage/Strength$(): 8hp$(br)$(l)Daylight$(): No$(br)$(l)Despawn$(): Yes$(br)$(l)Spawns$(): Underworld, Nether",
-    "$(l)Weapons/Specials$():$(br)- Aura of Blindness surrounds a Shadowlord.$(br)- Can inflict Poison on strike.$(br)- Can Drain health on strike.$(br)- Can cast Harm spell.$(br)- Can summon multiple minions at once including Shadows and Ghouls.$(br)- Has a chance to summon a Daemon.$(br)- Partial immunity against most weapons.$(br)$(l)Weakness$():$(br)- Gold and Shadow weapons.",
-    {
-      "type": "patchouli:text",
-      "title": "Aura of Blindness",
-      "text": "$(l)Aura of Blindness$() is a spell that encircles a Shadowlord. If one steps inside the circle, they will be inflicted with the $(l)Blindness$() effect for 2 seconds. The aura appears as smoke particles rising from the ground around the Shadowlord.$(br)You can negate this effect by wearing a $(l)Gold$() helmet."
-    },
+    "$(l)Weapons/Specials$():$(br)- $(l:aura_of_blindness)Aura of Blindness$() surrounds a Shadowlord.$(br)- Can inflict $(l)Poison$() on strike.$(br)- Can $(l:drain)Drain$() health on strike.$(br)- Can cast $(l:harm)Harm$() spell.$(br)- Can summon multiple minions at once including $(l:shadow)Shadows$() and $(l:ghoul)Ghouls$().$(br)- Has a chance to summon a $(l:daemon)Daemon$().$(br)- Partial immunity against most weapons.$(br)$(l)Weakness$():$(br)- Gold and Shadow weapons.",
     {
       "type": "patchouli:text",
       "title": "Drain",

@@ -176,6 +176,7 @@ public class Shadowlord extends DenizensMonster {
 		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Registration.SHADOW_BLADE.get()));
 	}
 
+	@Deprecated
 	public static boolean checkShadowlordSpawnRules(EntityType<Shadowlord> mob, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		if (level.getBiome(pos).is(BiomeTags.IS_NETHER)) {
 			return checkDDMonsterNetherSpawnRules(mob, level, spawnType, pos, random);

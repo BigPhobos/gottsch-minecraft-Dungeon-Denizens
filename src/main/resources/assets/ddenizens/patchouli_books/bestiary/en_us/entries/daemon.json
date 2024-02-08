@@ -9,9 +9,10 @@
         "images": ["ddenizens:textures/gui/entries/daemon_patchouli.png"],
         "title": "",
         "text": "",
+        "anchor": "daemon",
         "border": true
       },
       "$(l)Number$(): 1$(br)$(l)Size$(): Large$(br)$(l)Level$(): Mini Boss$(br)$(l)Rarity$(): Very Rare/Rare$(br)$(l)Movement$(): Walks$(br)$(l)Speed$(): Normal$(br)$(l)Health$(): 80hp$(br)$(l)Damage/Strength$(): 8hp$(br)$(l)Daylight$(): Yes$(br)$(l)Despawn$(): Yes$(br)$(l)Spawns$(): Underworld (Very Rare), Nether (Rare)",
-      "$(l)Weapons/Specials$():$(br)- Can cast Firespout.$(br)- Immune to fire.$(br)- Strong knockback."
+      "$(l)Weapons/Specials$():$(br)- Can cast $(l:firespout)Firespout$().$(br)- Immune to fire.$(br)- Strong knockback."
   ]
 }
