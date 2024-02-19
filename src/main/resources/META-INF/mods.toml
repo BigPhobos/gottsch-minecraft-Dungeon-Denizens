@@ -57,3 +57,10 @@ description="A mod that adds a classical set of mobs to your Minecraft world. Th
     versionRange="[2.1.0,]"
     ordering="BEFORE"
     side="BOTH"
+[[dependencies.ddenizens]]
+    modId="treasure2"
+    mandatory=false
+    # This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[3.6.2,]"
+    ordering="AFTER"
+    side="BOTH"

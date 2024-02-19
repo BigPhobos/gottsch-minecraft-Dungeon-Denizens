@@ -1,0 +1,17 @@
+{
+  "version" : "1.0.0",
+
+  "pools" : [ {
+    "name" : "dd_epic_items",
+    "rolls" : 1,
+    "entries" : [ {
+      "type" : "minecraft:item",
+      "name" : "ddenizens:shadow_falchion",
+      "weight" : 30
+    }, {
+        "type" : "minecraft:item",
+        "name" : "ddenizens:shadow_blade",
+        "weight" : 10
+      }]
+  } ]
+}

@@ -1,0 +1,12 @@
+{
+  "version" : "1.0.0",
+  "pools" : [ {
+    "name" : "dd_rare_items",
+    "rolls" : 1,
+    "entries" : [ {
+      "type" : "minecraft:item",
+      "name" : "ddenizens:shadow_falchion",
+      "weight" : 10
+    } ]
+  } ]
+}
