@@ -26,6 +26,7 @@ import com.someguyssoftware.ddenizens.entity.monster.*;
 import com.someguyssoftware.ddenizens.entity.monster.skeleton.FossilizedSkeleton;
 import com.someguyssoftware.ddenizens.entity.monster.skeleton.IronSkeleton;
 import com.someguyssoftware.ddenizens.entity.monster.skeleton.MagmaSkeleton;
+import com.someguyssoftware.ddenizens.integrations.Integrations;
 import mod.gottsch.forge.gottschcore.world.WorldInfo;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -65,6 +66,7 @@ public class CommonSetup {
 	public static void init(final FMLCommonSetupEvent event) {
 		Config.instance.addRollingFileAppender(DD.MODID);
 		DD.LOGGER.debug("starting Dungeon Denizens");
+		Integrations.registerTreasure2Integration();
 	}
 
 	/**

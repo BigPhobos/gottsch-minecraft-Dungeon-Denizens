@@ -6,7 +6,7 @@
     "A Death Tyrant is an undead Beholder that has retained some of its magical abilities, mainly the ability to summon multiple minions, and a better chance of summoning powerful daemons.",
     {
       "type": "patchouli:image",
-      "entity": "ddenizens:textures/gui/entries/death_tyrant_patchouli",
+      "images": ["ddenizens:textures/gui/entries/death_tyrant_patchouli.png"],
       "title": "",
       "text": "",
       "anchor": "death_tyrant",

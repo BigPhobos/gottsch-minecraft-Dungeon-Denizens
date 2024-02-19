@@ -136,7 +136,7 @@ public class Orc extends DenizensMonster {
 		double armorToughBonus = round(random.nextDouble() * 5D, 2);
 		this.getAttribute(Attributes.ARMOR_TOUGHNESS).addPermanentModifier(new AttributeModifier("random orc-spawn bonus", armorToughBonus, AttributeModifier.Operation.ADDITION));
 
-		double knockbackResistanceBonus = random.nextDouble() * 0.15D;
+		double knockbackResistanceBonus = random.nextDouble() * 0.1D;
 		this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).addPermanentModifier(new AttributeModifier("random orc-spawn bonus", knockbackResistanceBonus, AttributeModifier.Operation.ADDITION));
 
 		double attackKnockbackBonus = round(random.nextDouble() * 1.5D, 2);

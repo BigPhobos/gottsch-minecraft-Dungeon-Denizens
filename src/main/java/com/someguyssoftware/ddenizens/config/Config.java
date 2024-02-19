@@ -24,8 +24,6 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.someguyssoftware.ddenizens.DD;
-import com.someguyssoftware.ddenizens.entity.monster.SkeletonWarrior;
-import com.someguyssoftware.ddenizens.entity.monster.skeleton.FossilizedSkeleton;
 import com.someguyssoftware.ddenizens.setup.Registration;
 
 import mod.gottsch.forge.gottschcore.config.AbstractConfig;
@@ -76,9 +74,35 @@ public final class Config extends AbstractConfig {
 	private static void registerServerConfigs() {
 		ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
 		LOGGING = new Logging(COMMON_BUILDER);
+		General.register(COMMON_BUILDER);
 		Mobs.register(COMMON_BUILDER);
 		Spells.register(COMMON_BUILDER);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, COMMON_BUILDER.build());
+	}
+
+	public static class General {
+		public static Integration INTEGRATION;
+
+		public static void register(ForgeConfigSpec.Builder builder) {
+			INTEGRATION = new Integration(builder);
+		}
+	}
+
+	/*
+	 *
+	 */
+	public static class Integration {
+		public BooleanValue enableTreasure2;
+
+		public Integration(ForgeConfigSpec.Builder builder) {
+			builder.comment(CATEGORY_DIV, " Integration properties.", CATEGORY_DIV).push("integration");
+
+			this.enableTreasure2 = builder
+					.comment(" Enable Treasure2 integration.")
+					.define("enabled", true);
+
+			builder.pop();
+		}
 	}
 
 	public static class CommonSpawnConfig {
