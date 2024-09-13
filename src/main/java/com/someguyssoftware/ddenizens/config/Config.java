@@ -19,24 +19,20 @@
  */
 package com.someguyssoftware.ddenizens.config;
 
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.someguyssoftware.ddenizens.DD;
 import com.someguyssoftware.ddenizens.setup.Registration;
-
 import mod.gottsch.forge.gottschcore.config.AbstractConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.minecraftforge.common.ForgeConfigSpec.*;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -57,53 +53,78 @@ public final class Config extends AbstractConfig {
 	public static final int MAX_HEIGHT = 319;
 
 	public static ForgeConfigSpec COMMON_CONFIG;
-	public static Logging LOGGING;
+//	public static Logging LOGGING;
 	
 	public static Config instance = new Config();
-	
+
+	public static final ForgeConfigSpec COMMON_SPEC;
+	public static final CommonConfig COMMON;
+
+	static {
+		final Pair<CommonConfig, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder()
+				.configure(CommonConfig::new);
+		COMMON_SPEC = commonSpecPair.getRight();
+		COMMON = commonSpecPair.getLeft();
+	}
+
 	/**
 	 * 
 	 */
 	public static void register() {
 		registerServerConfigs();
+		registerCommonConfig();
+	}
+
+	private static void registerCommonConfig() {
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_SPEC);
 	}
 
 	/**
 	 * TODO change this to SERVER SPEC
 	 */
 	private static void registerServerConfigs() {
-		ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
-		LOGGING = new Logging(COMMON_BUILDER);
-		General.register(COMMON_BUILDER);
-		Mobs.register(COMMON_BUILDER);
-		Spells.register(COMMON_BUILDER);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, COMMON_BUILDER.build());
-	}
-
-	public static class General {
-		public static Integration INTEGRATION;
-
-		public static void register(ForgeConfigSpec.Builder builder) {
-			INTEGRATION = new Integration(builder);
-		}
+		ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+//		LOGGING = new Logging(BUILDER);
+//		General.register(BUILDER);
+		Mobs.register(BUILDER);
+		Spells.register(BUILDER);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, BUILDER.build());
 	}
 
 	/*
 	 *
 	 */
-	public static class Integration {
-		public BooleanValue enableTreasure2;
-
-		public Integration(ForgeConfigSpec.Builder builder) {
-			builder.comment(CATEGORY_DIV, " Integration properties.", CATEGORY_DIV).push("integration");
-
-			this.enableTreasure2 = builder
-					.comment(" Enable Treasure2 integration.")
-					.define("enabled", true);
-
-			builder.pop();
+	public static class CommonConfig {
+		public static Logging logging;
+		public CommonConfig(ForgeConfigSpec.Builder builder) {
+			logging = new Logging(builder);
 		}
 	}
+
+//	public static class General {
+//		public static Integration INTEGRATION;
+//
+//		public static void register(ForgeConfigSpec.Builder builder) {
+//			INTEGRATION = new Integration(builder);
+//		}
+//	}
+
+	/*
+	 *
+	 */
+//	public static class Integration {
+//		public BooleanValue enableTreasure2;
+//
+//		public Integration(ForgeConfigSpec.Builder builder) {
+//			builder.comment(CATEGORY_DIV, " Integration properties.", CATEGORY_DIV).push("integration");
+//
+//			this.enableTreasure2 = builder
+//					.comment(" Enable Treasure2 integration.")
+//					.define("enabled", true);
+//
+//			builder.pop();
+//		}
+//	}
 
 	public static class CommonSpawnConfig {
 		public BooleanValue enabled;
@@ -712,7 +733,7 @@ public final class Config extends AbstractConfig {
 			summonedLifespan = builder
 					.comment(" The duration in ticks that a summoned daemon can remain before returning to whence it came.")
 					.defineInRange("summonedLifespan", 1200
-							, 3, 20);
+							, 600, Integer.MAX_VALUE);
 			builder.pop();
 		}
 	}
@@ -761,15 +782,16 @@ public final class Config extends AbstractConfig {
 
 	@Override
 	public String getLogsFolder() {
-		return Config.LOGGING.folder.get();
+		return CommonConfig.logging.folder.get();
 	}
-	
-	public void setLogsFolder(String folder) {
-		Config.LOGGING.folder.set(folder);
+
+	@Override
+	public String getLogSize() {
+		return CommonConfig.logging.size.get();
 	}
-	
+
 	@Override
 	public String getLoggingLevel() {
-		return Config.LOGGING.level.get();
+		return CommonConfig.logging.level.get();
 	}
 }
